@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아이디(이메일) 입력"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:paddingTop="60dp"
+                android:paddingLeft="35dp"
+                android:layout_gravity="left"
+                tools:ignore="MissingConstraints"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                //아이디 입력창
+                <EditText
+                    android:id="@+id/edtID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="27dp"
+                    android:maxLength="50"
+                    android:singleLine="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/white_edittext"
+                    android:hint="이메일을 입력하세요"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="100dp"
+                    tools:layout_editor_absoluteY="202dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text=" @ "
+                    android:textSize="20dp"/>
+
+                <EditText
+                    android:id="@+id/edtEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:hint="입력하세요"
+                    android:background="@drawable/white_edittext"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtError1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="오류 메시지"
+                android:textColor="#FF0000"
+                android:textSize="14dp"
+                android:paddingLeft="30dp"
+                android:layout_gravity="left"
+                tools:ignore="MissingConstraints"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCheckID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="28dp"
+                    android:backgroundTint="#3F51B5"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:text="중복확인"
+                    android:textColor="@color/white"
+                    tools:ignore="MissingConstraints"/>
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="135dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="비밀번호 입력"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:paddingTop="20dp"
+                android:paddingLeft="35dp"
+                android:layout_gravity="left"
+                tools:ignore="MissingConstraints"/>
+
+            //비밀번호 입력창
+            <EditText
+                android:id="@+id/edtPW"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:ems="17"
+                android:singleLine="true"
+                android:password="true"
+                android:background="@drawable/white_edittext"
+                android:paddingLeft="10dp"
+                android:hint="6자리 이상 입력하세요"
+                tools:ignore="MissingConstraints"/>
+
+            <TextView
+                android:id="@+id/txtError2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="오류 메시지"
+                android:textColor="#FF0000"
+                android:textSize="14dp"
+                android:paddingLeft="30dp"
+                android:layout_gravity="left"
+                tools:ignore="MissingConstraints"/>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="비밀번호 재확인"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:paddingTop="20dp"
+                android:paddingLeft="35dp"
+                android:layout_gravity="left"
+                tools:ignore="MissingConstraints"/>
+
+            //비밀번호 재입력창
+            <EditText
+                android:id="@+id/edtPW2"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:ems="17"
+                android:singleLine="true"
+                android:password="true"
+                android:hint="다시 한번 입력하세요"
+                android:background="@drawable/white_edittext"
+                android:paddingLeft="10dp"
+                tools:ignore="MissingConstraints"/>
+
+            <TextView
+                android:id="@+id/txtError3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="오류 메시지"
+                android:textColor="#FF0000"
+                android:textSize="14dp"
+                android:paddingLeft="30dp"
+                android:paddingBottom="20dp"
+                android:layout_gravity="left"
+                tools:ignore="MissingConstraints"/>
+
+
+            //로그인 버튼
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="356dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#3F51B5"
+                android:text="회원가입"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                tools:ignore="MissingConstraints"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
