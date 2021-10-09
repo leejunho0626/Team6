@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="60dp"
+            android:text="Login"
+            android:textStyle="bold"
+            android:textSize="50dp"/>
+
+
+        //아이디 입력창
+
+        <EditText
+            android:id="@+id/idLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/layout_background"
+            android:ems="17"
+            android:hint="아이디(E-mail)를 입력하세요"
+            android:maxLength="30"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="202dp" />
+
+        //비밀번호 입력창
+
+        <EditText
+            android:id="@+id/pwLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:background="@drawable/layout_background"
+            android:ems="17"
+            android:hint="비밀번호를 입력하세요"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:password="true"
+            android:singleLine="true"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <LinearLayout
+            android:layout_width="364dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="left"
+            android:orientation="horizontal">
+
+
+
+            //아이디 저장
+            <CheckBox
+                android:id="@+id/saveID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아이디 저장"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="216dp"
+                tools:layout_editor_absoluteY="341dp" />
+
+            //아이디/비밀번호 찾기
+            <Button
+                android:id="@+id/btFind"
+                android:layout_width="173dp"
+                android:layout_height="wrap_content"
+                android:background="#00ff0000"
+                android:backgroundTint="#2196F3"
+                android:gravity="left"
+                android:layout_marginLeft="100dp"
+                android:text="아이디/비밀번호 찾기"
+                android:textColor="@color/black"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="100dp"
+                tools:layout_editor_absoluteY="405dp" />
+
+        </LinearLayout>
+
+        //로그인 버튼
+
+        <Button
+            android:id="@+id/btLogin"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#3F51B5"
+            android:text="로그인"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="405dp" />
+
+        <Button
+            android:id="@+id/btnKakao"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFC107"
+            android:text="카카오 로그인"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="405dp" />
+
+        //회원가입 버튼
+
+        <Button
+            android:id="@+id/btRegister"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00BCD4"
+            android:text="이메일로 회원가입"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="217dp"
+            tools:layout_editor_absoluteY="405dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
