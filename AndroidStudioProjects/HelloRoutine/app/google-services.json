@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "641423625813",
+    "project_id": "team-helloroutine",
+    "storage_bucket": "team-helloroutine.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641423625813:android:dd5af5367578a41b9f8edc",
+        "android_client_info": {
+          "package_name": "com.example.helloroutine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641423625813-drhdkq6ddrnlk7ikhr32858r7slt8kp1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.helloroutine",
+            "certificate_hash": "d45b610ccdba8430c4373ad5b269c8b3508ad31e"
+          }
+        },
+        {
+          "client_id": "641423625813-ufv3dbpf3vp2nvjkch2h0g511ke18iqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPkzKpUEScSQiOX45ou_JxbiEoP0bNxFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "641423625813-ufv3dbpf3vp2nvjkch2h0g511ke18iqf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

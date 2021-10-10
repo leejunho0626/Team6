@@ -108,6 +108,42 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="닉네임 입력"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:paddingTop="20dp"
+                android:paddingLeft="35dp"
+                android:layout_gravity="left"
+                tools:ignore="MissingConstraints"/>
+
+            //닉네임 입력창
+            <EditText
+                android:id="@+id/edtNick"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:ems="17"
+                android:singleLine="true"
+                android:background="@drawable/white_edittext"
+                android:paddingLeft="10dp"
+                android:hint="원하시는 닉네임을 입력하세요"
+                tools:ignore="MissingConstraints"/>
+
+            <TextView
+                android:id="@+id/txtError4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="오류 메시지"
+                android:textColor="#FF0000"
+                android:textSize="14dp"
+                android:paddingLeft="30dp"
+                android:layout_gravity="left"
+                tools:ignore="MissingConstraints"/>
+
+            <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
