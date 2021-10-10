@@ -9,11 +9,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.kakao.auth.ApiErrorCode;
 import com.kakao.auth.AuthType;
@@ -51,12 +55,13 @@ public class Login extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         checkBox = findViewById(R.id.saveLogin);
         btnKakao = findViewById(R.id.btnKakao);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         //카카오 로그인 콜백 초기화
         sessionCallback = new SessionCallback();
         Session.getCurrentSession().addCallback(sessionCallback);
         //앱 실행 시 로그인 토큰이 있으면 자동으로 로그인 수행
-        //Session.getCurrentSession().checkAndImplicitOpen();
+        Session.getCurrentSession().checkAndImplicitOpen();
 
         //로그인 버튼
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -115,15 +120,39 @@ public class Login extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(MeV2Response result) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("name", result.getNickname());
 
-                    if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE)
-                        intent.putExtra("email", result.getKakaoAccount().getEmail());
-                    else
-                        intent.putExtra("email", "none");
-                    startActivity(intent);
-                    finish();
+                    final String id = "k"+result.getKakaoAccount().getEmail().toString().trim();
+                    final String adminPW = "adminPW";
+                    firebaseAuth.createUserWithEmailAndPassword(id, adminPW).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                intent.putExtra("name", result.getNickname());
+
+                                if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE)
+                                    intent.putExtra("email", result.getKakaoAccount().getEmail());
+                                else
+                                    intent.putExtra("email", "none");
+                                startActivity(intent);
+                                finish();
+                            }
+                            else {
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                intent.putExtra("name", result.getNickname());
+
+                                if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE)
+                                    intent.putExtra("email", result.getKakaoAccount().getEmail());
+                                else
+                                    intent.putExtra("email", "none");
+                                startActivity(intent);
+                                finish();
+
+                            }
+                        }
+                    });
+
+
                 }
             });
         }

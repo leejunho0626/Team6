@@ -22,12 +22,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Register extends AppCompatActivity {
 
-    TextView txtError1, txtError2, txtError3, txtError4;
-    EditText edtID, edtPw, edtPW2, pickEmail, edtNick;
+    TextView txtError1, txtError2, txtError3;
+    EditText edtID, edtPw, edtPW2, pickEmail;
     Button btOk, btCheckId;
     String[] items = {"선택","naver.com","daum.net","nate.com","yahoo.com","hanmail.com","직접입력"}; //이메일 선택
     private FirebaseAuth firebaseAuth;
@@ -42,11 +41,9 @@ public class Register extends AppCompatActivity {
         txtError1 = findViewById(R.id.txtError1);
         txtError2 = findViewById(R.id.txtError2);
         txtError3 = findViewById(R.id.txtError3);
-        txtError4 = findViewById(R.id.txtError4);
         edtID = findViewById(R.id.edtID);
         edtPw = findViewById(R.id.edtPW);
         edtPW2 = findViewById(R.id.edtPW2);
-        edtNick = findViewById(R.id.edtNick);
         pickEmail = findViewById(R.id.edtEmail);
         btOk = findViewById(R.id.btnOk);
         btCheckId = findViewById(R.id.btnCheckID);
@@ -102,35 +99,6 @@ public class Register extends AppCompatActivity {
                         }
                     }
                 });
-            }
-        });
-
-        //닉네입 입력 중복 시
-        edtNick.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                String nick = edtNick.getText().toString();
-                if (nick.length()>0) {
-                    txtError4.setText("이미 존재한 닉네임입니다.");
-                    txtError4.setTextColor(Color.RED);
-                    edtNick.setBackgroundResource(R.drawable.red_edittext);  //테투리 흰색으로 변경
-                }
-                else{
-                    txtError4.setText("사용할 수 있습니다.");    // 경고 메세지
-                    txtError4.setTextColor(Color.parseColor("#4CAF50"));
-                    edtNick.setBackgroundResource(R.drawable.white_edittext);  // 적색 테두리 적용
-                }
             }
         });
 
