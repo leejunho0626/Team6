@@ -38,25 +38,20 @@ public class FragmentSetting extends Fragment {
         btnLogout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //일반 계정 로그아웃
                 firebaseAuth.signOut();
-                Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다(1)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), Login.class);
-                startActivity(intent);
-                getActivity().finish();
-
                 //카카오 로그아웃
                 UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
                     @Override
                     public void onCompleteLogout() {
-                        Toast.makeText(getActivity().getApplicationContext(), "로그아웃되었습니다(2)", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), Login.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-                        getActivity().finish();
                     }
                 });
+                startActivity(intent);
+                getActivity().finish();
             }
         });
 

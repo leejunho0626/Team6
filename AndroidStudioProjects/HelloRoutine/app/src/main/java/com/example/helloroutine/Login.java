@@ -169,37 +169,41 @@ public class Login extends AppCompatActivity {
                 public void onSessionClosed(ErrorResult errorResult) {
 
                 }
+                //카카오 로그인 성공
                 @Override
                 public void onSuccess(MeV2Response result) {
-                    Intent intent = new Intent(Login.this, MainActivity.class);
-                    startActivity(intent);
 
-                    final String id = "kk"+result.getKakaoAccount().getEmail().toString().trim();
-                    final String adminPW = "adminPW";
+                    //카카오 로그인 시 파이어베이스에 계정 생성
+                    final String id =result.getKakaoAccount().getEmail().toString().trim();
+                    final String adminPW = "adminPW"; //임의 비밀번호
                     firebaseAuth.createUserWithEmailAndPassword(id, adminPW).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            //등록된 계정이 없을 때
                             if (task.isSuccessful()) {
                                 Intent intent = new Intent(Login.this, MainActivity.class);
-                                startActivity(intent);
-
-                                //카카오 계정의 이메일과 이름 가져오기
-                                intent.putExtra("name", result.getNickname());
-                                if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE)
+                                //카카오 계정의 이메일 가져오기
+                                if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE){
                                     intent.putExtra("email", result.getKakaoAccount().getEmail());
-                                else
+                                }
+
+                                else{
                                     intent.putExtra("email", "none");
+                                }
+                                startActivity(intent);
                             }
+                            //등록된 계정이 있을 때
                             else {
                                 Intent intent = new Intent(Login.this, MainActivity.class);
+                                //카카오 계정의 이메일 가져오기
+                                if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE) {
+                                    intent.putExtra("email", result.getKakaoAccount().getEmail());
+                                }
+                                else {
+                                    intent.putExtra("email", "none");
+                                }
                                 startActivity(intent);
 
-                                //카카오 계정의 이메일과 이름 가져오기
-                                intent.putExtra("name", result.getNickname());
-                                if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE)
-                                    intent.putExtra("email", result.getKakaoAccount().getEmail());
-                                else
-                                    intent.putExtra("email", "none");
                             }
                         }
                     });
