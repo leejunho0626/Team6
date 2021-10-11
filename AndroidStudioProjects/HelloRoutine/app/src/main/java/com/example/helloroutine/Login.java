@@ -85,6 +85,7 @@ public class Login extends AppCompatActivity {
         btnKakao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, Login.this);
             }
         });
@@ -166,6 +167,7 @@ public class Login extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) { //카카오 로그인 액티비티에서 넘어온 경우일 때 실행
             super.onActivityResult(requestCode, resultCode, data);
+
             return;
         }
     }
