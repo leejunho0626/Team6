@@ -1,15 +1,26 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
+import com.naver.maps.map.util.FusedLocationSource;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView sno;
     private TextView sky;
     private TextView pop;
+    private TextView time3;
+    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
+    private static final int PERMISSION_REQUEST_CODE = 100;
+    private FusedLocationSource mLocationSource;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +49,57 @@ public class MainActivity extends AppCompatActivity {
         sno = (TextView) findViewById(R.id.sno);
         sky = (TextView) findViewById(R.id.sky);
         pop = (TextView) findViewById(R.id.pop);
+        time3 = (TextView) findViewById(R.id.time3);
+
 
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
         String format_time1 = format1.format (System.currentTimeMillis());
+
+
+        StringTokenizer st = new StringTokenizer(fileinput());
+
+        String nx=null;
+        String ny=null;
+        String we="1";
+        int num = 1;
+
+
+        while(st.hasMoreTokens())
+        {
+
+            if(num>20) {
+                if((num-21)%14 == 0) {
+                    we = st.nextToken();
+                    num++;
+                }
+                else if((num-22)%14 == 0) {
+                    nx = st.nextToken();
+                    num++;
+                }
+                else if((num-23)%14 == 0) {
+                    ny = st.nextToken();
+                    num++;
+                }
+                else {
+                    st.nextToken();
+                    num++;
+                }
+
+
+
+            }
+            else {
+                st.nextToken();
+                num++;
+            }
+
+            if(we.equals(getaddress_())) break;
+        }
+
+
+
+
+
 
 
         String service_key = "Qq0ncOZYtzwIBrVT5cMMrn%2BKP7nlXYXT52ZR%2FpoM6l%2B5W6ch9YeTupmGsrR6bfVDSvXVdI7Gl6sRzKhrkgQbHw%3D%3D";
@@ -42,8 +108,7 @@ public class MainActivity extends AppCompatActivity {
         String date_type = "JSON";
         String base_date = format_time1; // date
         String base_time = time();   // time
-        String nx = "60"; // x값
-        String ny = "127"; // y값
+
 
         String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?" +
                 "serviceKey=" +service_key+
@@ -131,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 pcp.setText("강수량 : " +PCP);
             }
             pop.setText("강수확률 : "+POP+"%");
+            time3.setText("기준 : " + time() + "시");
             Log.d("onpostEx", "출력 값 : "+s);
         }
     }
@@ -150,6 +216,91 @@ public class MainActivity extends AppCompatActivity {
         else if(intTime<2100) time_ = "2000";
         else time_ = "2300";
         return time_;
+
+
+    }
+
+    public String getaddress_()
+    {
+        GpsTracker gpsTracker = new GpsTracker(MainActivity.this);
+        double latitude = gpsTracker.getLatitude();// 위도
+        double longitude = gpsTracker.getLongitude(); //경도 //필요시 String address = getCurrentAddress(latitude, longitude); 대한민국 서울시 종로구 ~~
+        mLocationSource = new FusedLocationSource(this, PERMISSION_REQUEST_CODE);
+
+        return getCurrentAddress(latitude, longitude);
+    }
+
+
+    public String getCurrentAddress(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(
+                    latitude,
+                    longitude,
+                    100);
+        } catch (IOException ioException) {
+            //네트워크 문제
+            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            return "지오코더 서비스 사용불가";
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            showDialogForLocationServiceSetting();
+            return "잘못된 GPS 좌표";
+
+        }
+        if (addresses == null || addresses.size() == 0) {
+            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
+            showDialogForLocationServiceSetting();
+            return "주소 미발견";
+        }
+        Address address = addresses.get(0);
+        return address.getAddressLine(0).toString() + "\n";
+    }
+
+    private void showDialogForLocationServiceSetting() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("위치 서비스 비활성화");
+        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하실래요 ? ");
+        builder.setCancelable(true);
+
+        builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                Intent callGPSSettingIntent
+                        = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        builder.create().show();
+    }
+
+    private String fileinput(){
+        String strline = "";
+        String data = null;
+        InputStream inputStream = getResources().openRawResource(R.raw.weather_address_final);
+        InputStreamReader inputreader = new InputStreamReader(inputStream);
+        BufferedReader buffreader = new BufferedReader(inputreader);
+        String line;
+        StringBuilder text = new StringBuilder();
+
+        try {
+            while (( line = buffreader.readLine()) != null) {
+                strline = strline + line;
+            }
+        } catch (IOException e) {
+            return "읽기 실패";
+        }
+
+        return strline;
+
+
 
 
     }
