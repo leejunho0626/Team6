@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#673AB7"
+    android:background="#9370DB"
     android:orientation="vertical">
 
     <LinearLayout
@@ -120,24 +120,95 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_margin="10dp"
                     android:background="@drawable/layout_background">
 
-                    <TextView
-                        android:id="@+id/txtWeather"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:text="서비스 준비 중입니다."
-                        android:textColor="@color/black"
-                        android:textSize="18dp"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:background="@drawable/image_no"
-                        android:layout_margin="10dp"/>
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
+
+                        //발표시간
+                        <TextView
+                            android:id="@+id/time3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:text="발표시간"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"/>
+                        //기상상황
+                        <TextView
+                            android:id="@+id/sky"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:text="기상상황"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"/>
+                        //현재온도
+                        <TextView
+                            android:id="@+id/tmp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="10dp"
+                            android:text="현재온도"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"/>
+                        //강수형태
+                        <TextView
+                            android:id="@+id/pty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:text="강수형태"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
+
+                        //강수확률
+                        <TextView
+                            android:id="@+id/pop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:text="강수확률"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"/>
+                        //강수량
+                        <TextView
+                            android:id="@+id/pcp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="40dp"
+                            android:text="강수량"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"/>
+                        //적설량
+                        <TextView
+                            android:id="@+id/sno"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:paddingLeft="40dp"
+                            android:text="적설량"
+                            android:textColor="@color/black"
+                            android:textSize="18dp"/>
+
+                    </LinearLayout>
 
 
                 </LinearLayout>

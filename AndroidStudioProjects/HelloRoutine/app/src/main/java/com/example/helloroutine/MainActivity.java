@@ -7,10 +7,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.Toast;
 
+import android.os.Bundle;
+
+import android.view.MenuItem;
+
+import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
