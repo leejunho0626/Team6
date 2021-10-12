@@ -55,14 +55,37 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
         String format_time1 = format1.format (System.currentTimeMillis());
 
+        String strline = "";
+        InputStream inputStream = getResources().openRawResource(R.raw.weather_address_final);
+        InputStreamReader inputreader = new InputStreamReader(inputStream);
+        BufferedReader buffreader = new BufferedReader(inputreader);
+        String line;
+        StringBuilder text = new StringBuilder();
 
-        StringTokenizer st = new StringTokenizer(fileinput());
+        try {
+            while (( line = buffreader.readLine()) != null) {
+                strline = strline + line;
+            }
+        } catch (IOException e) {
+
+        }
+
+        StringTokenizer st = new StringTokenizer(strline);
 
         String nx=null;
         String ny=null;
         String we="1";
         int num = 1;
+        int i=0;
+        String[] add_ = new String[7];
 
+
+        StringTokenizer st_ = new StringTokenizer(getaddress_());
+        while(st_.hasMoreTokens())
+        {
+            add_[i] =st_.nextToken();
+            i++;
+        }
 
         while(st.hasMoreTokens())
         {
@@ -93,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 num++;
             }
 
-            if(we.equals(getaddress_())) break;
+            if(we.equals(add_[i-2])) break;
         }
 
 
@@ -281,29 +304,6 @@ public class MainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private String fileinput(){
-        String strline = "";
-        String data = null;
-        InputStream inputStream = getResources().openRawResource(R.raw.weather_address_final);
-        InputStreamReader inputreader = new InputStreamReader(inputStream);
-        BufferedReader buffreader = new BufferedReader(inputreader);
-        String line;
-        StringBuilder text = new StringBuilder();
-
-        try {
-            while (( line = buffreader.readLine()) != null) {
-                strline = strline + line;
-            }
-        } catch (IOException e) {
-            return "읽기 실패";
-        }
-
-        return strline;
-
-
-
-
-    }
 
 
 }
