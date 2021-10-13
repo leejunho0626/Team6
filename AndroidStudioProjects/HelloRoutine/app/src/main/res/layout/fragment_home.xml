@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" 하이 헬루"
+            android:text=" Hi Hellu"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:textStyle="bold"
@@ -136,7 +136,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="발표시간"
+                            android:text=" "
                             android:textColor="@color/black"
                             android:textSize="18dp"/>
                         //기상상황
@@ -146,7 +146,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:paddingLeft="10dp"
-                            android:text="기상상황"
+                            android:text=" "
                             android:textColor="@color/black"
                             android:textSize="18dp"/>
                         //현재온도
@@ -156,7 +156,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:paddingLeft="10dp"
-                            android:text="현재온도"
+                            android:text=" "
                             android:textColor="@color/black"
                             android:textSize="18dp"/>
                         //강수형태
@@ -165,7 +165,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="강수형태"
+                            android:text=" "
                             android:textColor="@color/black"
                             android:textSize="18dp"/>
 
@@ -184,7 +184,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="강수확률"
+                            android:text=" "
                             android:textColor="@color/black"
                             android:textSize="18dp"/>
                         //강수량
@@ -194,7 +194,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:paddingLeft="40dp"
-                            android:text="강수량"
+                            android:text=" "
                             android:textColor="@color/black"
                             android:textSize="18dp"/>
                         //적설량
@@ -204,7 +204,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:paddingLeft="40dp"
-                            android:text="적설량"
+                            android:text=" "
                             android:textColor="@color/black"
                             android:textSize="18dp"/>
 

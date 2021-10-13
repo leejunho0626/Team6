@@ -61,8 +61,11 @@ public class Login extends AppCompatActivity {
         checkBox = findViewById(R.id.saveLogin);
         btnKakao = findViewById(R.id.btnKakao);
         firebaseAuth = FirebaseAuth.getInstance();
-        
-        //일반 계정 자동 로그인
+
+        //로그인 상태 유지 체크박스
+        /*if(checkBox.isChecked()){
+
+        }*/
         if(firebaseAuth.getCurrentUser() != null){
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -122,6 +125,31 @@ public class Login extends AppCompatActivity {
     public void login(String id, String pw){
         id = edtID.getText().toString().trim();
         pw = edtPw.getText().toString().trim();
+
+        if(id.length()>0 && pw.length()>0){
+            firebaseAuth.signInWithEmailAndPassword(id, pw)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                String value = "a";
+                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀렸습니다.",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호를 입력하세요.",Toast.LENGTH_SHORT).show();
+        }
+    }
+    //카카오 로그인(파이어베이스)
+    public void kLogin(String id, String pw){
+
         if(id.length()>0 && pw.length()>0){
             firebaseAuth.signInWithEmailAndPassword(id, pw)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -185,25 +213,18 @@ public class Login extends AppCompatActivity {
                                 //카카오 계정의 이메일 가져오기
                                 if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE){
                                     intent.putExtra("email", result.getKakaoAccount().getEmail());
+
                                 }
 
                                 else{
                                     intent.putExtra("email", "none");
+
                                 }
                                 startActivity(intent);
                             }
                             //등록된 계정이 있을 때
                             else {
-                                Intent intent = new Intent(Login.this, MainActivity.class);
-                                //카카오 계정의 이메일 가져오기
-                                if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE) {
-                                    intent.putExtra("email", result.getKakaoAccount().getEmail());
-                                }
-                                else {
-                                    intent.putExtra("email", "none");
-                                }
-                                startActivity(intent);
-
+                                kLogin(id,adminPW);
                             }
                         }
                     });

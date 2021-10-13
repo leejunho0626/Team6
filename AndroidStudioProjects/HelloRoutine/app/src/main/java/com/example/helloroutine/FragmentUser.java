@@ -17,7 +17,7 @@ public class FragmentUser extends Fragment {
 
     TextView txtID, txtUid;
     FirebaseAuth firebaseAuth;
-    String strEmail, strUid;
+    String strEmail;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -32,7 +32,10 @@ public class FragmentUser extends Fragment {
         Intent intent = getActivity().getIntent();
         strEmail = intent.getStringExtra("email");
 
-        txtID.setText(strEmail);
+        if(firebaseAuth.getCurrentUser() != null){
+            txtID.setText(firebaseAuth.getCurrentUser().getEmail());
+        }
+        txtUid.setText(firebaseAuth.getUid());
 
 
         return view;
