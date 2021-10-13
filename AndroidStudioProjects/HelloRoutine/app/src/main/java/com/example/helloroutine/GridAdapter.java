@@ -1,6 +1,8 @@
 package com.example.helloroutine;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +10,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 public class GridAdapter extends BaseAdapter
 {
     ArrayList<GridItem>mItem = new ArrayList<GridItem>();
     LayoutInflater inflater;
     Context mContext;
+    private Calendar mCal;
+
 
     GridAdapter(Context context)
     {
@@ -54,6 +60,8 @@ public class GridAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         View v;
+        mCal = Calendar.getInstance();
+
         if (convertView == null)
         {
             v = inflater.inflate(R.layout.item_cal, null);
@@ -71,10 +79,18 @@ public class GridAdapter extends BaseAdapter
             day.setTextColor(mContext.getResources().getColor(R.color.red));
         else if (text == 7)
             day.setTextColor(mContext.getResources().getColor(R.color.blue));
+        //오늘 날짜
+        Integer today = mCal.get(Calendar.DAY_OF_MONTH);
+        String sToday = String.valueOf(today);
+        if(sToday.equals(mItem.get(position).day())){
+            day.setBackground(mContext.getResources().getDrawable(R.drawable.button_round));
+
+        }
 
         day.setVisibility(View.VISIBLE);
+        
 
-        day.setVisibility(View.VISIBLE);
+
 
         TextView label = (TextView)v.findViewById(R.id.label);
         if (mItem.get(position).img())
