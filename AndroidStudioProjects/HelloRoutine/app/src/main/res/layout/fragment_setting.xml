@@ -27,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/white">
+            android:layout_margin="10dp"
+            android:background="@drawable/layout_background2">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,8 +41,10 @@
                     android:id="@+id/txt2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="푸시 알림"
+                    android:layout_margin="1dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text=" 푸시 알림"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="25dp"/>
@@ -69,8 +72,10 @@
                     android:id="@+id/txt3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="잠금화면"
+                    android:layout_margin="1dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text=" 잠금화면"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="25dp"/>
@@ -97,8 +102,10 @@
                     android:id="@+id/txt4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="앱 버전"
+                    android:layout_margin="1dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text=" 앱 버전"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="25dp"/>

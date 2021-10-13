@@ -27,7 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:background="@color/white">
+                android:layout_margin="10dp"
+                android:background="@drawable/layout_background2">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,8 +41,10 @@
                         android:id="@+id/txt2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="계정"
+                        android:layout_margin="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text=" 계정"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="25dp"/>
@@ -69,8 +72,10 @@
                         android:id="@+id/txt3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="UID"
+                        android:layout_margin="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text=" UID"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="25dp"/>
@@ -97,20 +102,42 @@
                         android:id="@+id/txt4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="키(cm)"
+                        android:layout_margin="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text=" 키(cm)"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="25dp"/>
-
-                    <TextView
-                        android:id="@+id/txtUserHeight"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="180"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"/>
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtUserHeight"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="180"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"/>
+
+                        <Button
+                            android:id="@+id/btnSet1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="210dp"
+                            android:layout_marginBottom="10dp"
+                            android:backgroundTint="#D3D5D5"
+                            android:text="변경하기"
+                            android:textColor="@color/black"
+                            android:textSize="15dp"/>
+
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -125,20 +152,43 @@
                         android:id="@+id/txt5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="몸무게(kg)"
+                        android:layout_margin="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text=" 몸무게(kg)"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="25dp"/>
 
-                    <TextView
-                        android:id="@+id/txtUserWeight"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="70"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"/>
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtUserWeight"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="70"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"/>
+
+                        <Button
+                            android:id="@+id/btnSet2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="210dp"
+                            android:layout_marginBottom="10dp"
+                            android:backgroundTint="#D3D5D5"
+                            android:text="변경하기"
+                            android:textColor="@color/black"
+                            android:textSize="15dp"/>
+
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -166,10 +216,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layout_marginLeft="155dp"
+                        android:layout_marginLeft="149dp"
                         android:layout_marginBottom="10dp"
                         android:backgroundTint="#D3D5D5"
-                        android:text="친구 목록"
+                        android:text="친구목록"
                         android:textColor="@color/black"
                         android:textSize="15dp"/>
 
