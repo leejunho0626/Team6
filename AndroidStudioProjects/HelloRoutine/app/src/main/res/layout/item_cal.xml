@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/day"
+        android:gravity="bottom|center_horizontal"
+        android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearance"
+        android:textSize="24dp"
+        android:textColor="@color/black"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/label"
+        android:text="•"
+        android:gravity="top|center_horizontal"
+        android:visibility="invisible"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

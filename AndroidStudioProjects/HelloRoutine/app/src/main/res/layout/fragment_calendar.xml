@@ -11,15 +11,134 @@
         android:orientation="vertical"
         android:background="#9370DB">
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_margin="10dp"
-            android:background="@drawable/layout_background2">
+            android:background="@color/white">
+            <LinearLayout
+                android:gravity="center"
+                android:background="#453F51B5"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
 
+                <ImageButton
+                    android:id="@+id/pre"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/white"
+                    android:backgroundTint="#9370DB"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_arrow_back_ios_new_24"/>
+                <TextView
+                    android:id="@+id/date"
+                    android:textSize="30dp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:layout_weight="1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton
+                    android:id="@+id/next"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/white"
+                    android:backgroundTint="#9370DB"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_arrow_forward_ios_24"/>
+            </LinearLayout>
+
+            <TableLayout
+                android:stretchColumns="*"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TableRow>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textSize="25dp"
+                        android:gravity="center_horizontal"
+                        android:text="일"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textSize="25dp"
+                        android:gravity="center_horizontal"
+                        android:text="월"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textSize="25dp"
+                        android:gravity="center_horizontal"
+                        android:text="화"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="수"
+                        android:textStyle="bold"
+                        android:textSize="25dp"
+                        android:gravity="center_horizontal"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textSize="25dp"
+                        android:gravity="center_horizontal"
+                        android:text="목"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textSize="25dp"
+                        android:gravity="center_horizontal"
+                        android:text="금"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textSize="25dp"
+                        android:gravity="center_horizontal"
+                        android:text="토"/>
+                </TableRow>
+            </TableLayout>
+
+            <GridView
+                android:id="@+id/grid"
+                android:layout_width="fill_parent"
+                android:layout_height="375dp"
+                android:numColumns="7"
+                android:padding="0dip" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="241dp"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_baseline_add_box_24" />
+
+            </LinearLayout>
 
 
         </LinearLayout>
