@@ -1,11 +1,13 @@
 package com.example.helloroutine;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,9 +42,8 @@ public class Login extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     SignInButton signInButton;
     private SharedPreferences pref;
-    private SharedPreferences.Editor editor, editor2;
-    private boolean saveID;
-    String sID;
+    private SharedPreferences.Editor editor;
+    private boolean autoLogin;
     private SessionCallback sessionCallback;
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
@@ -61,15 +62,36 @@ public class Login extends AppCompatActivity {
         checkBox = findViewById(R.id.saveLogin);
         btnKakao = findViewById(R.id.btnKakao);
         firebaseAuth = FirebaseAuth.getInstance();
+        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        editor = pref.edit();
+        autoLogin = pref.getBoolean("AutoLogin",false);
 
-        //로그인 상태 유지 체크박스
-        /*if(checkBox.isChecked()){
+        //이전에 체크박스 설정을 저장시킨 기록이 있으면
+        if(autoLogin)
+            checkBox.setChecked(true);
 
-        }*/
-        if(firebaseAuth.getCurrentUser() != null){
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+        //체크박스가 클릭되어있을 때 자동로그인
+        if(checkBox.isChecked()){
+            if(firebaseAuth.getCurrentUser() != null){
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
         }
+
+        //체크박스 클릭
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(checkBox.isChecked()==true){
+                    editor.putBoolean("AutoLogin",checkBox.isChecked());
+                }
+                else {
+                    editor.clear();
+                }
+                editor.commit();
+            }
+        });
+
 
         //카카오 로그인 콜백 초기화
         sessionCallback = new SessionCallback();

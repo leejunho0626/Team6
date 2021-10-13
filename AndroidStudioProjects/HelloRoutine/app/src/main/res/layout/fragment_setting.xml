@@ -47,7 +47,7 @@
                     android:text=" 푸시 알림"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <TextView
                     android:id="@+id/notice"
@@ -78,7 +78,7 @@
                     android:text=" 잠금화면"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <TextView
                     android:id="@+id/lockScreen"
@@ -108,7 +108,7 @@
                     android:text=" 앱 버전"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <TextView
                     android:id="@+id/version"

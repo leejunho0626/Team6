@@ -55,7 +55,7 @@
                     android:text=" 오늘의 목표"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -115,7 +115,7 @@
                     android:text=" 오늘의 날씨"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -221,7 +221,7 @@
                     android:text=" 오늘의 운동 추천"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -262,7 +262,7 @@
                     android:text=" 운동 자세"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
