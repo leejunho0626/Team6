@@ -120,23 +120,76 @@
             <GridView
                 android:id="@+id/grid"
                 android:layout_width="fill_parent"
-                android:layout_height="375dp"
+                android:layout_height="300dp"
                 android:numColumns="7"
-                android:padding="0dip" />
-
-
+                android:padding="3dp" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="241dp"
+                android:layout_height="300dp"
                 android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/imageView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_baseline_add_box_24" />
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/shape_text"
+                    android:backgroundTint="#CDCBCB">
+                    <TextView
+                        android:id="@+id/calPlan1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="17dp"
+                        android:text="날짜를 클릭하세요."
+                        android:layout_centerHorizontal="true"/>
+                    <TextView
+                        android:id="@+id/calPlan2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="17dp"
+                        android:text="설정된 목표가 없습니다. 새로운 목표를 설정하세요."
+                        android:layout_centerHorizontal="true"/>
+                    <TextView
+                        android:id="@+id/calPlan3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="17dp"
+                        android:text="설정된 목표가 없습니다. 새로운 목표를 설정하세요."
+                        android:layout_centerHorizontal="true"/>
+                    <TextView
+                        android:id="@+id/calPlan4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="17dp"
+                        android:text="설정된 목표가 없습니다. 새로운 목표를 설정하세요."
+                        android:layout_centerHorizontal="true"/>
+                    <TextView
+                        android:id="@+id/calPlan5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="17dp"
+                        android:text="설정된 목표가 없습니다. 새로운 목표를 설정하세요."
+                        android:layout_centerHorizontal="true"/>
+                    <ImageButton
+                        android:id="@+id/addPlan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:src="@drawable/ic_baseline_add_box_24"/>
+
+                </LinearLayout>
+
+
 
             </LinearLayout>
 

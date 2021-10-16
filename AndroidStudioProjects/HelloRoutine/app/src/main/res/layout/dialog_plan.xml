@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9370DB"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/exeType"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/layout_background"
+            android:ems="17"
+            android:hint="운동 종류"
+            android:maxLength="30"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="202dp" />
+
+
+        <EditText
+            android:id="@+id/exeNUm"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/layout_background"
+            android:ems="17"
+            android:hint="횟수"
+            android:maxLength="30"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="202dp" />
+        <EditText
+            android:id="@+id/exeSet"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/layout_background"
+            android:ems="17"
+            android:hint="세트"
+            android:maxLength="30"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="202dp" />
+        <EditText
+            android:id="@+id/exeWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/layout_background"
+            android:ems="17"
+            android:hint="무게"
+            android:maxLength="30"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="202dp" />
+        <EditText
+            android:id="@+id/exeTime"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/layout_background"
+            android:ems="17"
+            android:hint="시간"
+            android:maxLength="30"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="202dp" />
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
