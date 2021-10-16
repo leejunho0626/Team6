@@ -102,32 +102,54 @@
             tools:layout_editor_absoluteX="100dp"
             tools:layout_editor_absoluteY="405dp" />
 
-        //카카오 로그인 버튼
-        <Button
-            android:id="@+id/btnKakao"
-            android:layout_width="350dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:backgroundTint="#FFC107"
-            android:text="카카오 로그인"
-            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:layout_marginTop="90dp"
+            android:text="소셜 계정으로 로그인"
             android:textStyle="bold"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="100dp"
-            tools:layout_editor_absoluteY="405dp" />
+            android:textSize="20dp"/>
 
-        //네이버 로그인 버튼
-        <Button
-            android:id="@+id/btnNaver"
-            android:layout_width="350dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#4CAF50"
-            android:text="NAVER 로그인"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="100dp"
-            tools:layout_editor_absoluteY="405dp" />
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            //카카오 로그인 버튼
+            <ImageButton
+                android:id="@+id/btnKakao"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/kakaolink_btn_medium"
+                tools:ignore="MissingConstraints"/>
+
+            //네이버 로그인 버튼
+            <ImageButton
+                android:id="@+id/btnNaver"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/naver_btn"
+                tools:ignore="MissingConstraints"/>
+
+            //구글 로그인 버튼
+            <ImageView
+                android:id="@+id/btnGoogle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="10dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/test1"
+                tools:ignore="MissingConstraints"
+                android:src="@drawable/google_btn"/>
+
+        </LinearLayout>
+
+
+
 
     </LinearLayout>
 
