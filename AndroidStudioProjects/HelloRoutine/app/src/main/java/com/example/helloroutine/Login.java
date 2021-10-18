@@ -52,7 +52,6 @@ public class Login extends AppCompatActivity {
     Button btnLogin, btnRegister;
     ImageButton btnKakao;
     ImageView btnGoogle;
-    CheckBox checkBox;
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
@@ -76,7 +75,6 @@ public class Login extends AppCompatActivity {
         edtPw = findViewById(R.id.loginPW);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
-        checkBox = findViewById(R.id.saveLogin);
         btnKakao = findViewById(R.id.btnKakao);
         firebaseAuth = FirebaseAuth.getInstance();
         pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
@@ -85,33 +83,10 @@ public class Login extends AppCompatActivity {
         btnGoogle = findViewById(R.id.btnGoogle);
         btnGoogle.setClipToOutline(true);
 
-
-
-        //이전에 체크박스 설정을 저장시킨 기록이 있으면
-        if(autoLogin)
-            checkBox.setChecked(true);
-
-        //체크박스가 클릭되어있을 때 자동로그인
-        if(checkBox.isChecked()){
-            if(firebaseAuth.getCurrentUser() != null){
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            }
+        if(firebaseAuth.getCurrentUser() != null){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
-
-        //체크박스 클릭
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(checkBox.isChecked()==true){
-                    editor.putBoolean("AutoLogin",checkBox.isChecked());
-                }
-                else {
-                    editor.clear();
-                }
-                editor.commit();
-            }
-        });
 
 
         //카카오 로그인 콜백 초기화

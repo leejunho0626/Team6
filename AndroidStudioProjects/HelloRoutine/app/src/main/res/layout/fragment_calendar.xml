@@ -160,7 +160,7 @@
                         android:layout_margin="10dp"
                         android:textColor="@color/black"
                         android:textSize="17dp"
-                        android:text="설정된 목표가 없습니다. 새로운 목표를 설정하세요."
+                        android:text=" "
                         android:layout_centerHorizontal="true"/>
                     <TextView
                         android:id="@+id/calPlan4"

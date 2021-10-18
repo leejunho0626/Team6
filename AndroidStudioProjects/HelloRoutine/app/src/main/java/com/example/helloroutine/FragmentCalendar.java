@@ -20,10 +20,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -80,11 +83,13 @@ public class FragmentCalendar extends Fragment {
                 clickDB = clickDate;
                 txt1.setText(clickDB);
                 txt3.setVisibility(view.VISIBLE);
+                writeDownload(clickDate);
                 addPlan.setVisibility(view.VISIBLE);
 
                 addPlan.setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //
                         showDialog(clickDB);
                     }
                 });
@@ -172,7 +177,7 @@ public class FragmentCalendar extends Fragment {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void avoid) {
-                            Toast.makeText(getActivity().getApplicationContext(), "글이 저장되었습니다.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
                             txt3.setText(" "+date+" : "+edit);
                         }
                     })
@@ -236,5 +241,31 @@ public class FragmentCalendar extends Fragment {
             }
         });
         builder.show();
+    }
+
+    //설정한 목표 표시
+    public void writeDownload(String date){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document(date)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String x = str1.substring(0, str1.indexOf("}"));
+                        txt3.setText(x);
+                    } else {
+                        txt3.setText(" 새로운 목표을 설정하세요.");
+
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
