@@ -143,7 +143,7 @@ public class FragmentHome extends Fragment {
                 "&nx=" +nx+
                 "&ny=" +ny;
         NetworkTask networkTask = new NetworkTask(url, null);
-        networkTask.execute();
+        //networkTask.execute();
 
         return view;
     }

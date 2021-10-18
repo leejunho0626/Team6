@@ -1,5 +1,6 @@
 package com.example.helloroutine;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,10 +39,12 @@ public class FragmentCalendar extends Fragment {
     GridView grid;
     GridAdapter adt;
     Calendar cal;
-    TextView date, txt1, txt2, txt3, txt4, txt5;
+    TextView date, txt1, txt2, txt3, txt4;
     ImageButton pre, next, addPlan;
     LinearLayout dialogView;
     EditText exeType, exeNum, exeSet, exeWeight, exeTime;
+    Button btnChange, btnRemove, btnChange2, btnRemove2, btnChange3, btnRemove3;
+    Context mContext;
     boolean img;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     static String clickDB;
@@ -59,12 +62,22 @@ public class FragmentCalendar extends Fragment {
         txt2 = view.findViewById(R.id.calPlan2);
         txt3 = view.findViewById(R.id.calPlan3);
         txt4 = view.findViewById(R.id.calPlan4);
-        txt5 = view.findViewById(R.id.calPlan5);
+        btnChange = view.findViewById(R.id.btnChange);
+        btnRemove = view.findViewById(R.id.btnRemove);
+        btnChange2 = view.findViewById(R.id.btnChange2);
+        btnRemove2 = view.findViewById(R.id.btnRemove2);
+        btnChange3 = view.findViewById(R.id.btnChange3);
+        btnRemove3 = view.findViewById(R.id.btnRemove3);
         addPlan = view.findViewById(R.id.addPlan);
         txt2.setVisibility(view.INVISIBLE);
         txt3.setVisibility(view.INVISIBLE);
         txt4.setVisibility(view.INVISIBLE);
-        txt5.setVisibility(view.INVISIBLE);
+        btnChange.setVisibility(view.INVISIBLE);
+        btnRemove.setVisibility(view.INVISIBLE);
+        btnChange2.setVisibility(view.INVISIBLE);
+        btnRemove2.setVisibility(view.INVISIBLE);
+        btnChange3.setVisibility(view.INVISIBLE);
+        btnRemove3.setVisibility(view.INVISIBLE);
         addPlan.setVisibility(view.INVISIBLE);
 
         //달력표시
@@ -82,8 +95,14 @@ public class FragmentCalendar extends Fragment {
                 //Toast.makeText(getActivity(), clickDate, Toast.LENGTH_LONG).show();
                 clickDB = clickDate;
                 txt1.setText(clickDB);
-                txt3.setVisibility(view.VISIBLE);
+                txt2.setVisibility(view.VISIBLE);
                 writeDownload(clickDate);
+                btnChange.setVisibility(view.VISIBLE);
+                btnRemove.setVisibility(view.VISIBLE);
+                btnChange2.setVisibility(view.VISIBLE);
+                btnRemove2.setVisibility(view.VISIBLE);
+                btnChange3.setVisibility(view.VISIBLE);
+                btnRemove3.setVisibility(view.VISIBLE);
                 addPlan.setVisibility(view.VISIBLE);
 
                 addPlan.setOnClickListener(new Button.OnClickListener() {
@@ -178,7 +197,7 @@ public class FragmentCalendar extends Fragment {
                         @Override
                         public void onSuccess(Void avoid) {
                             Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
-                            txt3.setText(" "+date+" : "+edit);
+                            txt2.setText(" "+edit);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -257,9 +276,9 @@ public class FragmentCalendar extends Fragment {
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String x = str1.substring(0, str1.indexOf("}"));
-                        txt3.setText(x);
+                        txt2.setText(" "+x);
                     } else {
-                        txt3.setText(" 새로운 목표을 설정하세요.");
+                        txt2.setText(" 새로운 목표을 설정하세요.");
 
                     }
                 } else {
