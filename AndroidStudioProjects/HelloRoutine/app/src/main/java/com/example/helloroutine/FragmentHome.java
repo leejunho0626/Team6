@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.naver.maps.map.LocationSource;
 import com.naver.maps.map.util.FusedLocationSource;
 
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -43,6 +47,11 @@ public class FragmentHome extends Fragment {
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private LocationSource mLocationSource;
+    GridView grid;
+    GridAdapter adt;
+    Calendar cal;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    static String clickDB;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +65,8 @@ public class FragmentHome extends Fragment {
         sky = (TextView) view.findViewById(R.id.sky);
         pop = (TextView) view.findViewById(R.id.pop);
         time3 = (TextView) view.findViewById(R.id.time3);
+        adt = new GridAdapter(getActivity()); //어댑터 객체 생성
+        grid = view.findViewById(R.id.grid); //그리드뷰 객체 참조
 
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
         String format_time1 = format1.format (System.currentTimeMillis());

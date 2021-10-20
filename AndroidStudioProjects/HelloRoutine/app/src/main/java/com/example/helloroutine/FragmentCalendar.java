@@ -34,13 +34,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 public class FragmentCalendar extends Fragment {
 
     GridView grid;
     GridAdapter adt;
     Calendar cal;
     TextView date, txt1, txt2, txt3, txt4;
-    ImageButton pre, next, addPlan;
+    ImageButton pre, next, addPlan, addPlan2, addPlan3;
     LinearLayout dialogView;
     EditText exeType, exeNum, exeSet, exeWeight, exeTime;
     Button btnChange, btnRemove, btnChange2, btnRemove2, btnChange3, btnRemove3;
@@ -68,17 +71,21 @@ public class FragmentCalendar extends Fragment {
         btnRemove2 = view.findViewById(R.id.btnRemove2);
         btnChange3 = view.findViewById(R.id.btnChange3);
         btnRemove3 = view.findViewById(R.id.btnRemove3);
-        addPlan = view.findViewById(R.id.addPlan);
-        txt2.setVisibility(view.INVISIBLE);
-        txt3.setVisibility(view.INVISIBLE);
-        txt4.setVisibility(view.INVISIBLE);
-        btnChange.setVisibility(view.INVISIBLE);
-        btnRemove.setVisibility(view.INVISIBLE);
-        btnChange2.setVisibility(view.INVISIBLE);
-        btnRemove2.setVisibility(view.INVISIBLE);
-        btnChange3.setVisibility(view.INVISIBLE);
-        btnRemove3.setVisibility(view.INVISIBLE);
-        addPlan.setVisibility(view.INVISIBLE);
+        addPlan = view.findViewById(R.id.btnAdd1);
+        addPlan2 = view.findViewById(R.id.btnAdd2);
+        addPlan3 = view.findViewById(R.id.btnAdd3);
+        txt2.setVisibility(INVISIBLE);
+        txt3.setVisibility(INVISIBLE);
+        txt4.setVisibility(INVISIBLE);
+        btnChange.setVisibility(INVISIBLE);
+        btnRemove.setVisibility(INVISIBLE);
+        btnChange2.setVisibility(INVISIBLE);
+        btnRemove2.setVisibility(INVISIBLE);
+        btnChange3.setVisibility(INVISIBLE);
+        btnRemove3.setVisibility(INVISIBLE);
+        addPlan.setVisibility(INVISIBLE);
+        addPlan2.setVisibility(INVISIBLE);
+        addPlan3.setVisibility(INVISIBLE);
 
         //달력표시
         cal = Calendar.getInstance();
@@ -95,21 +102,42 @@ public class FragmentCalendar extends Fragment {
                 //Toast.makeText(getActivity(), clickDate, Toast.LENGTH_LONG).show();
                 clickDB = clickDate;
                 txt1.setText(clickDB);
-                txt2.setVisibility(view.VISIBLE);
+                txt2.setVisibility(VISIBLE);
+                btnChange2.setVisibility(INVISIBLE);
+                btnRemove2.setVisibility(INVISIBLE);
+                btnChange3.setVisibility(INVISIBLE);
+                btnRemove3.setVisibility(INVISIBLE);
+                addPlan2.setVisibility(INVISIBLE);
+                addPlan3.setVisibility(INVISIBLE);
                 writeDownload(clickDate);
-                btnChange.setVisibility(view.VISIBLE);
-                btnRemove.setVisibility(view.VISIBLE);
-                btnChange2.setVisibility(view.VISIBLE);
-                btnRemove2.setVisibility(view.VISIBLE);
-                btnChange3.setVisibility(view.VISIBLE);
-                btnRemove3.setVisibility(view.VISIBLE);
-                addPlan.setVisibility(view.VISIBLE);
+                writeDownload2(clickDate);
+                writeDownload3(clickDate);
+
+                //btnChange2.setVisibility(VISIBLE);
+                //btnRemove2.setVisibility(VISIBLE);
+                //btnChange3.setVisibility(VISIBLE);
+                //btnRemove3.setVisibility(VISIBLE);
+                addPlan.setVisibility(VISIBLE);
 
                 addPlan.setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //
                         showDialog(clickDB);
+                    }
+                });
+                addPlan2.setOnClickListener(new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //
+                        showDialog2(clickDB);
+                    }
+                });
+                addPlan3.setOnClickListener(new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //
+                        showDialog3(clickDB);
                     }
                 });
 
@@ -186,13 +214,13 @@ public class FragmentCalendar extends Fragment {
         return Integer.parseInt(f.format(d));
     }
 
-    //목표 설정
+    //목표 설정1
     public void writeUpload(String date, String edit){
 
         if(edit.length()>0){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             UserWrite userWrite = new UserWrite(edit);
-            db.collection("DB").document("User").collection(user.getUid()).document(date).set(userWrite)
+            db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("1").set(userWrite)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void avoid) {
@@ -211,7 +239,57 @@ public class FragmentCalendar extends Fragment {
         }
     }
 
-    //글 작성 메뉴
+    //목표 설정2
+    public void writeUpload2(String date, String edit){
+
+        if(edit.length()>0){
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            UserWrite userWrite = new UserWrite(edit);
+            db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("2").set(userWrite)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void avoid) {
+                            Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
+                            txt3.setText(" "+edit);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }else{
+            Toast.makeText(getActivity().getApplicationContext(), "내용을 다시 입력하세요.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //목표 설정3
+    public void writeUpload3(String date, String edit){
+
+        if(edit.length()>0){
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            UserWrite userWrite = new UserWrite(edit);
+            db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("3").set(userWrite)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void avoid) {
+                            Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
+                            txt4.setText(" "+edit);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }else{
+            Toast.makeText(getActivity().getApplicationContext(), "내용을 다시 입력하세요.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //목표 설정 메뉴1
     public void showDialog(String date) {
 
         dialogView = (LinearLayout) View.inflate(getActivity(),R.layout.dialog_plan,null);
@@ -262,10 +340,112 @@ public class FragmentCalendar extends Fragment {
         builder.show();
     }
 
-    //설정한 목표 표시
+    //목표 설정 메뉴2
+    public void showDialog2(String date) {
+
+        dialogView = (LinearLayout) View.inflate(getActivity(),R.layout.dialog_plan,null);
+        //다이얼로그 메뉴
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+        builder.setView(dialogView);
+        builder.setTitle("운동 목표 설정");
+        builder.setMessage(date);
+        builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                exeType=dialogView.findViewById(R.id.exeType);
+                exeNum=dialogView.findViewById(R.id.exeNUm);
+                exeSet=dialogView.findViewById(R.id.exeSet);
+                exeWeight=dialogView.findViewById(R.id.exeWeight);
+                exeTime=dialogView.findViewById(R.id.exeTime);
+                String edit = exeType.getText().toString()+" : "+exeNum.getText().toString()+"회 "+exeSet.getText().toString()+"세트 "
+                        +exeWeight.getText().toString()+"kg "+exeTime.getText().toString()+"시간"; //입력한 값
+                if(edit.length()>0){
+                    builder1.setTitle("");
+                    builder1.setMessage("저장하시겠습니까?");
+                    builder1.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            writeUpload2(date, edit); //작성한 글 DB로 저장
+                        }
+                    });
+                    builder1.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(getActivity().getApplicationContext(), "취소", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    builder1.show();
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "내용을 입력하세요.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
+    }
+
+    //목표 설정 메뉴3
+    public void showDialog3(String date) {
+
+        dialogView = (LinearLayout) View.inflate(getActivity(),R.layout.dialog_plan,null);
+        //다이얼로그 메뉴
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog);
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+        builder.setView(dialogView);
+        builder.setTitle("운동 목표 설정");
+        builder.setMessage(date);
+        builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                exeType=dialogView.findViewById(R.id.exeType);
+                exeNum=dialogView.findViewById(R.id.exeNUm);
+                exeSet=dialogView.findViewById(R.id.exeSet);
+                exeWeight=dialogView.findViewById(R.id.exeWeight);
+                exeTime=dialogView.findViewById(R.id.exeTime);
+                String edit = exeType.getText().toString()+" : "+exeNum.getText().toString()+"회 "+exeSet.getText().toString()+"세트 "
+                        +exeWeight.getText().toString()+"kg "+exeTime.getText().toString()+"시간"; //입력한 값
+                if(edit.length()>0){
+                    builder1.setTitle("");
+                    builder1.setMessage("저장하시겠습니까?");
+                    builder1.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            writeUpload3(date, edit); //작성한 글 DB로 저장
+                        }
+                    });
+                    builder1.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(getActivity().getApplicationContext(), "취소", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    builder1.show();
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "내용을 입력하세요.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
+    }
+
+    //설정한 목표 표시1
     public void writeDownload(String date){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document(date)
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("1")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -277,9 +457,76 @@ public class FragmentCalendar extends Fragment {
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String x = str1.substring(0, str1.indexOf("}"));
                         txt2.setText(" "+x);
+                        btnChange.setVisibility(VISIBLE);
+                        btnRemove.setVisibility(VISIBLE);
+                        //txt3.setText(" 새로운 목표을 설정하세요.");
+                        txt3.setVisibility(VISIBLE);
+                        addPlan2.setVisibility(VISIBLE);
                     } else {
+                        txt3.setVisibility(INVISIBLE);
+                        addPlan2.setVisibility(INVISIBLE);
                         txt2.setText(" 새로운 목표을 설정하세요.");
 
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    //설정한 목표 표시2
+    public void writeDownload2(String date){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("2")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String x = str1.substring(0, str1.indexOf("}"));
+                        txt3.setText(" "+x);
+                        btnChange2.setVisibility(VISIBLE);
+                        btnRemove2.setVisibility(VISIBLE);
+                        //txt4.setText(" 새로운 목표을 설정하세요.");
+                        txt4.setVisibility(VISIBLE);
+                        addPlan3.setVisibility(VISIBLE);
+                    } else {
+                        txt4.setVisibility(INVISIBLE);
+                        addPlan3.setVisibility(INVISIBLE);
+                        txt3.setText(" 새로운 목표을 설정하세요.");
+
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    //설정한 목표 표시3
+    public void writeDownload3(String date){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("3")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String x = str1.substring(0, str1.indexOf("}"));
+                        txt4.setText(" "+x);
+                        btnChange3.setVisibility(VISIBLE);
+                        btnRemove3.setVisibility(VISIBLE);
+                    } else {
+                        txt4.setText(" 새로운 목표을 설정하세요.");
                     }
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();

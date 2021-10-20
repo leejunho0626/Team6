@@ -87,22 +87,6 @@
                         android:text="3. 목표를 설정하세요."
                         android:textColor="@color/black"
                         android:textSize="18dp"/>
-                    <TextView
-                        android:id="@+id/txtPlan4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="4. 목표를 설정하세요."
-                        android:textColor="@color/black"
-                        android:textSize="18dp"/>
-                    <TextView
-                        android:id="@+id/txtPlan5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="5. 목표를 설정하세요."
-                        android:textColor="@color/black"
-                        android:textSize="18dp"/>
 
                 </LinearLayout>
 
