@@ -20,8 +20,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.naver.maps.map.LocationSource;
 import com.naver.maps.map.util.FusedLocationSource;
 
@@ -35,6 +39,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 public class FragmentHome extends Fragment {
 
     private TextView tmp;
@@ -44,6 +51,7 @@ public class FragmentHome extends Fragment {
     private TextView sky;
     private TextView pop;
     private TextView time3;
+    TextView txtPlan1, txtPlan2, txtPlan3;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private LocationSource mLocationSource;
@@ -67,9 +75,18 @@ public class FragmentHome extends Fragment {
         time3 = (TextView) view.findViewById(R.id.time3);
         adt = new GridAdapter(getActivity()); //어댑터 객체 생성
         grid = view.findViewById(R.id.grid); //그리드뷰 객체 참조
+        txtPlan1 = (TextView) view.findViewById(R.id.txtPlan1);
+        txtPlan2 = (TextView) view.findViewById(R.id.txtPlan2);
+        txtPlan3 = (TextView) view.findViewById(R.id.txtPlan3);
 
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
+        SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy.MM.dd일");
         String format_time1 = format1.format (System.currentTimeMillis());
+        String format_time2 = format2.format (System.currentTimeMillis());
+
+        writeDownload(format_time2);
+        writeDownload2(format_time2);
+        writeDownload3(format_time2);
 
         String strline = "";
         InputStream inputStream = getResources().openRawResource(R.raw.weather_address_final);
@@ -158,6 +175,86 @@ public class FragmentHome extends Fragment {
 
         return view;
     }
+    //설정한 목표 표시1
+    public void writeDownload(String date){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("1")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String x = str1.substring(0, str1.indexOf("}"));
+                        txtPlan1.setText("1. "+x);
+                        //txt3.setText(" 새로운 목표을 설정하세요.");
+                    } else {
+                        txtPlan1.setText(" 새로운 목표을 설정하세요.");
+
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+    //설정한 목표 표시2
+    public void writeDownload2(String date){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("2")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String x = str1.substring(0, str1.indexOf("}"));
+                        txtPlan2.setText("2. "+x);
+                        //txt3.setText(" 새로운 목표을 설정하세요.");
+                    } else {
+                        txtPlan2.setText(" 새로운 목표을 설정하세요.");
+
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+    //설정한 목표 표시3
+    public void writeDownload3(String date){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("3")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String x = str1.substring(0, str1.indexOf("}"));
+                        txtPlan3.setText("3. "+x);
+                        //txt3.setText(" 새로운 목표을 설정하세요.");
+                    } else {
+                        txtPlan3.setText(" 새로운 목표을 설정하세요.");
+
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+
     public class NetworkTask extends AsyncTask<Void, Void, String> {
         private String url;
         private ContentValues values;
