@@ -51,7 +51,7 @@ public class FragmentHome extends Fragment {
     private TextView sky;
     private TextView pop;
     private TextView time3;
-    TextView txtPlan1, txtPlan2, txtPlan3;
+    TextView txtPlan1, txtPlan2, txtPlan3, txtChallenge1, txtChallenge2, txtChallenge3;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private LocationSource mLocationSource;
@@ -78,6 +78,9 @@ public class FragmentHome extends Fragment {
         txtPlan1 = (TextView) view.findViewById(R.id.txtPlan1);
         txtPlan2 = (TextView) view.findViewById(R.id.txtPlan2);
         txtPlan3 = (TextView) view.findViewById(R.id.txtPlan3);
+        txtChallenge1 = (TextView) view.findViewById(R.id.txtChallenge1);
+        txtChallenge2 = (TextView) view.findViewById(R.id.txtChallenge2);
+        txtChallenge3 = (TextView) view.findViewById(R.id.txtChallenge3);
 
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
         SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy.MM.dd일");
