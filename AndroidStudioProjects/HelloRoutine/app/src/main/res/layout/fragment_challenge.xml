@@ -19,17 +19,19 @@
             android:textStyle="bold"
             android:textSize="25dp"
             android:textColor="@color/black"
-            android:backgroundTint="@color/white"/>
+            android:backgroundTint="#BFBCBC"/>
 
         <Button
             android:id="@+id/btnFavorite"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:text="즐겨찾기"
             android:textStyle="bold"
             android:textSize="25dp"
             android:textColor="@color/black"
-            android:backgroundTint="@color/white"/>
+            android:backgroundTint="#BFBCBC"/>
 
         <Button
             android:id="@+id/btnComplete"
@@ -39,13 +41,13 @@
             android:textStyle="bold"
             android:textSize="25dp"
             android:textColor="@color/black"
-            android:backgroundTint="@color/white"/>
+            android:backgroundTint="#BFBCBC"/>
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragment_challenge"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="670dp"
         android:background="@color/white">
 
     </FrameLayout>
