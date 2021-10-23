@@ -1,13 +1,290 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="50dp"
-        android:text="완료입니다"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 1. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 2. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 3. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 4. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 5. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 6. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 7. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 8. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 9. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 10. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 11. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 12. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 13. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 14. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
+                    <TextView
+                        android:id="@+id/challenge15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text=" 15. 팔굽혀펴기 1분에 80개"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

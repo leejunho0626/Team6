@@ -3,6 +3,7 @@ package com.example.helloroutine;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -51,6 +54,7 @@ public class FragmentCalendar extends Fragment {
     boolean img;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     static String clickDB;
+    ProgressDialog customProgressDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -93,11 +97,18 @@ public class FragmentCalendar extends Fragment {
         int m = cal.get(Calendar.MONTH) + 1;
         cal.set(y, m - 1, 1);
         show();
+
+        //로딩창 객체 생성
+        customProgressDialog = new ProgressDialog(getActivity());
+        //로딩창을 투명하게
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         
         //날짜 클릭 시
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // 로딩창 보여주기
+                customProgressDialog.show();
                 String clickDate = adt.mItem.get(i).year()+"."+adt.mItem.get(i).month()+"."+adt.mItem.get(i).day()+"일";
                 //Toast.makeText(getActivity(), clickDate, Toast.LENGTH_LONG).show();
                 clickDB = clickDate;
@@ -112,6 +123,25 @@ public class FragmentCalendar extends Fragment {
                 writeDownload(clickDate);
                 writeDownload2(clickDate);
                 writeDownload3(clickDate);
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 3초가 지나면 다이얼로그 닫기
+                        TimerTask task = new TimerTask(){
+                            @Override
+                            public void run() {
+                                customProgressDialog.dismiss();
+
+                            }
+                        };
+
+                        Timer timer = new Timer();
+                        timer.schedule(task, 1500);
+                    }
+                });
+                thread.start();
+
 
                 //btnChange2.setVisibility(VISIBLE);
                 //btnRemove2.setVisibility(VISIBLE);

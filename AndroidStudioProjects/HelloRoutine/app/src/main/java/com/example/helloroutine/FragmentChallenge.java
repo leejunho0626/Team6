@@ -1,5 +1,7 @@
 package com.example.helloroutine;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +25,7 @@ public class FragmentChallenge extends Fragment {
     private final int Fragment_1 = 1;
     private final int Fragment_2 = 2;
     private final int Fragment_3 = 3;
+    Context mContext;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,12 +35,16 @@ public class FragmentChallenge extends Fragment {
         btnList = (Button) view.findViewById(R.id.btnList);
         btnFav = (Button) view.findViewById(R.id.btnFavorite);
         btnComplete = (Button) view.findViewById(R.id.btnComplete);
-
+        btnFav.setBackgroundColor(Color.parseColor("#9370DB"));
+        btnComplete.setBackgroundColor(Color.parseColor("#9370DB"));
         FragmentView(Fragment_1);
 
         btnList.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnList.setBackgroundColor(Color.parseColor("#FFBB86FC"));
+                btnFav.setBackgroundColor(Color.parseColor("#9370DB"));
+                btnComplete.setBackgroundColor(Color.parseColor("#9370DB"));
                 FragmentView(Fragment_1);
             }
         });
@@ -45,6 +52,9 @@ public class FragmentChallenge extends Fragment {
         btnFav.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnList.setBackgroundColor(Color.parseColor("#9370DB"));
+                btnFav.setBackgroundColor(Color.parseColor("#FFBB86FC"));
+                btnComplete.setBackgroundColor(Color.parseColor("#9370DB"));
                 FragmentView(Fragment_2);
             }
         });
@@ -52,6 +62,9 @@ public class FragmentChallenge extends Fragment {
         btnComplete.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnList.setBackgroundColor(Color.parseColor("#9370DB"));
+                btnFav.setBackgroundColor(Color.parseColor("#9370DB"));
+                btnComplete.setBackgroundColor(Color.parseColor("#FFBB86FC"));
                 FragmentView(Fragment_3);
             }
         });

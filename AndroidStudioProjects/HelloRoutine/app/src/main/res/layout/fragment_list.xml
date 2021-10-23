@@ -33,10 +33,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 1. 팔굽혀펴기 1분에 80개"
+                        android:text="  팔굽혀펴기 2분에 72개"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="20dp"/>
+                        android:textSize="15dp"/>
+
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layerType="none"/>
 
 
                 </LinearLayout>
