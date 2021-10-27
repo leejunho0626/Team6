@@ -25,7 +25,7 @@
                     android:id="@+id/txt1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="10dp"
                     android:text=" 오늘의 목표"
                     android:textStyle="bold"
@@ -44,7 +44,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="1. 목표를 설정하세요."
+                        android:text=" loading.."
                         android:textColor="@color/black"
                         android:textSize="18dp"/>
                     <TextView
@@ -52,7 +52,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="2. 목표를 설정하세요."
+                        android:text=" "
                         android:textColor="@color/black"
                         android:textSize="18dp"/>
                     <TextView
@@ -60,7 +60,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="3. 목표를 설정하세요."
+                        android:text=" "
                         android:textColor="@color/black"
                         android:textSize="18dp"/>
 
@@ -70,9 +70,9 @@
                     android:id="@+id/txt5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="10dp"
-                    android:text=" ★도전 과제"
+                    android:text=" 도전 과제"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="20dp"/>
@@ -89,7 +89,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="1. 도전과제를 설정하세요."
+                        android:text=" loading.."
                         android:textColor="@color/black"
                         android:textSize="18dp"/>
                     <TextView
@@ -97,7 +97,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="2. 도전과제를 설정하세요."
+                        android:text=" "
                         android:textColor="@color/black"
                         android:textSize="18dp"/>
                     <TextView
@@ -105,7 +105,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="3. 도전과제를 설정하세요."
+                        android:text=" "
                         android:textColor="@color/black"
                         android:textSize="18dp"/>
 
@@ -115,7 +115,8 @@
                     android:id="@+id/txt2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
                     android:text=" 오늘의 날씨"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -140,7 +141,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text=" "
+                            android:text=" loading.. "
                             android:textColor="@color/black"
                             android:textSize="18dp"/>
                         //기상상황
@@ -220,7 +221,8 @@
                     android:id="@+id/txt3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
                     android:text=" 오늘의 운동 추천"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -261,7 +263,8 @@
                     android:id="@+id/txt4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
                     android:text=" 운동 자세"
                     android:textStyle="bold"
                     android:textColor="@color/black"

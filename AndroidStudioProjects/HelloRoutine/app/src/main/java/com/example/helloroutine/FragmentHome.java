@@ -18,12 +18,10 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,21 +31,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.naver.maps.map.LocationSource;
 import com.naver.maps.map.util.FusedLocationSource;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 
 public class FragmentHome extends Fragment {
 
@@ -64,9 +57,7 @@ public class FragmentHome extends Fragment {
     private LocationSource mLocationSource;
     GridView grid;
     GridAdapter adt;
-    Calendar cal;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    static String clickDB;
     ProgressDialog customProgressDialog;
     private Animation fab_open, fab_close;
     private Boolean isFabOpen = false;
@@ -91,22 +82,20 @@ public class FragmentHome extends Fragment {
         txtChallenge1 = (TextView) view.findViewById(R.id.txtChallenge1);
         txtChallenge2 = (TextView) view.findViewById(R.id.txtChallenge2);
         txtChallenge3 = (TextView) view.findViewById(R.id.txtChallenge3);
-        //로딩창 객체 생성
-        customProgressDialog = new ProgressDialog(getActivity());
-        //로딩창을 투명하게
-        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        // 로딩창 보여주기
-        customProgressDialog.show();
 
+        //로딩화면 객체 생성
+        customProgressDialog = new ProgressDialog(getActivity());
+        //로딩화면을 투명하게 설정
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        // 로딩화면 보여주기
+        customProgressDialog.show();
 
         //플로팅 메뉴 설정
         fab_open = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_close);
-
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab1 = (FloatingActionButton) view.findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) view.findViewById(R.id.fab2);
-
         fab.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,24 +118,26 @@ public class FragmentHome extends Fragment {
             }
         });
 
-
         //현재 날짜
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
         SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy.MM.dd일");
         String format_time1 = format1.format (System.currentTimeMillis());
         String format_time2 = format2.format (System.currentTimeMillis());
 
+        //목표 표시
         writeDownload(format_time2);
         writeDownload2(format_time2);
         writeDownload3(format_time2);
 
+        //도전과제 표시
+        fav1();
+
+        //날씨
         String strline = "";
         InputStream inputStream = getResources().openRawResource(R.raw.weather_address_final);
         InputStreamReader inputreader = new InputStreamReader(inputStream);
         BufferedReader buffreader = new BufferedReader(inputreader);
         String line;
-        StringBuilder text = new StringBuilder();
-
         try {
             while (( line = buffreader.readLine()) != null) {
                 strline = strline + line;
@@ -154,24 +145,19 @@ public class FragmentHome extends Fragment {
         } catch (IOException e) {
 
         }
-
         StringTokenizer st = new StringTokenizer(strline);
-
         String nx=null;
         String ny=null;
         String we="1";
         int num = 1;
         int i=0;
         String[] add_ = new String[7];
-
-
         StringTokenizer st_ = new StringTokenizer(getaddress_());
         while(st_.hasMoreTokens())
         {
             add_[i] =st_.nextToken();
             i++;
         }
-
         while(st.hasMoreTokens())
         {
 
@@ -200,16 +186,12 @@ public class FragmentHome extends Fragment {
 
             if(we.equals(add_[i-2])) break;
         }
-
-
         String service_key = "Qq0ncOZYtzwIBrVT5cMMrn%2BKP7nlXYXT52ZR%2FpoM6l%2B5W6ch9YeTupmGsrR6bfVDSvXVdI7Gl6sRzKhrkgQbHw%3D%3D";
         String num_of_rows = "12";
         String page_no = "1";
         String date_type = "JSON";
         String base_date = format_time1; // date
         String base_time = time();   // time
-
-
         String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?" +
                 "serviceKey=" +service_key+
                 "&pageNo=" +page_no+
@@ -222,6 +204,7 @@ public class FragmentHome extends Fragment {
         NetworkTask networkTask = new NetworkTask(url, null);
         networkTask.execute();
 
+        //로딩화면 종료
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -259,7 +242,6 @@ public class FragmentHome extends Fragment {
             isFabOpen = true;
         }
     }
-
 
     //설정한 목표 표시1
     public void writeDownload(String date){
@@ -304,7 +286,7 @@ public class FragmentHome extends Fragment {
                         txtPlan2.setText("2. "+x);
                         //txt3.setText(" 새로운 목표을 설정하세요.");
                     } else {
-                        txtPlan2.setText(" 새로운 목표을 설정하세요.");
+                        txtPlan2.setText(" ");
 
                     }
                 } else {
@@ -330,7 +312,7 @@ public class FragmentHome extends Fragment {
                         txtPlan3.setText("3. "+x);
                         //txt3.setText(" 새로운 목표을 설정하세요.");
                     } else {
-                        txtPlan3.setText(" 새로운 목표을 설정하세요.");
+                        txtPlan3.setText(" ");
 
                     }
                 } else {
@@ -340,7 +322,34 @@ public class FragmentHome extends Fragment {
         });
     }
 
+    //즐겨찾기 도전과제1
+    public void fav1(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("favorite").document("1")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String x = str1.substring(0, str1.indexOf("}"));
+                        txtChallenge1.setText("1. "+x);
+                        //txt3.setText(" 새로운 목표을 설정하세요.");
+                    } else {
+                        txtChallenge1.setText(" 즐겨찾기로 추가된 도전과제가 없습니다.");
 
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    //날씨
     public class NetworkTask extends AsyncTask<Void, Void, String> {
         private String url;
         private ContentValues values;
@@ -437,8 +446,8 @@ public class FragmentHome extends Fragment {
 
 
     }
-
-
+    
+    //위치
     public String getaddress_()
     {
         GpsTracker gpsTracker = new GpsTracker(getActivity());
