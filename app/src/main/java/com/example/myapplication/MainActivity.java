@@ -131,6 +131,12 @@ public class MainActivity extends AppCompatActivity {
         String date_type = "JSON";
         String base_date = format_time1; // date
         String base_time = time();   // time
+        int temp = 0;
+        if(time().equals("-1")) {
+            temp = Integer.parseInt(format_time1) - 1;
+            base_date = Integer.toString(temp);
+            base_time = "2300";
+        }
 
 
         String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?" +
@@ -230,16 +236,16 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat format2 = new SimpleDateFormat ( "HHmm");
         String format_time2 = format2.format (System.currentTimeMillis());
         int intTime = Integer.parseInt(format_time2);
-        if(intTime<300) time_ = "0200";
-        else if(intTime<600) time_ = "0500";
-        else if(intTime<900) time_ = "0800";
-        else if(intTime<1200) time_ = "1100";
-        else if(intTime<1500) time_ = "1400";
-        else if(intTime<1800) time_ = "1700";
-        else if(intTime<2100) time_ = "2000";
+        if(intTime<200) time_ = "-1";
+        else if(intTime<500) time_ = "0200";
+        else if(intTime<800) time_ = "0500";
+        else if(intTime<1100) time_ = "0800";
+        else if(intTime<1400) time_ = "1100";
+        else if(intTime<1700) time_ = "1400";
+        else if(intTime<2000) time_ = "1700";
+        else if(intTime<2300) time_ = "2000";
         else time_ = "2300";
         return time_;
-
 
     }
 
