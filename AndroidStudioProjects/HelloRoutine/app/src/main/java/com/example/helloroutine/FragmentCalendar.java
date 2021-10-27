@@ -127,7 +127,6 @@ public class FragmentCalendar extends Fragment {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        // 3초가 지나면 다이얼로그 닫기
                         TimerTask task = new TimerTask(){
                             @Override
                             public void run() {

@@ -8,12 +8,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import android.view.MenuItem;
 
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
+    ProgressDialog customProgressDialog;
 
 
     @Override
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         //하단 메뉴바
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
+
+
     }
 
     @Override
@@ -64,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
 
+
             switch(menuItem.getItemId())
             {
                 case R.id.user:
@@ -73,7 +81,29 @@ public class MainActivity extends AppCompatActivity {
                     transaction.replace(R.id.frameLayout, fragmentCalendar).commitAllowingStateLoss();
                     break;
                 case R.id.home:
+                    //로딩창 객체 생성
+                    customProgressDialog = new ProgressDialog(MainActivity.this);
+                    //로딩창을 투명하게
+                    customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    // 로딩창 보여주기
+                    customProgressDialog.show();
                     transaction.replace(R.id.frameLayout, fragmentHome).commitAllowingStateLoss();
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            TimerTask task = new TimerTask(){
+                                @Override
+                                public void run() {
+                                    customProgressDialog.dismiss();
+
+                                }
+                            };
+
+                            Timer timer = new Timer();
+                            timer.schedule(task, 1500);
+                        }
+                    });
+                    thread.start();
                     break;
                 case R.id.challenge:
                     transaction.replace(R.id.frameLayout, fragmentChallenge).commitAllowingStateLoss();

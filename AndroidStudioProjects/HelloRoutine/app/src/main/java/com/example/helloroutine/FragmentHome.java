@@ -3,6 +3,7 @@ package com.example.helloroutine;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -11,6 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,6 +43,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -60,7 +67,10 @@ public class FragmentHome extends Fragment {
     Calendar cal;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     static String clickDB;
-
+    ProgressDialog customProgressDialog;
+    private Animation fab_open, fab_close;
+    private Boolean isFabOpen = false;
+    private FloatingActionButton fab, fab1, fab2;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -81,7 +91,46 @@ public class FragmentHome extends Fragment {
         txtChallenge1 = (TextView) view.findViewById(R.id.txtChallenge1);
         txtChallenge2 = (TextView) view.findViewById(R.id.txtChallenge2);
         txtChallenge3 = (TextView) view.findViewById(R.id.txtChallenge3);
+        //로딩창 객체 생성
+        customProgressDialog = new ProgressDialog(getActivity());
+        //로딩창을 투명하게
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        // 로딩창 보여주기
+        customProgressDialog.show();
 
+
+        //플로팅 메뉴 설정
+        fab_open = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fab_close);
+
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab1 = (FloatingActionButton) view.findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) view.findViewById(R.id.fab2);
+
+        fab.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+                anim();
+            }
+        });
+        fab1.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+                anim();
+            }
+        });
+        fab2.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+                anim();
+            }
+        });
+
+
+        //현재 날짜
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
         SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy.MM.dd일");
         String format_time1 = format1.format (System.currentTimeMillis());
@@ -143,9 +192,6 @@ public class FragmentHome extends Fragment {
                     st.nextToken();
                     num++;
                 }
-
-
-
             }
             else {
                 st.nextToken();
@@ -174,10 +220,47 @@ public class FragmentHome extends Fragment {
                 "&nx=" +nx+
                 "&ny=" +ny;
         NetworkTask networkTask = new NetworkTask(url, null);
-        //networkTask.execute();
+        networkTask.execute();
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TimerTask task = new TimerTask(){
+                    @Override
+                    public void run() {
+                        customProgressDialog.dismiss();
+
+                    }
+                };
+
+                Timer timer = new Timer();
+                timer.schedule(task, 1500);
+            }
+        });
+        thread.start();
 
         return view;
     }
+
+    //플로팅메뉴 애니메이션
+    public void anim() {
+
+        if (isFabOpen) {
+            fab1.startAnimation(fab_close);
+            fab2.startAnimation(fab_close);
+            fab1.setClickable(false);
+            fab2.setClickable(false);
+            isFabOpen = false;
+        } else {
+            fab1.startAnimation(fab_open);
+            fab2.startAnimation(fab_open);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            isFabOpen = true;
+        }
+    }
+
+
     //설정한 목표 표시1
     public void writeDownload(String date){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
