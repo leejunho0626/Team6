@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -192,6 +194,14 @@ public class FragmentHome extends Fragment {
         String date_type = "JSON";
         String base_date = format_time1; // date
         String base_time = time();   // time
+        if(time().equals("-1")) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, -1);
+            base_date =  format1.format(cal.getTime());
+            base_time = "2300";
+            cal.add(Calendar.DATE, 1);
+        }
         String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?" +
                 "serviceKey=" +service_key+
                 "&pageNo=" +page_no+
@@ -433,7 +443,7 @@ public class FragmentHome extends Fragment {
         SimpleDateFormat format2 = new SimpleDateFormat ( "HHmm");
         String format_time2 = format2.format (System.currentTimeMillis());
         int intTime = Integer.parseInt(format_time2);
-        if(intTime<200) time_ = "2300";
+        if(intTime<200) time_ = "-1";
         else if(intTime<500) time_ = "0200";
         else if(intTime<800) time_ = "0500";
         else if(intTime<1100) time_ = "0800";
@@ -443,8 +453,6 @@ public class FragmentHome extends Fragment {
         else if(intTime<2300) time_ = "2000";
         else time_ = "2300";
         return time_;
-
-
     }
     
     //위치
