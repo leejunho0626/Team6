@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -133,9 +135,12 @@ public class MainActivity extends AppCompatActivity {
         String base_time = time();   // time
         int temp = 0;
         if(time().equals("-1")) {
-            temp = Integer.parseInt(format_time1) - 1;
-            base_date = Integer.toString(temp);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, -1);
+            base_date =  format1.format(cal.getTime());
             base_time = "2300";
+            cal.add(Calendar.DATE, 1);
         }
 
 
