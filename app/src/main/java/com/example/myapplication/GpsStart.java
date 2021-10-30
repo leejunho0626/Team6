@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -50,12 +51,7 @@ public class GpsStart extends AppCompatActivity {
         btn1.setOnClickListener(new TextView.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*BackgroundThread thread = new BackgroundThread();
-                thread.start();*/
 
-                //Runable객체를 implent하는방법(이것을 구현함으로써 한번 실행될 객체를 정의가능)
-                //스레드를 만들고 그안에 Runnable을 집어넣는데 myThread2에서 스레드를 클래스로 별도로
-                //만들었을떄와 차이가 없음.
                 new Thread(new Runnable() {
 
 
@@ -66,12 +62,10 @@ public class GpsStart extends AppCompatActivity {
                         isRun = true;
                         int i = -1;
                         abc.setText("시작");
-                        //1초마다 벨류값 1씩 증가시키는 스레드임
+                        //Location location = null;
+
+                        //speed_ = location.getSpeed();
                         while ((isRun)) {
-                            //핸들러클래스로서 post로 던질수가있음.
-                            //핸들러의 post 메소드를 호출하면 Runnable 객체를 전달할 수 있습니다.
-                            //핸들러로 전달된 Runnable, 객체는 메인 스레드에서 실행될 수 있으며 따라서 UI를 접근하는 코드는 Runnable 객체 안에 넣어두면 됩니다.
-                            //post 메소드 이외에도 지정된 시간에 실행하는 postAtTime 메소드와 지정된 시간만큼 딜레이된 시간후 실행되는 postDelayed 메소드가 있습니다.
                             handler2.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -83,12 +77,12 @@ public class GpsStart extends AppCompatActivity {
                                 }
                             });
                             try {
-                                Thread.sleep(1000);
+                                Thread.sleep(3000);
                             } catch (Exception e) {
                             }
                         }
                     }
-                }).start(); //start()붙이면 바로실행시킨다.
+                }).start();
             }
         });
 
@@ -96,16 +90,35 @@ public class GpsStart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isRun = false;
-                //listA.add(37.57152);
-                //listA.add(37.56607);
-                //listB.add(126.97714);
-                //listB.add(126.98268);
                 for(int i = 0; i < listA.size(); i++){
                     listC.add(new LatLng(listA.get(i), listB.get(i)));
                 }
                 Intent intent = new Intent(GpsStart.this, Gpsline.class);
                 intent.putParcelableArrayListExtra("Key01", listC);
+                //intent.putExtra("speedKey", speed_);
+
+                double add = 0;
+                double s = 0;
+                float distance_ = 0;
+
+                for(int i = 0; i < listA.size()-1; i++){
+                    Location locationA = new Location("point A");
+                    locationA.setLatitude(listA.get(i));
+                    locationA.setLongitude(listB.get(i));
+
+                    Location locationB = new Location("point B");
+                    locationB.setLatitude(listA.get(i+1));
+                    locationB.setLongitude(listB.get(i+1));
+                    s = locationA.distanceTo(locationB);
+                    add = add + s;
+
+                }
+                intent.putExtra("Key02", add);
+
+                abc.setText(Double.toString(add));
+
                 startActivity(intent);
+
 
 
             }
@@ -114,6 +127,5 @@ public class GpsStart extends AppCompatActivity {
 
 
     }
-
 
 }

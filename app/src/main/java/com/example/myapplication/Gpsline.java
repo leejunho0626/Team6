@@ -26,12 +26,17 @@ public class Gpsline extends AppCompatActivity implements OnMapReadyCallback {
     private LatLng myLatLng = new LatLng( 37.57152, 126.97714);
     private static NaverMap naverMap;
     TextView textView;
+    TextView speed_;
     ArrayList listC = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gpsline);
+        speed_ = findViewById(R.id.speed);
+
+
+
 
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
@@ -41,6 +46,12 @@ public class Gpsline extends AppCompatActivity implements OnMapReadyCallback {
         }
 
         mapFragment.getMapAsync(this);
+        double speed = 0;
+        Intent receive_intent_ = getIntent();
+        speed = receive_intent_.getDoubleExtra("Key02", 0);
+        speed_.setText(Double.toString(speed));
+
+
 
 
 

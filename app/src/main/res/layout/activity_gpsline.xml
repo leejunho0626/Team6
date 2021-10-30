@@ -27,4 +27,15 @@
         app:layout_constraintRight_toRightOf="parent" />
 
 
+    <TextView
+        android:id="@+id/speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="108dp"
+        android:layout_marginBottom="164dp"
+        android:text="spped"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
