@@ -431,8 +431,15 @@ public class FragmentHome extends Fragment {
                 pty.setText("소나기");
                 pcp.setText("강수량 : " +PCP);
             }
+
             pop.setText("강수확률 : "+POP+"%");
-            time3.setText("기준 : " + time() + "시");
+
+            if(time().equals("-1")){
+                time3.setText("기준 : 2300시");
+            }
+            else {
+                time3.setText("기준 : " + time() + "시");
+            }
             Log.d("onpostEx", "출력 값 : "+s);
         }
     }
