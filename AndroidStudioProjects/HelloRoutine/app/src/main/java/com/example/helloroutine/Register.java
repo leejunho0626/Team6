@@ -18,10 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Register extends AppCompatActivity {
 
@@ -162,6 +165,21 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 register();
+                //회원가입 후 Firestore에 아이디(Eamil) 저장
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                UserWrite userWrite = new UserWrite(user.getEmail());
+                db.collection("DB").document("User").collection(user.getUid()).document("ID").set(userWrite)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void avoid) {
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
     }
@@ -225,5 +243,7 @@ public class Register extends AppCompatActivity {
         }
 
     }
+
+
 
 }

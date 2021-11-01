@@ -3,7 +3,7 @@ package com.example.helloroutine;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-//글 작성 DB 객체
+//목표설정 DB 객체
 public class UserWrite {
 
     public String write;
