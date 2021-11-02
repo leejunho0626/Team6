@@ -37,4 +37,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="100dp"
+        android:layout_height="92dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="128dp"
+        android:text="aa"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

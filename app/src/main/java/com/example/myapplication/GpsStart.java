@@ -19,7 +19,9 @@ import android.widget.Toast;
 import com.naver.maps.geometry.LatLng;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,13 +30,17 @@ public class GpsStart extends AppCompatActivity {
     Button btn1;
     Button btn2;
     TextView abc;
+    TextView textview;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSION_REQUEST_CODE = 100;
-
+    SimpleDateFormat format1 = new SimpleDateFormat ( "HHmmss");
     ArrayList<Double> listA = new <Double>ArrayList();
     ArrayList <Double>listB = new <Double>ArrayList();
     ArrayList listC = new ArrayList();
     boolean isRun = false;
+    String firstTime = null;
+    String secondTime = null;
+    float speed_ = 0;
 
 
     @Override
@@ -46,6 +52,7 @@ public class GpsStart extends AppCompatActivity {
         abc = findViewById(R.id.abc);
         btn1 = findViewById(R.id.btn1);
         btn2 = findViewById(R.id.btn2);
+        textview = findViewById(R.id.textview);
         Handler handler2 = new Handler();
 
         btn1.setOnClickListener(new TextView.OnClickListener() {
@@ -62,9 +69,7 @@ public class GpsStart extends AppCompatActivity {
                         isRun = true;
                         int i = -1;
                         abc.setText("시작");
-                        //Location location = null;
-
-                        //speed_ = location.getSpeed();
+                        firstTime = format1.format (System.currentTimeMillis());
                         while ((isRun)) {
                             handler2.post(new Runnable() {
                                 @Override
@@ -115,7 +120,19 @@ public class GpsStart extends AppCompatActivity {
                 }
                 intent.putExtra("Key02", add);
 
-                abc.setText(Double.toString(add));
+                abc.setText("이동 거리 " + Double.toString(add) + "m");
+                Date d1 = null;
+                Date d2 = null;
+                try {
+                    d1 = format1.parse(firstTime);
+                    d2 = format1.parse(secondTime);
+
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
+                double diff = d2.getTime() - d1.getTime();
+                intent.putExtra("Key03", diff);
+                textview.setText("이동시간" + Double.toString(diff/1000) + "초");
 
                 startActivity(intent);
 

@@ -24,6 +24,19 @@
         android:layout_marginBottom="200dp"
         android:text="aa"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" /><![CDATA[
+
+    />
+    ]]>
+
+    <TextView
+        android:id="@+id/km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="256dp"
+        android:layout_marginBottom="136dp"
+        android:text="속력은 ?>"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
 

@@ -27,6 +27,7 @@ public class Gpsline extends AppCompatActivity implements OnMapReadyCallback {
     private static NaverMap naverMap;
     TextView textView;
     TextView speed_;
+    TextView km;
     ArrayList listC = new ArrayList();
 
     @Override
@@ -34,6 +35,8 @@ public class Gpsline extends AppCompatActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gpsline);
         speed_ = findViewById(R.id.speed);
+        textView = findViewById(R.id.textview);
+        km = findViewById(R.id.km);
 
 
 
@@ -49,7 +52,16 @@ public class Gpsline extends AppCompatActivity implements OnMapReadyCallback {
         double speed = 0;
         Intent receive_intent_ = getIntent();
         speed = receive_intent_.getDoubleExtra("Key02", 0);
-        speed_.setText(Double.toString(speed));
+        speed_.setText("이동 거리 " + Double.toString(Math.round((speed/1000)*100)/100.0) + "km");
+
+        double time_ = 0;
+        time_ = receive_intent_.getDoubleExtra("Key03", 0);
+        textView.setText("이동시간" + Double.toString(time_/1000) + "초");
+
+        double avgspeed = (speed/1000)/(time_/1000/60/60);
+
+
+        km.setText("평균 속력" + Double.toString(Math.round(avgspeed*100)/100.0) + "km/h");
 
 
 
