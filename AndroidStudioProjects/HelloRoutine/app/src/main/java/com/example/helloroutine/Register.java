@@ -165,21 +165,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 register();
-                //회원가입 후 Firestore에 아이디(Eamil) 저장
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                UserWrite userWrite = new UserWrite(user.getEmail());
-                db.collection("DB").document("User").collection(user.getUid()).document("ID").set(userWrite)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void avoid) {
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
-                            }
-                        });
+
             }
         });
     }
@@ -198,6 +184,21 @@ public class Register extends AppCompatActivity {
                                 final String pw = edtPw.getText().toString().trim();
                                 user.updatePassword(pw);
                                 Toast.makeText(Register.this, "회원가입을 축하합니다.", Toast.LENGTH_SHORT).show();
+                                //회원가입 후 Firestore에 아이디(Eamil) 저장
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                UserWrite userWrite = new UserWrite(user.getEmail());
+                                db.collection("DB").document("User").collection(user.getUid()).document("ID").set(userWrite)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void avoid) {
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
                                 firebaseAuth.signOut();
                                 finish();
                             }
