@@ -3,6 +3,7 @@ package com.example.helloroutine;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -50,7 +51,6 @@ import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 public class Login extends AppCompatActivity {
 
-    TextView google;
     EditText edtID, edtPw;
     Button btnLogin, btnRegister;
     ImageButton btnKakao;
@@ -58,13 +58,10 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
-    SignInButton signInButton;
-    private SharedPreferences pref;
-    private SharedPreferences.Editor editor;
-    private boolean autoLogin;
     private SessionCallback sessionCallback;
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
+    ProgressDialog customProgressDialog;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -80,11 +77,12 @@ public class Login extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         btnKakao = findViewById(R.id.btnKakao);
         firebaseAuth = FirebaseAuth.getInstance();
-        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-        editor = pref.edit();
-        autoLogin = pref.getBoolean("AutoLogin",false);
         btnGoogle = findViewById(R.id.btnGoogle);
         btnGoogle.setClipToOutline(true);
+        //로딩창 객체 생성
+        customProgressDialog = new ProgressDialog(this);
+        //로딩창을 투명하게
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         if(firebaseAuth.getCurrentUser() != null){
             Intent intent = new Intent(this, MainActivity.class);
@@ -95,8 +93,10 @@ public class Login extends AppCompatActivity {
         //카카오 로그인 콜백 초기화
         sessionCallback = new SessionCallback();
         Session.getCurrentSession().addCallback(sessionCallback);
+        /*
         //앱 실행 시 로그인 토큰이 있으면 자동으로 로그인 수행
         Session.getCurrentSession().checkAndImplicitOpen();
+         */
 
 
         //일반 로그인 버튼
@@ -140,6 +140,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    //뒤로가기 버튼
     @Override
     public void onBackPressed() {
         long tempTime = System.currentTimeMillis();
@@ -192,6 +193,7 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
+
                                 Intent intent = new Intent(Login.this, MainActivity.class);
                                 intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
@@ -253,7 +255,8 @@ public class Login extends AppCompatActivity {
                 //카카오 로그인 성공
                 @Override
                 public void onSuccess(MeV2Response result) {
-
+                    // 로딩창 보여주기
+                    customProgressDialog.show();
                     //카카오 로그인 시 파이어베이스에 계정 생성
                     final String id =result.getKakaoAccount().getEmail().toString().trim();
                     final String adminPW = "adminPW"; //임의 비밀번호
@@ -262,17 +265,23 @@ public class Login extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             //등록된 계정이 없을 때
                             if (task.isSuccessful()) {
+                                //회원가입 후 Firestore에 아이디(Eamil) 저장
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                UserWrite userWrite = new UserWrite(user.getEmail());
+                                db.collection("DB").document("User").collection(user.getUid()).document("ID").set(userWrite)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void avoid) {
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
                                 Intent intent = new Intent(Login.this, MainActivity.class);
-                                //카카오 계정의 이메일 가져오기
-                                if(result.getKakaoAccount().hasEmail() == OptionalBoolean.TRUE){
-                                    intent.putExtra("email", result.getKakaoAccount().getEmail());
-
-                                }
-
-                                else{
-                                    intent.putExtra("email", "none");
-
-                                }
                                 startActivity(intent);
                             }
                             //등록된 계정이 있을 때
@@ -304,6 +313,7 @@ public class Login extends AppCompatActivity {
 
             return;
         }
+        //구글 로그인
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -324,6 +334,8 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // 로딩창 보여주기
+                            customProgressDialog.show();
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             updateUI(user);

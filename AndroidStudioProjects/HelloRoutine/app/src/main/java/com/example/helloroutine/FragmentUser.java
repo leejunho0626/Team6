@@ -24,7 +24,6 @@ public class FragmentUser extends Fragment {
     TextView txtID, txtUid;
     Button btnFriend, btnCopy;
     FirebaseAuth firebaseAuth;
-    String strEmail;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -37,9 +36,6 @@ public class FragmentUser extends Fragment {
         txtUid = view.findViewById(R.id.txtUID);
         btnFriend = view.findViewById(R.id.btnFriend);
         btnCopy = view.findViewById(R.id.btnCopy);
-
-        Intent intent = getActivity().getIntent();
-        strEmail = intent.getStringExtra("email");
 
         if(firebaseAuth.getCurrentUser() != null){
             txtID.setText(firebaseAuth.getCurrentUser().getEmail());

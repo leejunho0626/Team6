@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,7 +32,7 @@ public class Register extends AppCompatActivity {
     TextView txtError1, txtError2, txtError3;
     EditText edtID, edtPw, edtPW2, pickEmail;
     Button btOk, btCheckId;
-    String[] items = {"선택","naver.com","daum.net","nate.com","yahoo.com","hanmail.com","직접입력"}; //이메일 선택
+    String[] items = {"","daum.net","nate.com","yahoo.com","hanmail.com","직접입력"}; //이메일 선택
     private FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     @Override
@@ -54,9 +55,7 @@ public class Register extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.spinner);
 
         //이메일 선택 스피너
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, items
-        );
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -66,7 +65,7 @@ public class Register extends AppCompatActivity {
                 pickEmail.setClickable(false);
                 pickEmail.setFocusable(false);
 
-                if(i==6){
+                if(i==0){
                     pickEmail.setFocusableInTouchMode(true);
                     pickEmail.setFocusable(true);
                     pickEmail.setText(null);
@@ -83,6 +82,7 @@ public class Register extends AppCompatActivity {
         btCheckId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 final String id = edtID.getText().toString().trim()+"@"+pickEmail.getText().toString().trim();
                 final String adminPW = "adminPW";
                 firebaseAuth.createUserWithEmailAndPassword(id, adminPW).addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
@@ -92,13 +92,22 @@ public class Register extends AppCompatActivity {
                             txtError1.setText("사용 가능한 아이디입니다.");
                             txtError1.setTextColor(Color.parseColor("#4CAF50"));
                             edtID.setBackgroundResource(R.drawable.white_edittext);  //테투리 흰색으로 변경
+                            pickEmail.setBackgroundResource(R.drawable.white_edittext);  //테투리 흰색으로 변경
                             firebaseAuth.signOut();
                         }
                         else {
-                            txtError1.setText("이미 등록된 아이디입니다.");
+                            if(edtID.getText().toString().length()==0){
+                                txtError1.setText("아이디를 입력하세요.");
+                            }
+                            else if(edtID.getText().toString().length()>0&&pickEmail.getText().toString().length()==0){
+                                txtError1.setText("아이디를 입력하세요.");
+                            }
+                            else {
+                                txtError1.setText("이미 등록된 아이디입니다.");
+                            }
                             txtError1.setTextColor(Color.RED);
-                            edtID.setBackgroundResource(R.drawable.red_edittext);  //테투리 흰색으로 변경
-
+                            edtID.setBackgroundResource(R.drawable.red_edittext);  //테투리 빨간색으로 변경
+                            pickEmail.setBackgroundResource(R.drawable.red_edittext);  //테투리 빨간색으로 변경
                         }
                     }
                 });
@@ -219,32 +228,30 @@ public class Register extends AppCompatActivity {
         super.onBackPressed();
         final String id = edtID.getText().toString().trim()+"@"+pickEmail.getText().toString().trim();
         final String adminPW= "adminPW";
-        if(id.length()>0 && adminPW.length()>0){
+        if(id.length()>0 && adminPW.length()>0) {
             firebaseAuth.signInWithEmailAndPassword(id, adminPW)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "로그인", Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        finish();
+                                        //
+                                        Toast.makeText(getApplicationContext(), "삭제", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(),"뒤로가기 버튼 에러",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "뒤로가기 버튼 에러", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
         }
         else{
-            Toast.makeText(getApplicationContext(),"뒤로가기 버튼 에러",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"뒤로가기 에러",Toast.LENGTH_SHORT).show();
         }
-
     }
-
-
 
 }

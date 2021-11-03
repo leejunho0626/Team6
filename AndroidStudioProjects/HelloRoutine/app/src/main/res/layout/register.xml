@@ -76,7 +76,7 @@
                     android:layout_marginRight="19dp"
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
-                    android:hint="선택하세요"
+                    android:hint="입력하세요"
                     android:background="@drawable/white_edittext"/>
 
             </LinearLayout>
