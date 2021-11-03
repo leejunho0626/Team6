@@ -109,7 +109,14 @@ public class FragmentCalendar extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // 로딩창 보여주기
                 customProgressDialog.show();
-                String clickDate = adt.mItem.get(i).year()+"."+adt.mItem.get(i).month()+"."+adt.mItem.get(i).day()+"일";
+                String zero = null;
+                if(adt.mItem.get(i).day().length()<2){
+                    zero = "0"+adt.mItem.get(i).day();
+                }
+                else{
+                    zero = adt.mItem.get(i).day();
+                }
+                String clickDate = adt.mItem.get(i).year()+"."+adt.mItem.get(i).month()+"."+zero+"일";
                 //Toast.makeText(getActivity(), clickDate, Toast.LENGTH_LONG).show();
                 clickDB = clickDate;
                 txt1.setText(clickDB);
