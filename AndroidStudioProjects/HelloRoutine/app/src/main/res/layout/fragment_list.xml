@@ -22,19 +22,20 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/shape_text2">
-                    <ImageButton
-                        android:id="@+id/fav1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/ic_baseline_star_24"/>
+
+                   <CheckBox
+                       android:id="@+id/fav1"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginLeft="10dp"
+                       android:button="@drawable/btn_star"/>
 
                     <TextView
                         android:id="@+id/challenge1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text=" 1. 운동 목표 설정 10개하기"
+                        android:layout_margin="5dp"
+                        android:text=" "
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>
@@ -55,18 +56,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/shape_text2">
-                    <ImageButton
+                    <CheckBox
                         android:id="@+id/fav2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:background="@drawable/ic_baseline_star_24"/>
+                        android:button="@drawable/btn_star"/>
                     <TextView
                         android:id="@+id/challenge2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 2. 팔굽혀펴기 1분에 80개"
+                        android:text=" 2. 운동 일정 30개 추가"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>
@@ -87,18 +88,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/shape_text2">
-                    <ImageButton
+                    <CheckBox
                         android:id="@+id/fav3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:background="@drawable/ic_baseline_star_24"/>
+                        android:button="@drawable/btn_star"/>
                     <TextView
                         android:id="@+id/challenge3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 3. 팔굽혀펴기 1분에 80개"
+                        android:text=" 3. 걷거나 뛴 거리 3km"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>
@@ -118,18 +119,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/shape_text2">
-                    <ImageButton
+                    <CheckBox
                         android:id="@+id/fav4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:background="@drawable/ic_baseline_star_24"/>
+                        android:button="@drawable/btn_star"/>
                     <TextView
                         android:id="@+id/challenge4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 4. 팔굽혀펴기 1분에 80개"
+                        android:text=" 4. 걷거나 뛴 거리 5km"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>
@@ -149,18 +150,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/shape_text2">
-                    <ImageButton
+                    <CheckBox
                         android:id="@+id/fav5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:background="@drawable/ic_baseline_star_24"/>
+                        android:button="@drawable/btn_star"/>
                     <TextView
                         android:id="@+id/challenge5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 5. 팔굽혀펴기 1분에 80개"
+                        android:text=" 5. 3일 연속 접속"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>

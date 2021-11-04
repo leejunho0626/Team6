@@ -17,74 +17,35 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/favList1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/shape_text2">
-                    <ImageButton
-                        android:id="@+id/fav1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_baseline_star_24"/>
+                    android:layout_margin="10dp"
+                    android:text=" loading..."
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"/>
 
-                    <TextView
-                        android:id="@+id/challenge1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text=" 1. 팔굽혀펴기 1분에 80개"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"/>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/favList2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/shape_text2">
-                    <ImageButton
-                        android:id="@+id/fav2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_baseline_star_24"/>
-                    <TextView
-                        android:id="@+id/challenge2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text=" 2. 팔굽혀펴기 1분에 80개"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"/>
+                    android:layout_margin="10dp"
+                    android:text=" "
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"/>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/favList3"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/shape_text2">
-                    <ImageButton
-                        android:id="@+id/fav3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_baseline_star_24"/>
-                    <TextView
-                        android:id="@+id/challenge3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text=" 3. 팔굽혀펴기 1분에 80개"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"/>
-
-                </LinearLayout>
-
+                    android:layout_margin="10dp"
+                    android:text=" "
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"/>
 
             </LinearLayout>
 
