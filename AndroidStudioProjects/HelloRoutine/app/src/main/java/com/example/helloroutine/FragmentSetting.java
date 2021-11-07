@@ -51,6 +51,7 @@ public class FragmentSetting extends Fragment {
         btnLogout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 signOut(); //파이어베이스 로그아웃
                 firebaseAuth.signOut(); //구글 로그아웃
                 Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다", Toast.LENGTH_SHORT).show();

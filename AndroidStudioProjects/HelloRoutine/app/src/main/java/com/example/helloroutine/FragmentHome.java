@@ -110,6 +110,8 @@ public class FragmentHome extends Fragment {
             public void onClick(View v) {
                 //
                 anim();
+                Intent intent = new Intent(getActivity(), Route.class);
+                startActivity(intent);
             }
         });
         fab2.setOnClickListener(new Button.OnClickListener() {
@@ -212,7 +214,7 @@ public class FragmentHome extends Fragment {
                 "&nx=" +nx+
                 "&ny=" +ny;
         NetworkTask networkTask = new NetworkTask(url, null);
-        networkTask.execute();
+        //networkTask.execute(); //날씨 실행
 
         //로딩화면 종료
         Thread thread = new Thread(new Runnable() {

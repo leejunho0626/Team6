@@ -46,6 +46,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginRight="10dp"
+                        android:max = "100"
                         style="?android:attr/progressBarStyleHorizontal"/>
 
 
@@ -67,7 +68,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 2. 운동 일정 30개 추가"
+                        android:text=" "
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>
@@ -99,7 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 3. 걷거나 뛴 거리 3km"
+                        android:text=" "
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>
@@ -130,7 +131,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 4. 걷거나 뛴 거리 5km"
+                        android:text=" "
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>
@@ -161,7 +162,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text=" 5. 3일 연속 접속"
+                        android:text=" "
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="17dp"/>

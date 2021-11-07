@@ -90,6 +90,7 @@ public class Login extends AppCompatActivity {
         }
 
 
+
         //카카오 로그인 콜백 초기화
         sessionCallback = new SessionCallback();
         Session.getCurrentSession().addCallback(sessionCallback);
@@ -351,7 +352,7 @@ public class Login extends AppCompatActivity {
         if (user != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-            //회원가입 후 Firestore에 아이디(Eamil) 저장
+            //Firestore에 아이디(Eamil) 저장
             FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             UserWrite userWrite = new UserWrite(user1.getEmail());
@@ -367,8 +368,11 @@ public class Login extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
                         }
                     });
+
             finish();
         }
     }
+
+
 
 }

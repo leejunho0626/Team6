@@ -7,14 +7,14 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
-        android:usesCleartextTraffic="true"
         android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/ic_baseline_run_circle_24"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_baseline_run_circle_24"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HelloRoutine">
+        android:theme="@style/Theme.HelloRoutine"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
@@ -32,6 +32,9 @@
         <activity android:name=".Register"/>
         <activity android:name=".MainActivity"/>
         <activity android:name=".Friend"/>
+        <activity android:name=".Route"/>
+        <activity android:name=".Navermap"/>
+
     </application>
 
 </manifest>
