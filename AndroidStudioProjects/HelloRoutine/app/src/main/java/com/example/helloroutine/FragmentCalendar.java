@@ -55,6 +55,7 @@ public class FragmentCalendar extends Fragment {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     static String clickDB;
     ProgressDialog customProgressDialog;
+    String x;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -126,7 +127,6 @@ public class FragmentCalendar extends Fragment {
                 }
                 //클릭한 날짜 데이터
                 String clickDate = adt.mItem.get(i).year()+"."+month+"."+day+"일";
-                //Toast.makeText(getActivity(), clickDate, Toast.LENGTH_LONG).show();
                 clickDB = clickDate;
                 txt1.setText(clickDB);
                 txt2.setVisibility(VISIBLE);
@@ -158,13 +158,7 @@ public class FragmentCalendar extends Fragment {
                 });
                 thread.start();
 
-
-                //btnChange2.setVisibility(VISIBLE);
-                //btnRemove2.setVisibility(VISIBLE);
-                //btnChange3.setVisibility(VISIBLE);
-                //btnRemove3.setVisibility(VISIBLE);
                 addPlan.setVisibility(VISIBLE);
-
                 addPlan.setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -260,6 +254,91 @@ public class FragmentCalendar extends Fragment {
         return Integer.parseInt(f.format(d));
     }
 
+    //추가한 일정 횟수 추가
+    public void addTotalPlan(String total){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserWrite userWrite = new UserWrite(total);
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan").set(userWrite)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    //최종 일정 횟수 불러오기
+    public void loadingTotalPlan(){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        x = str1.substring(0, str1.indexOf("}"));
+                        //데이터 값
+                        int temp = Integer.parseInt(x)+1;
+                        x = Integer.toString(temp);
+                        //String distance = listC.toString();
+                        addTotalPlan(x);
+
+                    }
+                    else {
+                        addTotalPlan("0"); //문서 생성
+                        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                        String str1 = document.getData().toString();
+                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                        x = str1.substring(0, str1.indexOf("}"));
+                                        //데이터 값
+                                        int temp = Integer.parseInt(x)+1;
+                                        x = Integer.toString(temp);
+                                        //String distance = listC.toString();
+                                        addTotalPlan(x);
+
+                                    } else {
+
+
+                                    }
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), "일정 횟수 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                        });
+                    }
+                }
+                else {
+
+
+                }
+            }
+
+        });
+    }
+
+
+
     //목표 설정1
     public void writeUpload(String date, String edit){
 
@@ -272,6 +351,9 @@ public class FragmentCalendar extends Fragment {
                         public void onSuccess(Void avoid) {
                             Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
                             txt2.setText(" "+edit);
+
+                            loadingTotalPlan();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -297,6 +379,7 @@ public class FragmentCalendar extends Fragment {
                         public void onSuccess(Void avoid) {
                             Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
                             txt3.setText(" "+edit);
+                            loadingTotalPlan();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -322,6 +405,7 @@ public class FragmentCalendar extends Fragment {
                         public void onSuccess(Void avoid) {
                             Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
                             txt4.setText(" "+edit);
+                            loadingTotalPlan();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

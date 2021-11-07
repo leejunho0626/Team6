@@ -2,8 +2,10 @@ package com.example.helloroutine;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -28,17 +30,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class FragmentList extends Fragment {
 
     CheckBox btnFav1, btnFav2, btnFav3, btnFav4, btnFav5;
-    TextView txtCha1 , txtCha2, txtCha3, txtCha4, txtCha5;
+    TextView txtCha1 , txtCha2, txtCha3, txtCha4, txtCha5, txtScore;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private SharedPreferences pref1, pref2, pref3, pref4, pref5;
     private SharedPreferences.Editor editor1, editor2, editor3, editor4, editor5;
     private boolean saveFav1, saveFav2, saveFav3, saveFav4, saveFav5;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar1, progressBar2, progressBar3, progressBar4, progressBar5;
+    ProgressDialog customProgressDialog;
     String x;
+    String totalDis, totalPlan;
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -56,7 +64,19 @@ public class FragmentList extends Fragment {
         txtCha3 = view.findViewById(R.id.challenge3);
         txtCha4 = view.findViewById(R.id.challenge4);
         txtCha5 = view.findViewById(R.id.challenge5);
-        progressBar = view.findViewById(R.id.prg1);
+        txtScore = view.findViewById(R.id.txtScore);
+        progressBar1 = view.findViewById(R.id.prg1);
+        progressBar2 = view.findViewById(R.id.prg2);
+        progressBar3 = view.findViewById(R.id.prg3);
+        progressBar4 = view.findViewById(R.id.prg4);
+        progressBar5 = view.findViewById(R.id.prg5);
+
+        //로딩화면 객체 생성
+        customProgressDialog = new ProgressDialog(getActivity());
+        //로딩화면을 투명하게 설정
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        // 로딩화면 보여주기
+        customProgressDialog.show();
 
         firebaseAuth = FirebaseAuth.getInstance();
         pref1 = getActivity().getSharedPreferences("pref1", Activity.MODE_PRIVATE);
@@ -81,51 +101,39 @@ public class FragmentList extends Fragment {
         txtCha4.setText("걷거나 뛴 거리 5km");
         txtCha5.setText("3일 연속 접속");
 
-        if(saveFav1){
-            btnFav1.setChecked(saveFav1);
-        }
-        if(saveFav2){
-            btnFav2.setChecked(saveFav2);
-        }
-        if(saveFav3){
-            btnFav3.setChecked(saveFav3);
-        }
-        if(saveFav4){
-            btnFav4.setChecked(saveFav4);
-        }
-        if(saveFav5){
-            btnFav5.setChecked(saveFav5);
-        }
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalDistance")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        totalDistance(); //거리 DB 불러오기 - 진행도 표시
+        totalPlan();
+        loadingScore();
+
+
+        showBtnFav1();
+        showBtnFav2();
+        showBtnFav3();
+
+
+
+        //로딩화면 종료
+        Thread thread = new Thread(new Runnable() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString();
-                        str1 = str1.substring(str1.indexOf("=")+1);
-                        x = str1.substring(0, str1.indexOf("}"));
-
-                        int value = (int) Math.round(Double.parseDouble(x)/3*100);
-                        if(value>=100) progressBar.setProgress(100);
-                        else progressBar.setProgress(value);
-
-                    } else {
+            public void run() {
+                TimerTask task = new TimerTask(){
+                    @Override
+                    public void run() {
+                        customProgressDialog.dismiss();
 
                     }
-                }
-                else {
+                };
 
-
-                }
+                Timer timer = new Timer();
+                timer.schedule(task, 500);
             }
-
         });
+        thread.start();
+
+
+
+
 
         btnFav1.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -314,9 +322,162 @@ public class FragmentList extends Fragment {
         return view;
     }
 
+    //진행도 점수 저장하기
+    public void saveScore(String total){
+        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserWrite userWrite = new UserWrite(total);
+        db.collection("DB").document("User").collection(user1.getUid()).document("Score").set(userWrite)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+    }
+    //진행도 점수 불러오기
+    public void loadingScore(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Score")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        x = str1.substring(0, str1.indexOf("}"));
+
+                       txtScore.setText("현재점수 : "+x+"점");
+
+
+
+                    } else {
+                        txtScore.setText("현재점수 : 0점");
+                    }
+                }
+                else {
+                }
+            }
+        });
+
+    }
+
+
+    //거리 DB 불러오기
     public void totalDistance(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalDistance")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        x = str1.substring(0, str1.indexOf("}"));
+
+                        int value = (int) Math.round(Double.parseDouble(x)/3*100);
+                        if(value>=100) progressBar3.setProgress(100);
+                        else progressBar3.setProgress(value);
+
+                        int value2 = (int) Math.round(Double.parseDouble(x)/5*100);
+                        if(value2>=100) progressBar4.setProgress(100);
+                        else progressBar4.setProgress(value2);
+
+                        String sum = Integer.toString(value+value2);
+
+                        saveScore(sum);
 
 
+
+
+                    } else {
+                    }
+                }
+                else {
+                }
+            }
+        });
+
+    }
+
+    //일정추가 횟수 DB 불러오기
+    public void totalPlan(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        x = str1.substring(0, str1.indexOf("}"));
+
+                        int value = Integer.parseInt(x)*10;
+                        if(value>=100) progressBar1.setProgress(100);
+                        else progressBar1.setProgress(value);
+
+                        int value2 = (int) Math.round(Double.parseDouble(x)/30*100);
+                        if(value2>=100) progressBar2.setProgress(100);
+                        else progressBar2.setProgress(value2);
+
+
+
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("DB").document("User").collection(user.getUid()).document("Score")
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                        String str1 = document.getData().toString();
+                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                        x = str1.substring(0, str1.indexOf("}"));
+
+                                        int nowScore = Integer.parseInt(x);
+
+                                        String sum = Integer.toString(nowScore+value+value2);
+
+                                        saveScore(sum);
+
+
+                                    } else {
+                                    }
+                                }
+                                else {
+                                }
+                            }
+                        });
+
+
+
+                    } else {
+                    }
+                }
+                else {
+                }
+            }
+        });
     }
 
 

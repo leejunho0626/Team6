@@ -23,6 +23,29 @@
                     android:orientation="horizontal"
                     android:background="@drawable/shape_text2">
 
+
+
+                    <TextView
+                        android:id="@+id/txtScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_gravity="right"
+                        android:text=" 현재 점수 "
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="17dp"/>
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_text2">
+
                    <CheckBox
                        android:id="@+id/fav1"
                        android:layout_width="wrap_content"
