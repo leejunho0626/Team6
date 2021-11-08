@@ -326,8 +326,8 @@ public class FragmentList extends Fragment {
     public void saveScore(String total){
         FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserWrite userWrite = new UserWrite(total);
-        db.collection("DB").document("User").collection(user1.getUid()).document("Score").set(userWrite)
+        UserRank userRank = new UserRank(user1.getEmail(),total);
+        db.collection("DB").document("User").collection(user1.getUid()).document("Score").set(userRank)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
@@ -336,7 +336,7 @@ public class FragmentList extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -353,11 +353,14 @@ public class FragmentList extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString();
-                        str1 = str1.substring(str1.indexOf("=")+1);
-                        x = str1.substring(0, str1.indexOf("}"));
+                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
+                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
+                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                        //String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                        //String id2 = id1.substring(0, id1.indexOf("}")); //이메일
 
-                       txtScore.setText("현재점수 : "+x+"점");
+                        txtScore.setText("현재점수 : "+score1+"점");
+
 
 
 
@@ -439,8 +442,6 @@ public class FragmentList extends Fragment {
                         else progressBar2.setProgress(value2);
 
 
-
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
                         db.collection("DB").document("User").collection(user.getUid()).document("Score")
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
@@ -450,13 +451,15 @@ public class FragmentList extends Fragment {
                                     DocumentSnapshot document = task.getResult();
                                     if (document.exists()) {
                                         //DB 필드명 표시 지워서 데이터 값만 표시
-                                        String str1 = document.getData().toString();
-                                        str1 = str1.substring(str1.indexOf("=")+1);
-                                        x = str1.substring(0, str1.indexOf("}"));
+                                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
+                                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
+                                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                                        //String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                                        //String id2 = id1.substring(0, id1.indexOf("}")); //이메일
+                                        
+                                        int nowScore = Integer.parseInt(score1); //점수
 
-                                        int nowScore = Integer.parseInt(x);
-
-                                        String sum = Integer.toString(nowScore+value+value2);
+                                        String sum = Integer.toString(nowScore+value+value2); //기존점수와 더하기
 
                                         saveScore(sum);
 
@@ -468,6 +471,7 @@ public class FragmentList extends Fragment {
                                 }
                             }
                         });
+
 
 
 

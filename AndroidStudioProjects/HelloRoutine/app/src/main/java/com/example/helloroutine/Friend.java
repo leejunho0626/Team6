@@ -28,7 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class Friend extends AppCompatActivity {
 
     Button btnAddFr;
-    TextView txtFr1;
+    TextView txtFr1, txtFrRank, txtFrRank2;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -40,9 +40,13 @@ public class Friend extends AppCompatActivity {
 
         btnAddFr = findViewById(R.id.btnAddFr);
         txtFr1= findViewById(R.id.txtFr1);
+        txtFrRank = findViewById(R.id.txtFrRank);
+        txtFrRank2 = findViewById(R.id.txtFrRank2);
         firebaseAuth = FirebaseAuth.getInstance();
 
 
+        ownScore();
+        frScore();
         addFrDownload();
 
 
@@ -93,8 +97,94 @@ public class Friend extends AppCompatActivity {
 
             }
         });
+    }
+    //본인점수 표시
+    public void ownScore(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Score")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
+                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
+                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                        String id2 = id1.substring(0, id1.indexOf("}")); //이메일
+                        
+                        txtFrRank.setText(id2+"              "+score1+"점");
+
+
+                    } else {
+
+                    }
+                }
+                else {
+                }
+            }
+        });
 
     }
+
+    //친구점수 표시
+    public void frScore(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document("1")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String y = str1.substring(0, str1.indexOf("}"));
+
+                        db.collection("DB").document("User").collection(y).document("Score")
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
+                                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
+                                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                                        String id2 = id1.substring(0, id1.indexOf("}")); //이메일
+
+                                        txtFrRank2.setText(id2+"              "+score1+"점");
+
+
+                                    } else {
+
+                                    }
+                                }
+                                else {
+                                }
+                            }
+                        });
+
+
+                    } else {
+
+                    }
+                }
+                else {
+                }
+            }
+        });
+
+    }
+
 
 
     //친구 추가1
@@ -102,6 +192,22 @@ public class Friend extends AppCompatActivity {
 
         if(uid.length()>0){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
+            int userCounting = 0;
+            /*db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document("1")
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                     @Override
+                                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                         if (task.isSuccessful()) {
+                                                             DocumentSnapshot document = task.getResult();
+                                                             if (document.exists()) {
+
+                                                             }
+                                                         }
+                                                     }
+                                                 });*/
+
+
+
             UserWrite userWrite = new UserWrite(uid);
             db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document("1").set(userWrite)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -151,6 +257,8 @@ public class Friend extends AppCompatActivity {
                                         String y = str1.substring(0, str1.indexOf("}"));
 
                                         txtFr1.setText("1. "+y);
+
+
                                     }
                                 }
                             }
