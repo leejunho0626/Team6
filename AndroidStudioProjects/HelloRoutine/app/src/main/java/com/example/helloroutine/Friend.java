@@ -46,10 +46,13 @@ public class Friend extends AppCompatActivity {
     ArrayList<String> scoreList = new ArrayList<>();
     ArrayList<String> idScoreList = new ArrayList<>();
     ArrayList<String> friendList = new ArrayList<>();
+    ArrayList<String> arrayList = new ArrayList<>();
 
     String id2, score1, temp1, temp2;
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> adapter2;
+    ArrayAdapter<String> adapter3;
+    ArrayAdapter<String> adapter4;
     ListView listView, listView2;
 
     @Override
@@ -85,8 +88,11 @@ public class Friend extends AppCompatActivity {
             }
         });*/
 
+
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, idScoreList);
         adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friendList);
+        adapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, scoreList);
+        adapter4 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, idList);
 
         listView.setAdapter(adapter);
         listView2.setAdapter(adapter2);
@@ -159,134 +165,6 @@ public class Friend extends AppCompatActivity {
         }
     }
 
-    //본인점수 표시
-    public void ownScore(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Score")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
-                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                        score1 = str1.substring(0, str1.indexOf(",")); //점수
-                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                        id2 = id1.substring(0, id1.indexOf("}")); //이메일
-
-
-
-
-                    }
-
-
-
-                    else {
-
-                    }
-
-                }
-                else {
-                }
-
-
-            }
-
-        });
-
-    }
-
-
-    //친구점수 표시
-    public void frScore(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid")
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        idList.add(document.getData().toString());
-                        scoreList.add("90");
-                        adapter.notifyDataSetChanged();
-
-                        for (int i =0; i < idList.size() ; i++ ){
-
-                            for (int j = i+1; j < idList.size() ; j++ ){
-
-                                if (Integer.parseInt(scoreList.get(j)) > Integer.parseInt(scoreList.get(i))){
-
-
-
-                                    String temp = scoreList.get(i);
-
-                                    scoreList.set(i, scoreList.get(j));
-
-                                    scoreList.set(j, temp);
-
-
-
-                                    String str = idList.get(i);
-
-                                    idList.set(i, idList.get(j));
-
-                                    idList.set(j, str);
-
-                                }
-
-                            }
-
-                        }
-                        for (int i =0; i < idList.size() ; i++ ){
-                            idScoreList.add(idList.get(i) + "/" + scoreList.get(i));
-                        }
-
-
-
-                        if (document.exists()) {
-                            //DB 필드명 표시 지워서 데이터 값만 표시
-                            String str1 = document.getId().toString();
-
-                            db.collection("DB").document("User").collection(str1).document("ID")
-                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if(task.isSuccessful()){
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()){
-                                            //DB 필드명 표시 지워서 데이터 값만 표시
-                                            String str1 = document.getData().toString();
-                                            str1 = str1.substring(str1.indexOf("=")+1);
-                                            String y = str1.substring(0, str1.indexOf("}"));
-
-                                            txtFr1.setText("1. "+y);
-
-
-                                        }
-                                    }
-                                }
-
-                            });
-                        } else {
-                            txtFr1.setText(" 새로운 친구를 추가하세요.");
-
-                        }
-
-                    }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-    }
-
-
 
     //친구 추가1
     public void addFriend(String uid){
@@ -324,7 +202,7 @@ public class Friend extends AppCompatActivity {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         if (document.exists()) {
                             //DB 필드명 표시 지워서 데이터 값만 표시
-                            String str1 = document.getId().toString();
+                            String str1 = document.getId().toString(); //uid
 
                             db.collection("DB").document("User").collection(str1).document("ID")
                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
@@ -334,18 +212,16 @@ public class Friend extends AppCompatActivity {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()){
                                             //DB 필드명 표시 지워서 데이터 값만 표시
-                                            String str1 = document.getData().toString();
-                                            str1 = str1.substring(str1.indexOf("=")+1);
-                                            String y = str1.substring(0, str1.indexOf("}"));
+                                            String str2 = document.getData().toString();
+                                            str2 = str2.substring(str2.indexOf("=")+1);
+                                            String y = str2.substring(0, str2.indexOf("}"));
 
-                                            Log.d(TAG, document.getId() + " => " +y);
+                                            Log.d(TAG, "ID" + " => " +y);
 
                                             friendList.add(y);
-                                            adapter2.notifyDataSetChanged();
 
-                                            for (int i =0; i < friendList.size() ; i++ ){
-                                                idScoreList.add(friendList.get(i));
-                                            }
+
+                                            adapter2.notifyDataSetChanged();
 
                                             db.collection("DB").document("User").collection(str1).document("Score")
                                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
@@ -355,15 +231,38 @@ public class Friend extends AppCompatActivity {
                                                         DocumentSnapshot document = task.getResult();
                                                         if (document.exists()){
                                                             //DB 필드명 표시 지워서 데이터 값만 표시
-                                                            String str1 = document.getData().toString();
-                                                            str1 = str1.substring(str1.indexOf("=")+1);
-                                                            String y = str1.substring(0, str1.indexOf("}"));
+                                                            String str1 = document.getData().toString(); //{score=점수,id=이메일}
+                                                            str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
+                                                            score1 = str1.substring(0, str1.indexOf(",")); //점수
+                                                            String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                                                            id2 = id1.substring(0, id1.indexOf("}")); //이메일
 
-                                                            Log.d(TAG, document.getId() + " => " +y);
+                                                            Log.d(TAG, "id/score" + " => " +id2+" "+score1);
 
+                                                            scoreList.add(score1);
+                                                            adapter3.notifyDataSetChanged();
+                                                            idList.add(id2);
+                                                            adapter4.notifyDataSetChanged();
 
+                                                            for (int i =0; i < idList.size() ; i++ ){
+                                                                for (int j = i+1; j < idList.size() ; j++ ){
+                                                                    if (Integer.parseInt(scoreList.get(j)) > Integer.parseInt(scoreList.get(i))){
+                                                                        String temp = scoreList.get(i);
+                                                                        scoreList.set(i, scoreList.get(j));
+                                                                        scoreList.set(j, temp);
+                                                                        String str = idList.get(i);
+                                                                        idList.set(i, idList.get(j));
+                                                                        idList.set(j, str);
+                                                                    }
+                                                                }
+                                                            }
+                                                            idScoreList.clear();
+                                                            for (int i =0; i < idList.size() ; i++ ){
 
-
+                                                                idScoreList.add(idList.get(i)+ " / " + scoreList.get(i));
+                                                            }
+                                                            adapter.notifyDataSetChanged();
+                                                            Log.d(TAG, "total"+ " => " +idScoreList);
 
 
                                                         }

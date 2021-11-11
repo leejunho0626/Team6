@@ -154,7 +154,7 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
                         locationB.setLatitude(listA.get(i+1));
                         locationB.setLongitude(listB.get(i+1));
                         s = locationA.distanceTo(locationB); //lista[i], listb[i] ~ lista[i+1], listb[i+1] 사이의 거리를 s에 저장
-                        if(s > 100) // 거리가 50m 가 넘을 시 lista, listb를 비워줌. gps가 갑자기 이상한 위치로 잡히는 오류 수정
+                        if(s > 100) // 거리가 100m 가 넘을 시 lista, listb를 비워줌. gps가 갑자기 이상한 위치로 잡히는 오류 수정
                         {
                             listA.set(i + 1, null);
                             listB.set(i + 1, null);
@@ -162,10 +162,9 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
                             }
                             while (listB.remove(null)) {
                             }
+                            i--;
                         }
-
                     }
-
                     for (int i = 0; i < listA.size(); i++) {
                         listC.add(new LatLng(listA.get(i), listB.get(i))); // listC에 위도 경도 저장
                     }

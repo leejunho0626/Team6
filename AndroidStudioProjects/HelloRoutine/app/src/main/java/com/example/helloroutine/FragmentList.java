@@ -326,7 +326,7 @@ public class FragmentList extends Fragment {
     public void saveScore(String total){
         FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserRank userRank = new UserRank(user1.getEmail(),total);
+        UserRank userRank = new UserRank(total);
         db.collection("DB").document("User").collection(user1.getUid()).document("Score").set(userRank)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -355,7 +355,7 @@ public class FragmentList extends Fragment {
                         //DB 필드명 표시 지워서 데이터 값만 표시
                         String str1 = document.getData().toString(); //{score=점수,id=이메일}
                         str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                        String score1 = str1.substring(0, str1.indexOf("}")); //점수
                         //String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
                         //String id2 = id1.substring(0, id1.indexOf("}")); //이메일
 
@@ -453,10 +453,10 @@ public class FragmentList extends Fragment {
                                         //DB 필드명 표시 지워서 데이터 값만 표시
                                         String str1 = document.getData().toString(); //{score=점수,id=이메일}
                                         str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                                        String score1 = str1.substring(0, str1.indexOf("}")); //점수
                                         //String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
                                         //String id2 = id1.substring(0, id1.indexOf("}")); //이메일
-                                        
+
                                         int nowScore = Integer.parseInt(score1); //점수
 
                                         String sum = Integer.toString(nowScore+value+value2); //기존점수와 더하기
@@ -506,7 +506,7 @@ public class FragmentList extends Fragment {
                                     //세번째 즐겨찾기에 이미 등록된 상태라면
                                     if (document.exists()) {
                                         Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 초과(최대3개).", Toast.LENGTH_LONG).show();
-                                    } 
+                                    }
                                     //추가3
                                     else {
                                         addFav3(list);
@@ -566,7 +566,7 @@ public class FragmentList extends Fragment {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void avoid) {
-                           //
+                            //
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -590,7 +590,7 @@ public class FragmentList extends Fragment {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void avoid) {
-                          //
+                            //
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

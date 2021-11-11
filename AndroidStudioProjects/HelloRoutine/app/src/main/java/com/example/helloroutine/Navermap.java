@@ -143,8 +143,6 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
                             }
                         }
                         else {
-
-
                         }
                     }
 
@@ -173,8 +171,6 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
                         }).show();
             }
         });
-
-
     }
 
 
@@ -186,9 +182,7 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
 
         Intent receive_intent = getIntent();
 
-
         listC.clear();
-
         listC = receive_intent.getParcelableArrayListExtra("Key01"); // 위도 경도의 좌표값을 list에 담아서 가져옴
 
         CameraPosition cameraPosition = new CameraPosition((LatLng) listC.get(0), 16); // 첫번째 시작지점으로 카메라의 위치를 조정함.
