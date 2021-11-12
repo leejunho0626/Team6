@@ -1,12 +1,11 @@
 package com.example.helloroutine;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,39 +15,32 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
-
+import java.util.Timer;
+import java.util.TimerTask;
 import static android.content.ContentValues.TAG;
 
 public class Friend extends AppCompatActivity {
 
-    Button btnAddFr, btnShow;
-    TextView txtFr1, txtFrRank, txtFrRank2, test1, test2;
+    Button btnAddFr;
+    ProgressDialog customProgressDialog;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     ArrayList<String> idList = new ArrayList<>();
     ArrayList<String> scoreList = new ArrayList<>();
     ArrayList<String> idScoreList = new ArrayList<>();
     ArrayList<String> friendList = new ArrayList<>();
-    ArrayList<String> arrayList = new ArrayList<>();
-
-    String id2, score1, temp1, temp2;
+    String id2, score1;
     ArrayAdapter<String> adapter;
     ArrayAdapter<String> adapter2;
     ArrayAdapter<String> adapter3;
@@ -61,33 +53,19 @@ public class Friend extends AppCompatActivity {
         setContentView(R.layout.friend);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        btnShow = findViewById(R.id.btnShow1);
-        btnAddFr = findViewById(R.id.btnAddFr);
-
-        test1= findViewById(R.id.test1);
-        test2= findViewById(R.id.test2);
+        btnAddFr = findViewById(R.id.btnAddFriend);
         listView = findViewById(R.id.listView);
         listView2 = findViewById(R.id.listView2);
 
-
+        //로딩화면 객체 생성
+        customProgressDialog = new ProgressDialog(this);
+        //로딩화면을 투명하게 설정
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        // 로딩화면 보여주기
+        customProgressDialog.show();
         firebaseAuth = FirebaseAuth.getInstance();
 
-
-
         showFriendList();
-
-
-
-        //list_(temp1,temp2);
-
-        /*
-        btnShow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                list_();
-            }
-        });*/
-
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, idScoreList);
         adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friendList);
@@ -96,6 +74,24 @@ public class Friend extends AppCompatActivity {
 
         listView.setAdapter(adapter);
         listView2.setAdapter(adapter2);
+
+        //로딩화면 종료
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TimerTask task = new TimerTask(){
+                    @Override
+                    public void run() {
+                        customProgressDialog.dismiss();
+
+                    }
+                };
+
+                Timer timer = new Timer();
+                timer.schedule(task, 1500);
+            }
+        });
+        thread.start();
 
         btnAddFr.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -152,21 +148,7 @@ public class Friend extends AppCompatActivity {
 
 
     }
-
-    public void list_(String id, String score){
-
-        idList.add(id);
-        scoreList.add(score);
-        if(id==null){
-            idList.add("null");
-        }
-        if(score==null){
-            scoreList.add("0");
-        }
-    }
-
-
-    //친구 추가1
+    //친구 추가
     public void addFriend(String uid){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if(uid.length()>0){
@@ -190,7 +172,7 @@ public class Friend extends AppCompatActivity {
         }
     }
 
-    //친구 표시1
+    //친구 표시
     public void showFriendList(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid")

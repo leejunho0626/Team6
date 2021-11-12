@@ -25,8 +25,6 @@ public class FragmentChallenge extends Fragment {
     private final int Fragment_1 = 1;
     private final int Fragment_2 = 2;
     private final int Fragment_3 = 3;
-    Context mContext;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 

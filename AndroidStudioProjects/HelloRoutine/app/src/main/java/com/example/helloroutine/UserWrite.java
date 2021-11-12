@@ -8,7 +8,6 @@ public class UserWrite {
 
     public String write;
     public UserWrite(String write) {
-        //
         this.write = write;
     }
 

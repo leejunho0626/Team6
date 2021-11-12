@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -64,6 +66,7 @@ public class FragmentHome extends Fragment {
     private Animation fab_open, fab_close;
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2;
+    LinearLayout linearLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -84,6 +87,7 @@ public class FragmentHome extends Fragment {
         txtChallenge1 = (TextView) view.findViewById(R.id.txtChallenge1);
         txtChallenge2 = (TextView) view.findViewById(R.id.txtChallenge2);
         txtChallenge3 = (TextView) view.findViewById(R.id.txtChallenge3);
+        linearLayout = view.findViewById(R.id.layout_Guid);
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -119,6 +123,15 @@ public class FragmentHome extends Fragment {
             public void onClick(View v) {
                 //
                 anim();
+            }
+        });
+
+        linearLayout.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/results?search_query=%ED%94%BC%EC%A7%80%EC%BB%AC%EA%B0%A4%EB%9F%AC%EB%A6%AC"));
+                startActivity(intent);
             }
         });
 
@@ -214,7 +227,7 @@ public class FragmentHome extends Fragment {
                 "&nx=" +nx+
                 "&ny=" +ny;
         NetworkTask networkTask = new NetworkTask(url, null);
-        //networkTask.execute(); //날씨 실행
+        networkTask.execute(); //날씨 실행
 
         //로딩화면 종료
         Thread thread = new Thread(new Runnable() {

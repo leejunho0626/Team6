@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#9370DB"
     android:orientation="vertical">
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,14 +14,12 @@
         android:text="Register"
         android:textStyle="bold"
         android:textSize="40dp"/>
-
+    //스크롤뷰
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:background="@drawable/layout_background2">
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,12 +38,10 @@
                 android:paddingLeft="35dp"
                 android:layout_gravity="left"
                 tools:ignore="MissingConstraints"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 //아이디 입력창
                 <EditText
                     android:id="@+id/edtID"
@@ -68,7 +63,7 @@
                     android:gravity="center"
                     android:text=" @ "
                     android:textSize="20dp"/>
-
+                //이메일 입력창
                 <EditText
                     android:id="@+id/edtEmail"
                     android:layout_width="wrap_content"
@@ -78,9 +73,8 @@
                     android:paddingLeft="10dp"
                     android:hint="입력하세요"
                     android:background="@drawable/white_edittext"/>
-
             </LinearLayout>
-
+            //오류 메시지
             <TextView
                 android:id="@+id/txtError1"
                 android:layout_width="wrap_content"
@@ -91,12 +85,11 @@
                 android:paddingLeft="30dp"
                 android:layout_gravity="left"
                 tools:ignore="MissingConstraints"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
-
+                //중복 확인 버튼
                 <Button
                     android:id="@+id/btnCheckID"
                     android:layout_width="wrap_content"
@@ -108,7 +101,7 @@
                     android:text="중복확인"
                     android:textColor="@color/white"
                     tools:ignore="MissingConstraints"/>
-
+                //이메일 선택 스피너
                 <Spinner
                     android:id="@+id/spinner"
                     android:layout_width="wrap_content"
@@ -117,10 +110,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:layout_gravity="center"/>
-
             </LinearLayout>
-
-
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
@@ -133,7 +123,6 @@
                 android:paddingLeft="35dp"
                 android:layout_gravity="left"
                 tools:ignore="MissingConstraints"/>
-
             //비밀번호 입력창
             <EditText
                 android:id="@+id/edtPW"
@@ -146,7 +135,7 @@
                 android:paddingLeft="10dp"
                 android:hint="6자리 이상 입력하세요"
                 tools:ignore="MissingConstraints"/>
-
+            //오류 메시지
             <TextView
                 android:id="@+id/txtError2"
                 android:layout_width="wrap_content"
@@ -157,7 +146,6 @@
                 android:paddingLeft="30dp"
                 android:layout_gravity="left"
                 tools:ignore="MissingConstraints"/>
-
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
@@ -170,7 +158,6 @@
                 android:paddingLeft="35dp"
                 android:layout_gravity="left"
                 tools:ignore="MissingConstraints"/>
-
             //비밀번호 재입력창
             <EditText
                 android:id="@+id/edtPW2"
@@ -183,7 +170,7 @@
                 android:background="@drawable/white_edittext"
                 android:paddingLeft="10dp"
                 tools:ignore="MissingConstraints"/>
-
+            //오류 메시지
             <TextView
                 android:id="@+id/txtError3"
                 android:layout_width="wrap_content"
@@ -195,11 +182,9 @@
                 android:paddingBottom="20dp"
                 android:layout_gravity="left"
                 tools:ignore="MissingConstraints"/>
-
-
-            //로그인 버튼
+            //회원가입 버튼
             <Button
-                android:id="@+id/btnOk"
+                android:id="@+id/btnSignUp"
                 android:layout_width="356dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#3F51B5"
@@ -207,9 +192,6 @@
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 tools:ignore="MissingConstraints"/>
-
         </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout>

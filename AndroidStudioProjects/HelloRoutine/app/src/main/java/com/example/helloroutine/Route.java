@@ -2,17 +2,10 @@ package com.example.helloroutine;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
-
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,28 +13,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.naver.maps.geometry.LatLng;
-import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
-import com.naver.maps.map.NaverMapSdk;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
-import com.naver.maps.map.overlay.Marker;
-import com.naver.maps.map.overlay.PathOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import static java.lang.Thread.sleep;
 
 public class Route extends AppCompatActivity implements OnMapReadyCallback {
     private static NaverMap naverMap;
@@ -62,7 +43,6 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
     boolean btnbool = false;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

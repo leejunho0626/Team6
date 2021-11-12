@@ -11,9 +11,12 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,22 +33,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class FragmentList extends Fragment {
 
-    CheckBox btnFav1, btnFav2, btnFav3, btnFav4, btnFav5;
+    CheckBox btnFav;
+    CheckedTextView cbFav;
     TextView txtCha1 , txtCha2, txtCha3, txtCha4, txtCha5, txtScore;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private SharedPreferences pref1, pref2, pref3, pref4, pref5;
-    private SharedPreferences.Editor editor1, editor2, editor3, editor4, editor5;
-    private boolean saveFav1, saveFav2, saveFav3, saveFav4, saveFav5;
-    private ProgressBar progressBar1, progressBar2, progressBar3, progressBar4, progressBar5;
+    private ProgressBar progressBar;
     ProgressDialog customProgressDialog;
     String x;
-    String totalDis, totalPlan;
+    ListView listView;
+    ListAdapter adapter;
+
 
 
     @SuppressLint("SetTextI18n")
@@ -54,22 +58,13 @@ public class FragmentList extends Fragment {
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_list, container, false);
 
-        btnFav1 = view.findViewById(R.id.fav1);
-        btnFav2 = view.findViewById(R.id.fav2);
-        btnFav3 = view.findViewById(R.id.fav3);
-        btnFav4 = view.findViewById(R.id.fav4);
-        btnFav5 = view.findViewById(R.id.fav5);
-        txtCha1 = view.findViewById(R.id.challenge1);
-        txtCha2 = view.findViewById(R.id.challenge2);
-        txtCha3 = view.findViewById(R.id.challenge3);
-        txtCha4 = view.findViewById(R.id.challenge4);
-        txtCha5 = view.findViewById(R.id.challenge5);
+        cbFav = view.findViewById(R.id.cbFav);
         txtScore = view.findViewById(R.id.txtScore);
-        progressBar1 = view.findViewById(R.id.prg1);
-        progressBar2 = view.findViewById(R.id.prg2);
-        progressBar3 = view.findViewById(R.id.prg3);
-        progressBar4 = view.findViewById(R.id.prg4);
-        progressBar5 = view.findViewById(R.id.prg5);
+        progressBar= view.findViewById(R.id.prg);
+        listView = view.findViewById(R.id.listView);
+        adapter = new ListAdapter((getActivity()));
+        listView.setAdapter(adapter);
+
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -79,38 +74,13 @@ public class FragmentList extends Fragment {
         customProgressDialog.show();
 
         firebaseAuth = FirebaseAuth.getInstance();
-        pref1 = getActivity().getSharedPreferences("pref1", Activity.MODE_PRIVATE);
-        pref2 = getActivity().getSharedPreferences("pref2", Activity.MODE_PRIVATE);
-        pref3 = getActivity().getSharedPreferences("pref3", Activity.MODE_PRIVATE);
-        pref4 = getActivity().getSharedPreferences("pref4", Activity.MODE_PRIVATE);
-        pref5 = getActivity().getSharedPreferences("pref5", Activity.MODE_PRIVATE);
-        editor1 = pref1.edit();
-        editor2 = pref2.edit();
-        editor3 = pref3.edit();
-        editor4 = pref4.edit();
-        editor5 = pref5.edit();
-        saveFav1 = pref1.getBoolean("SaveFav1",false);
-        saveFav2 = pref2.getBoolean("SaveFav2",false);
-        saveFav3 = pref3.getBoolean("SaveFav3",false);
-        saveFav4 = pref4.getBoolean("SaveFav4",false);
-        saveFav5 = pref5.getBoolean("SaveFav5",false);
 
-        txtCha1.setText("운동 일정 10개 추가");
-        txtCha2.setText("운동 일정 30개 추가");
-        txtCha3.setText("걷거나 뛴 거리 3km");
-        txtCha4.setText("걷거나 뛴 거리 5km");
-        txtCha5.setText("3일 연속 접속");
 
 
         totalDistance(); //거리 DB 불러오기 - 진행도 표시
         totalPlan();
+        totalAttendance();
         loadingScore();
-
-
-        showBtnFav1();
-        showBtnFav2();
-        showBtnFav3();
-
 
 
         //로딩화면 종료
@@ -131,17 +101,26 @@ public class FragmentList extends Fragment {
         });
         thread.start();
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                int check_position = listView.getCheckedItemPosition();   //리스트뷰의 포지션을 가져옴.
+                Object vo = adapterView.getAdapter().getItem(i).toString();  //리스트뷰의 포지션 내용을 가져옴
+                Toast.makeText(getContext().getApplicationContext(), Integer.toString(i), Toast.LENGTH_LONG).show();
+            }
+        });
 
 
 
 
-        btnFav1.setOnClickListener(new Button.OnClickListener() {
+
+
+        /*btnFav1.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //즐겨찾기 설정
                 if(btnFav1.isChecked()){
-                    editor1.putBoolean("SaveFav1",btnFav1.isChecked());
-                    editor1.commit();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -165,8 +144,6 @@ public class FragmentList extends Fragment {
                 }
                 //즐겨찾기 해제
                 else{
-                    editor1.clear();
-                    editor1.commit();
                     deleteFav1(txtCha1.getText().toString());
                 }
             }
@@ -176,8 +153,6 @@ public class FragmentList extends Fragment {
             public void onClick(View v) {
                 //즐겨찾기 설정
                 if(btnFav2.isChecked()){
-                    editor2.putBoolean("SaveFav2",btnFav2.isChecked());
-                    editor2.commit();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -200,8 +175,6 @@ public class FragmentList extends Fragment {
                 }
                 //즐겨찾기 해제
                 else{
-                    editor2.clear();
-                    editor2.commit();
                     deleteFav1(txtCha2.getText().toString());
                 }
 
@@ -212,8 +185,6 @@ public class FragmentList extends Fragment {
             public void onClick(View v) {
                 //즐겨찾기 설정
                 if(btnFav3.isChecked()){
-                    editor3.putBoolean("SaveFav3",btnFav3.isChecked());
-                    editor3.commit();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -237,8 +208,6 @@ public class FragmentList extends Fragment {
                 }
                 //즐겨찾기 해제
                 else{
-                    editor3.clear();
-                    editor3.commit();
                     deleteFav1(txtCha3.getText().toString());
                 }
 
@@ -249,8 +218,6 @@ public class FragmentList extends Fragment {
             public void onClick(View v) {
                 //즐겨찾기 설정
                 if(btnFav4.isChecked()){
-                    editor4.putBoolean("SaveFav4",btnFav4.isChecked());
-                    editor4.commit();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -274,8 +241,6 @@ public class FragmentList extends Fragment {
                 }
                 //즐겨찾기 해제
                 else{
-                    editor4.clear();
-                    editor4.commit();
                     deleteFav1(txtCha4.getText().toString());
                 }
 
@@ -286,8 +251,6 @@ public class FragmentList extends Fragment {
             public void onClick(View v) {
                 //즐겨찾기 설정
                 if(btnFav5.isChecked()){
-                    editor5.putBoolean("SaveFav5",btnFav5.isChecked());
-                    editor5.commit();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -311,13 +274,11 @@ public class FragmentList extends Fragment {
                 }
                 //즐겨찾기 해제
                 else{
-                    editor5.clear();
-                    editor5.commit();
                     deleteFav1(txtCha5.getText().toString());
                 }
 
             }
-        });
+        });*/
 
         return view;
     }
@@ -326,7 +287,7 @@ public class FragmentList extends Fragment {
     public void saveScore(String total){
         FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserRank userRank = new UserRank(total);
+        UserRank userRank = new UserRank(user1.getEmail(),total);
         db.collection("DB").document("User").collection(user1.getUid()).document("Score").set(userRank)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -355,9 +316,9 @@ public class FragmentList extends Fragment {
                         //DB 필드명 표시 지워서 데이터 값만 표시
                         String str1 = document.getData().toString(); //{score=점수,id=이메일}
                         str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                        String score1 = str1.substring(0, str1.indexOf("}")); //점수
-                        //String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                        //String id2 = id1.substring(0, id1.indexOf("}")); //이메일
+                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                        String id2 = id1.substring(0, id1.indexOf("}")); //이메일
 
                         txtScore.setText("현재점수 : "+score1+"점");
 
@@ -393,19 +354,18 @@ public class FragmentList extends Fragment {
                         x = str1.substring(0, str1.indexOf("}"));
 
                         int value = (int) Math.round(Double.parseDouble(x)/3*100);
-                        if(value>=100) progressBar3.setProgress(100);
-                        else progressBar3.setProgress(value);
+
+                        adapter.addItem("걷거나 뛴 거리 3km", Integer.toString(value)+"%", value);
+                        adapter.notifyDataSetChanged();
 
                         int value2 = (int) Math.round(Double.parseDouble(x)/5*100);
-                        if(value2>=100) progressBar4.setProgress(100);
-                        else progressBar4.setProgress(value2);
+
+                        adapter.addItem("걷거나 뛴 거리 5km", Integer.toString(value2)+"%", value2);
+                        adapter.notifyDataSetChanged();
 
                         String sum = Integer.toString(value+value2);
 
                         saveScore(sum);
-
-
-
 
                     } else {
                     }
@@ -434,12 +394,14 @@ public class FragmentList extends Fragment {
                         x = str1.substring(0, str1.indexOf("}"));
 
                         int value = Integer.parseInt(x)*10;
-                        if(value>=100) progressBar1.setProgress(100);
-                        else progressBar1.setProgress(value);
+
+                        adapter.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value);
+                        adapter.notifyDataSetChanged();
 
                         int value2 = (int) Math.round(Double.parseDouble(x)/30*100);
-                        if(value2>=100) progressBar2.setProgress(100);
-                        else progressBar2.setProgress(value2);
+
+                        adapter.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2);
+                        adapter.notifyDataSetChanged();
 
 
                         db.collection("DB").document("User").collection(user.getUid()).document("Score")
@@ -453,9 +415,9 @@ public class FragmentList extends Fragment {
                                         //DB 필드명 표시 지워서 데이터 값만 표시
                                         String str1 = document.getData().toString(); //{score=점수,id=이메일}
                                         str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                                        String score1 = str1.substring(0, str1.indexOf("}")); //점수
-                                        //String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                                        //String id2 = id1.substring(0, id1.indexOf("}")); //이메일
+                                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                                        String id2 = id1.substring(0, id1.indexOf("}")); //이메일
 
                                         int nowScore = Integer.parseInt(score1); //점수
 
@@ -482,6 +444,73 @@ public class FragmentList extends Fragment {
                 }
             }
         });
+    }
+
+    //출석일수 DB 불러오기
+    public void totalAttendance(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendance")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        x = str1.substring(0, str1.indexOf("}"));
+
+                        int value = Integer.parseInt(x)*10;
+
+                        adapter.addItem("3일 연속 출석", Integer.toString(value)+"%", value);
+                        adapter.notifyDataSetChanged();
+
+                        db.collection("DB").document("User").collection(user.getUid()).document("Score")
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
+                                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
+                                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
+                                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                                        String id2 = id1.substring(0, id1.indexOf("}")); //이메일
+
+                                        int nowScore = Integer.parseInt(score1); //점수
+
+                                        String sum = Integer.toString(nowScore+value); //기존점수와 더하기
+
+                                        saveScore(sum);
+
+
+                                    } else {
+                                    }
+                                }
+                                else {
+                                }
+                            }
+                        });
+
+
+                    } else {
+                        adapter.addItem("3일 연속 출석", Integer.toString(0)+"%", 0);
+                        adapter.addItem("7일 연속 출석", Integer.toString(0)+"%", 0);
+                        adapter.addItem("10일 연속 출석", Integer.toString(0)+"%", 0);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+                else {
+
+                }
+            }
+        });
+
     }
 
 
@@ -752,7 +781,7 @@ public class FragmentList extends Fragment {
     }
 
     //즐겨찾기 표시1
-    public void showBtnFav1(){
+    /*public void showBtnFav1(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -870,6 +899,6 @@ public class FragmentList extends Fragment {
             }
 
         });
-    }
+    }*/
 
 }

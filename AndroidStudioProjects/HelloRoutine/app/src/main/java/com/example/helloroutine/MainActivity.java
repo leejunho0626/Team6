@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private FragmentUser fragmentUser = new FragmentUser();
     private FragmentCalendar fragmentCalendar = new FragmentCalendar();
     private FragmentChallenge fragmentChallenge = new FragmentChallenge();
-    private FragmentSetting fragmentSetting = new FragmentSetting();
 
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
@@ -95,10 +94,8 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     customProgressDialog.dismiss();
-
                                 }
                             };
-
                             Timer timer = new Timer();
                             timer.schedule(task, 1500);
                         }
@@ -107,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.challenge:
                     transaction.replace(R.id.frameLayout, fragmentChallenge).commitAllowingStateLoss();
-                    break;
-                case R.id.setting:
-                    transaction.replace(R.id.frameLayout, fragmentSetting).commitAllowingStateLoss();
                     break;
             }
             return true;

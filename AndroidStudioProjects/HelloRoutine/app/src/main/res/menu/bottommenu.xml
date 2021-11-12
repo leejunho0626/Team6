@@ -17,8 +17,4 @@
         android:id="@+id/challenge"
         android:icon="@drawable/ic_baseline_stars_24"
         android:title="Challenge" />
-    <item
-        android:id="@+id/setting"
-        android:icon="@drawable/ic_baseline_settings_24"
-        android:title="Setting" />
 </menu>
