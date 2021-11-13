@@ -15,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -31,6 +33,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.naver.maps.map.LocationSource;
 import com.naver.maps.map.util.FusedLocationSource;
 import java.io.BufferedReader;
@@ -38,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +50,9 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.content.ContentValues.TAG;
+import static java.lang.Thread.sleep;
 
 public class FragmentHome extends Fragment {
 
@@ -67,6 +75,12 @@ public class FragmentHome extends Fragment {
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2;
     LinearLayout linearLayout;
+    ListView listView;
+    ArrayAdapter<String> adapter;
+    ArrayList<String> idList = new ArrayList<>();
+    HomeListAdapter adapter2;
+    String x;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -84,10 +98,13 @@ public class FragmentHome extends Fragment {
         txtPlan1 = (TextView) view.findViewById(R.id.txtPlan1);
         txtPlan2 = (TextView) view.findViewById(R.id.txtPlan2);
         txtPlan3 = (TextView) view.findViewById(R.id.txtPlan3);
-        txtChallenge1 = (TextView) view.findViewById(R.id.txtChallenge1);
-        txtChallenge2 = (TextView) view.findViewById(R.id.txtChallenge2);
-        txtChallenge3 = (TextView) view.findViewById(R.id.txtChallenge3);
         linearLayout = view.findViewById(R.id.layout_Guid);
+
+
+        listView = view.findViewById(R.id.home_listView);
+        adapter2 = new HomeListAdapter((getActivity()));
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, idList);
+        listView.setAdapter(adapter2);
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -147,7 +164,15 @@ public class FragmentHome extends Fragment {
         writeDownload3(format_time2);
 
         //도전과제 표시
-        fav1();
+        //showFriendList();
+        try {
+            totalDistance(); //거리 DB 불러오기 - 진행도 표시
+            sleep(2000);
+            totalPlan();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //날씨
         String strline = "";
@@ -347,10 +372,47 @@ public class FragmentHome extends Fragment {
         });
     }
 
-    //즐겨찾기 도전과제1
-    public void fav1(){
+    //거리 DB 불러오기
+    public void totalDistance(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("favorite").document("1")
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalDistance")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        x = str1.substring(0, str1.indexOf("}"));
+
+                        int value = (int) Math.round(Double.parseDouble(x)/3*100);
+                        int value2 = (int) Math.round(Double.parseDouble(x)/5*100);
+
+                        showBtnFav("0", value, value2);
+                        showBtnFav("1", value, value2);
+
+
+                    } else {
+
+                        adapter2.addItem("걷거나 뛴 거리 3km", Integer.toString(0)+"%", 0);
+                        adapter2.addItem("걷거나 뛴 거리 5km", Integer.toString(0)+"%", 0);
+                        adapter2.notifyDataSetChanged();
+                    }
+                }
+                else {
+                }
+            }
+        });
+
+    }
+
+    //일정추가 횟수 DB 불러오기
+    public void totalPlan(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -360,19 +422,106 @@ public class FragmentHome extends Fragment {
                         //DB 필드명 표시 지워서 데이터 값만 표시
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
-                        String x = str1.substring(0, str1.indexOf("}"));
-                        txtChallenge1.setText("1. "+x);
-                        //txt3.setText(" 새로운 목표을 설정하세요.");
-                    } else {
-                        txtChallenge1.setText(" 즐겨찾기로 추가된 도전과제가 없습니다.");
+                        x = str1.substring(0, str1.indexOf("}"));
 
+                        int value = Integer.parseInt(x)*10;
+                        int value2 = (int) Math.round(Double.parseDouble(x)/30*100);
+                        showBtnFav("2", value, value2);
+                        showBtnFav("3", value, value2);
+
+
+                    } else {
+                        adapter2.addItem("운동 일정 10개 추가", Integer.toString(0)+"%", 0);
+                        adapter2.addItem("운동 일정 30개 추가", Integer.toString(0)+"%", 0);
+                        adapter2.notifyDataSetChanged();
                     }
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+                else {
+
+
                 }
             }
         });
     }
+
+    public void showBtnFav(String position, int value , int value2){
+        try {
+
+            sleep(1000);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document(position)
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if(document.exists()){
+                            if(document.getId().equals("0")){
+                                adapter2.addItem("걷거나 뛴 거리 3km", Integer.toString(value)+"%", value);
+                            }
+                            else if(document.getId().equals("1")){
+                                adapter2.addItem("걷거나 뛴 거리 5km", Integer.toString(value2)+"%", value2);
+                            }
+                            else if(document.getId().equals("2")){
+                                adapter2.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value);
+                            }
+
+                            else {
+                                adapter2.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2);
+                            }
+
+                        }
+                        else {
+
+
+                        }
+
+
+                        adapter2.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            });
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //친구 표시
+    public void showFriendList(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        if (document.exists()) {
+                            //DB 필드명 표시 지워서 데이터 값만 표시
+                            String str2 = document.getData().toString();
+                            str2 = str2.substring(str2.indexOf("=")+1);
+                            String y = str2.substring(0, str2.indexOf("}"));
+
+                            idList.add(y);
+                            adapter.notifyDataSetChanged();
+                        } else {
+
+                        }
+
+                    }
+
+                } else {
+                    Toast.makeText(getContext().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+
 
     //날씨
     public class NetworkTask extends AsyncTask<Void, Void, String> {

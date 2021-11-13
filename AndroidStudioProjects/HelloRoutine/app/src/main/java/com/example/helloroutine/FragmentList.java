@@ -2,28 +2,20 @@ package com.example.helloroutine;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,16 +24,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import static java.lang.Thread.sleep;
 
 public class FragmentList extends Fragment {
 
-    CheckBox btnFav;
-    CheckedTextView cbFav;
-    TextView txtCha1 , txtCha2, txtCha3, txtCha4, txtCha5, txtScore;
+    private Context mContext;
+    CheckBox cbFav;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private ProgressBar progressBar;
@@ -49,8 +39,10 @@ public class FragmentList extends Fragment {
     String x;
     ListView listView;
     ListAdapter adapter;
-
-
+    boolean check;
+    private SharedPreferences pref1, pref2, pref3, pref4, pref5;
+    private SharedPreferences.Editor editor1, editor2, editor3, editor4, editor5;
+    private boolean saveFav1, saveFav2, saveFav3, saveFav4, saveFav5;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -59,29 +51,29 @@ public class FragmentList extends Fragment {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_list, container, false);
 
         cbFav = view.findViewById(R.id.cbFav);
-        txtScore = view.findViewById(R.id.txtScore);
         progressBar= view.findViewById(R.id.prg);
         listView = view.findViewById(R.id.listView);
         adapter = new ListAdapter((getActivity()));
         listView.setAdapter(adapter);
-
+        firebaseAuth = FirebaseAuth.getInstance();
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
         //로딩화면을 투명하게 설정
-        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // 로딩화면 보여주기
         customProgressDialog.show();
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        try {
+            totalDistance(); //거리 DB 불러오기 - 진행도 표시
+            sleep(2000);
+            totalPlan();
 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-
-        totalDistance(); //거리 DB 불러오기 - 진행도 표시
-        totalPlan();
-        totalAttendance();
-        loadingScore();
-
+        //totalAttendance();
 
         //로딩화면 종료
         Thread thread = new Thread(new Runnable() {
@@ -96,189 +88,11 @@ public class FragmentList extends Fragment {
                 };
 
                 Timer timer = new Timer();
-                timer.schedule(task, 500);
+                timer.schedule(task, 1000);
             }
         });
         thread.start();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int check_position = listView.getCheckedItemPosition();   //리스트뷰의 포지션을 가져옴.
-                Object vo = adapterView.getAdapter().getItem(i).toString();  //리스트뷰의 포지션 내용을 가져옴
-                Toast.makeText(getContext().getApplicationContext(), Integer.toString(i), Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-
-
-
-
-        /*btnFav1.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //즐겨찾기 설정
-                if(btnFav1.isChecked()){
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
-                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                //첫번째 즐겨찾기에 이미 등록된 상태라면
-                                if (document.exists()) {
-                                    findFav(txtCha1.getText().toString()); //다른 즐겨찾기 남은공간 검색
-                                }
-                                //추가1
-                                else {
-                                    addFav1(txtCha1.getText().toString());
-                                }
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 추가를 실패했습니다.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-                //즐겨찾기 해제
-                else{
-                    deleteFav1(txtCha1.getText().toString());
-                }
-            }
-        });
-        btnFav2.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //즐겨찾기 설정
-                if(btnFav2.isChecked()){
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
-                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    findFav(txtCha2.getText().toString());
-
-                                } else {
-                                    addFav1(txtCha2.getText().toString());
-                                }
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 추가를 실패했습니다.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                    });
-                }
-                //즐겨찾기 해제
-                else{
-                    deleteFav1(txtCha2.getText().toString());
-                }
-
-            }
-        });
-        btnFav3.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //즐겨찾기 설정
-                if(btnFav3.isChecked()){
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
-                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                //첫번째 즐겨찾기에 이미 등록된 상태라면
-                                if (document.exists()) {
-                                    findFav(txtCha3.getText().toString()); //다른 즐겨찾기 남은공간 검색
-                                }
-                                //추가1
-                                else {
-                                    addFav1(txtCha3.getText().toString());
-                                }
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 추가를 실패했습니다.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-                //즐겨찾기 해제
-                else{
-                    deleteFav1(txtCha3.getText().toString());
-                }
-
-            }
-        });
-        btnFav4.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //즐겨찾기 설정
-                if(btnFav4.isChecked()){
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
-                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                //첫번째 즐겨찾기에 이미 등록된 상태라면
-                                if (document.exists()) {
-                                    findFav(txtCha4.getText().toString()); //다른 즐겨찾기 남은공간 검색
-                                }
-                                //추가1
-                                else {
-                                    addFav1(txtCha4.getText().toString());
-                                }
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 추가를 실패했습니다.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-                //즐겨찾기 해제
-                else{
-                    deleteFav1(txtCha4.getText().toString());
-                }
-
-            }
-        });
-        btnFav5.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //즐겨찾기 설정
-                if(btnFav5.isChecked()){
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document("1")
-                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                //첫번째 즐겨찾기에 이미 등록된 상태라면
-                                if (document.exists()) {
-                                    findFav(txtCha5.getText().toString()); //다른 즐겨찾기 남은공간 검색
-                                }
-                                //추가1
-                                else {
-                                    addFav1(txtCha5.getText().toString());
-                                }
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 추가를 실패했습니다.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-                //즐겨찾기 해제
-                else{
-                    deleteFav1(txtCha5.getText().toString());
-                }
-
-            }
-        });*/
 
         return view;
     }
@@ -302,40 +116,6 @@ public class FragmentList extends Fragment {
                 });
 
     }
-    //진행도 점수 불러오기
-    public void loadingScore(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Score")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
-                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
-                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                        String id2 = id1.substring(0, id1.indexOf("}")); //이메일
-
-                        txtScore.setText("현재점수 : "+score1+"점");
-
-
-
-
-                    } else {
-                        txtScore.setText("현재점수 : 0점");
-                    }
-                }
-                else {
-                }
-            }
-        });
-
-    }
-
 
     //거리 DB 불러오기
     public void totalDistance(){
@@ -354,20 +134,21 @@ public class FragmentList extends Fragment {
                         x = str1.substring(0, str1.indexOf("}"));
 
                         int value = (int) Math.round(Double.parseDouble(x)/3*100);
-
-                        adapter.addItem("걷거나 뛴 거리 3km", Integer.toString(value)+"%", value);
-                        adapter.notifyDataSetChanged();
-
                         int value2 = (int) Math.round(Double.parseDouble(x)/5*100);
 
-                        adapter.addItem("걷거나 뛴 거리 5km", Integer.toString(value2)+"%", value2);
-                        adapter.notifyDataSetChanged();
-
+                        showBtnFav("0", value, value2);
+                        showBtnFav("1", value, value2);
                         String sum = Integer.toString(value+value2);
 
                         saveScore(sum);
 
+
+
                     } else {
+
+                        adapter.addItem("걷거나 뛴 거리 3km", Integer.toString(0)+"%", 0, false);
+                        adapter.addItem("걷거나 뛴 거리 5km", Integer.toString(0)+"%", 0, false);
+                        adapter.notifyDataSetChanged();
                     }
                 }
                 else {
@@ -384,7 +165,6 @@ public class FragmentList extends Fragment {
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
@@ -394,14 +174,10 @@ public class FragmentList extends Fragment {
                         x = str1.substring(0, str1.indexOf("}"));
 
                         int value = Integer.parseInt(x)*10;
-
-                        adapter.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value);
-                        adapter.notifyDataSetChanged();
-
                         int value2 = (int) Math.round(Double.parseDouble(x)/30*100);
+                        showBtnFav("2", value, value2);
+                        showBtnFav("3", value, value2);
 
-                        adapter.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2);
-                        adapter.notifyDataSetChanged();
 
 
                         db.collection("DB").document("User").collection(user.getUid()).document("Score")
@@ -427,6 +203,7 @@ public class FragmentList extends Fragment {
 
 
                                     } else {
+
                                     }
                                 }
                                 else {
@@ -438,15 +215,78 @@ public class FragmentList extends Fragment {
 
 
                     } else {
+                        adapter.addItem("운동 일정 10개 추가", Integer.toString(0)+"%", 0, false);
+                        adapter.addItem("운동 일정 30개 추가", Integer.toString(0)+"%", 0, false);
+                        adapter.notifyDataSetChanged();
                     }
                 }
                 else {
+
+
                 }
             }
         });
     }
+    public void showBtnFav(String position, int value , int value2){
+        try {
 
-    //출석일수 DB 불러오기
+            sleep(500);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document(position)
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if(document.exists()){
+                            if(document.getId().equals("0")){
+                                adapter.addItem("걷거나 뛴 거리 3km", Integer.toString(value)+"%", value, true);
+                            }
+                            else if(document.getId().equals("1")){
+                                adapter.addItem("걷거나 뛴 거리 5km", Integer.toString(value2)+"%", value2, true);
+                            }
+                            else if(document.getId().equals("2")){
+                                adapter.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value, true);
+                            }
+
+                            else {
+                                adapter.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2, true);
+                            }
+
+                        }
+                        else {
+                            if(position.equals("0")){
+                                adapter.addItem("걷거나 뛴 거리 3km", Integer.toString(value)+"%", value, false);
+                            }
+                            else if(position.equals("1")){
+                                adapter.addItem("걷거나 뛴 거리 5km", Integer.toString(value2)+"%", value2, false);
+                            }
+                            else if(position.equals("2")){
+                                adapter.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value, false);
+                            }
+                            else {
+                                adapter.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2, false);
+                            }
+
+
+
+                        }
+
+
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(mContext.getApplicationContext(), "즐겨찾기 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            });
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*//출석일수 DB 불러오기
     public void totalAttendance(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendance")
@@ -463,7 +303,7 @@ public class FragmentList extends Fragment {
                         x = str1.substring(0, str1.indexOf("}"));
 
                         int value = Integer.parseInt(x)*10;
-
+                        check = true;
                         adapter.addItem("3일 연속 출석", Integer.toString(value)+"%", value);
                         adapter.notifyDataSetChanged();
 
@@ -511,7 +351,7 @@ public class FragmentList extends Fragment {
             }
         });
 
-    }
+    }*/
 
 
     public void findFav(String list){

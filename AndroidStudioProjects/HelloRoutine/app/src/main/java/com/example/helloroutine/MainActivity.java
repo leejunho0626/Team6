@@ -103,7 +103,27 @@ public class MainActivity extends AppCompatActivity {
                     thread.start();
                     break;
                 case R.id.challenge:
+                    //로딩창 객체 생성
+                    customProgressDialog = new ProgressDialog(MainActivity.this);
+                    //로딩창을 투명하게
+                    customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    // 로딩창 보여주기
+                    customProgressDialog.show();
                     transaction.replace(R.id.frameLayout, fragmentChallenge).commitAllowingStateLoss();
+                    Thread thread1 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            TimerTask task = new TimerTask(){
+                                @Override
+                                public void run() {
+                                    customProgressDialog.dismiss();
+                                }
+                            };
+                            Timer timer = new Timer();
+                            timer.schedule(task, 1500);
+                        }
+                    });
+                    thread1.start();
                     break;
             }
             return true;

@@ -5,24 +5,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:paddingEnd="12dp"
-        android:layout_width="0dp"
-        android:gravity="end|center"
-        android:layout_weight="2"
-        android:layout_height="match_parent"
-        android:paddingRight="12dp">
-
-        <CheckBox
-            android:id="@+id/cbFav"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:button="@drawable/btn_star"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/body"
+        android:id="@+id/home_body"
 
         android:gravity="center|start"
         android:orientation="vertical"
@@ -32,8 +15,9 @@
 
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/home_title"
             android:textSize="20sp"
+            android:layout_marginLeft="10dp"
             android:text="Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -41,8 +25,9 @@
         </TextView>
 
         <TextView
-            android:id="@+id/sub"
+            android:id="@+id/home_sub"
             android:textSize="15sp"
+            android:layout_marginLeft="10dp"
             android:text="000%"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -60,7 +45,7 @@
         android:paddingRight="12dp">
 
         <ProgressBar
-            android:id="@+id/prg"
+            android:id="@+id/home_prg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

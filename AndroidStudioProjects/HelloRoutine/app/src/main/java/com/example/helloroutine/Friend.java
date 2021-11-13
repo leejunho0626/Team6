@@ -141,12 +141,6 @@ public class Friend extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
-
     }
     //친구 추가
     public void addFriend(String uid){
@@ -201,7 +195,11 @@ public class Friend extends AppCompatActivity {
                                             Log.d(TAG, "ID" + " => " +y);
 
                                             friendList.add(y);
-
+                                            for (int i =0; i < friendList.size() ; i++ ){
+                                                if(friendList.get(i).toString().equals(user.getEmail())){
+                                                    friendList.remove(i);
+                                                }
+                                            }
 
                                             adapter2.notifyDataSetChanged();
 
@@ -240,13 +238,17 @@ public class Friend extends AppCompatActivity {
                                                             }
                                                             idScoreList.clear();
                                                             for (int i =0; i < idList.size() ; i++ ){
-
                                                                 idScoreList.add(idList.get(i)+ " / " + scoreList.get(i));
+
                                                             }
                                                             adapter.notifyDataSetChanged();
                                                             Log.d(TAG, "total"+ " => " +idScoreList);
 
 
+                                                        }
+                                                        else{
+                                                            idScoreList.add(user.getEmail()+ " / " + "0");
+                                                            adapter.notifyDataSetChanged();
                                                         }
                                                     }
                                                 }

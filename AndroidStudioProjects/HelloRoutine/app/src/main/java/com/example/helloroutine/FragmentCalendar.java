@@ -256,14 +256,12 @@ public class FragmentCalendar extends Fragment {
 
     //추가한 일정 횟수 추가
     public void addTotalPlan(String total){
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserWrite userWrite = new UserWrite(total);
         db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan").set(userWrite)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -273,7 +271,6 @@ public class FragmentCalendar extends Fragment {
                     }
                 });
     }
-
     //최종 일정 횟수 불러오기
     public void loadingTotalPlan(){
 

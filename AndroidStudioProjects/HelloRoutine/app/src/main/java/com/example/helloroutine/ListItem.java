@@ -5,7 +5,7 @@ public class ListItem {
     private String title;
     private String sub;
     private int progress;
-    private boolean check;
+    boolean check;
 
     public String getTitle() {
         return title;

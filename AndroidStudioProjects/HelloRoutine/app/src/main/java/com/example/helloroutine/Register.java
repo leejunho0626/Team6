@@ -223,6 +223,8 @@ public class Register extends AppCompatActivity {
                                                 Log.d(TAG, "fail");
                                             }
                                         });
+                                saveScore();
+                                saveFriend();
                                 firebaseAuth.signOut(); //로그아웃
                                 finish();
                                 Toast.makeText(Register.this, "회원가입을 축하합니다.", Toast.LENGTH_SHORT).show();
@@ -237,6 +239,45 @@ public class Register extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호를 입력하세요.(회원가입)",Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void saveScore(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserRank userRank = new UserRank(user.getEmail(),"0");
+        db.collection("DB").document("User").collection(user.getUid()).document("Score").set(userRank) //경로
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        Log.d(TAG, "save success(score)");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "save fail(score)");
+                    }
+                });
+    }
+
+    public void saveFriend(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserWrite userWrite = new UserWrite(user.getUid());
+        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(user.getUid()).set(userWrite) //경로
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        Log.d(TAG, "save success(score)");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "save fail(score)");
+                    }
+                });
+    }
+
 
     //뒤로 가기 버튼 클릭 시(계정삭제)
     @Override

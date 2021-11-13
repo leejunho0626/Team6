@@ -203,6 +203,7 @@ public class Login extends AppCompatActivity {
                                                 Toast.makeText(getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
                                             }
                                         });
+                                saveFriend();
                             }
                             else {
                                 Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀렸습니다.",Toast.LENGTH_SHORT).show();
@@ -271,6 +272,7 @@ public class Login extends AppCompatActivity {
                                                 Log.d(TAG, "Add fail(kakao)");
                                             }
                                         });
+                                saveFriend();
                                 Intent intent = new Intent(Login.this, MainActivity.class); //메인화면으로 이동
                                 startActivity(intent);
                             }
@@ -352,7 +354,46 @@ public class Login extends AppCompatActivity {
                             Log.d(TAG, "Add fail(google)");
                         }
                     });
+            saveFriend();
             finish();
         }
     }
+    public void saveScore(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserRank userRank = new UserRank(user.getEmail(),"0");
+        db.collection("DB").document("User").collection(user.getUid()).document("Score").set(userRank) //경로
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        Log.d(TAG, "save success(score)");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "save fail(score)");
+                    }
+                });
+    }
+
+    public void saveFriend(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserWrite userWrite = new UserWrite(user.getUid());
+        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(user.getUid()).set(userWrite) //경로
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        Log.d(TAG, "save success(score)");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "save fail(score)");
+                    }
+                });
+    }
+
 }

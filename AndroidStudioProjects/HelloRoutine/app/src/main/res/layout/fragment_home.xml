@@ -84,30 +84,12 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/layout_background">
 
-                    <TextView
-                        android:id="@+id/txtChallenge1"
+                    <ListView
+                        android:id="@+id/home_listView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text=" loading.."
-                        android:textColor="@color/black"
-                        android:textSize="18dp"/>
-                    <TextView
-                        android:id="@+id/txtChallenge2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text=" "
-                        android:textColor="@color/black"
-                        android:textSize="18dp"/>
-                    <TextView
-                        android:id="@+id/txtChallenge3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text=" "
-                        android:textColor="@color/black"
-                        android:textSize="18dp"/>
+                        android:layout_height="190dp">
+
+                    </ListView>
 
                 </LinearLayout>
 
