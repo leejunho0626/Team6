@@ -39,10 +39,6 @@ public class FragmentList extends Fragment {
     String x;
     ListView listView;
     ListAdapter adapter;
-    boolean check;
-    private SharedPreferences pref1, pref2, pref3, pref4, pref5;
-    private SharedPreferences.Editor editor1, editor2, editor3, editor4, editor5;
-    private boolean saveFav1, saveFav2, saveFav3, saveFav4, saveFav5;
 
     @SuppressLint("SetTextI18n")
     @Override

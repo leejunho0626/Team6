@@ -143,173 +143,58 @@
 
                         <TextView
                             android:id="@+id/calPlan1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_margin="10dp"
-                            android:paddingLeft="10dp"
+                            android:gravity="center"
                             android:text="날짜를 클릭하세요."
                             android:textColor="@color/black"
-                            android:textSize="17dp"
+                            android:textSize="20dp"
                             android:textStyle="bold" />
 
 
                     </LinearLayout>
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/calPlan2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/calPlan2"
-                            android:layout_width="300dp"
-                            android:layout_height="35dp"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="1dp"
-                            android:padding="6dp"
-                            android:textColor="@color/black"
-                            android:textSize="17dp"
-                            android:text=" "
-                            android:background="@drawable/layout_background"
-                            android:layout_centerHorizontal="true"/>
-
-                        <ImageButton
-                            android:id="@+id/btnAdd1"
-                            android:layout_width="78dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/ic_baseline_add_box_24"/>
+                        android:layout_height="40dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:text=" "
+                        android:background="@drawable/layout_background"
+                        android:layout_centerHorizontal="true"/>
 
 
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="right">
-
-                        <Button
-                            android:id="@+id/btnChange"
-                            android:layout_width="60dp"
-                            android:layout_height="40dp"
-                            android:layout_marginRight="10dp"
-                            android:text="변경"
-                            android:textStyle="bold"/>
-                        <Button
-                            android:id="@+id/btnRemove"
-                            android:layout_width="60dp"
-                            android:layout_height="40dp"
-                            android:layout_marginRight="11dp"
-                            android:text="삭제"
-                            android:textStyle="bold"/>
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/calPlan3"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="7dp">
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:text=" "
+                        android:background="@drawable/layout_background"
+                        android:layout_centerHorizontal="true"/>
 
-                        <TextView
-                            android:id="@+id/calPlan3"
-                            android:layout_width="300dp"
-                            android:layout_height="35dp"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="1dp"
-                            android:padding="6dp"
-                            android:textColor="@color/black"
-                            android:textSize="17dp"
-                            android:text=" "
-                            android:background="@drawable/layout_background"
-                            android:layout_centerHorizontal="true"/>
-
-                        <ImageButton
-                            android:id="@+id/btnAdd2"
-                            android:layout_width="78dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/ic_baseline_add_box_24"/>
-
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="right">
-
-                        <Button
-                            android:id="@+id/btnChange2"
-                            android:layout_width="60dp"
-                            android:layout_height="40dp"
-                            android:layout_marginRight="10dp"
-                            android:text="변경"
-                            android:textStyle="bold"/>
-                        <Button
-                            android:id="@+id/btnRemove2"
-                            android:layout_width="60dp"
-                            android:layout_height="40dp"
-                            android:layout_marginRight="11dp"
-                            android:text="삭제"
-                            android:textStyle="bold"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/calPlan4"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="7dp">
-
-                        <TextView
-                            android:id="@+id/calPlan4"
-                            android:layout_width="300dp"
-                            android:layout_height="35dp"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="1dp"
-                            android:padding="6dp"
-                            android:textColor="@color/black"
-                            android:textSize="17dp"
-                            android:text=" "
-                            android:background="@drawable/layout_background"
-                            android:layout_centerHorizontal="true"/>
-
-                        <ImageButton
-                            android:id="@+id/btnAdd3"
-                            android:layout_width="78dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/ic_baseline_add_box_24"/>
-
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="right">
-
-                        <Button
-                            android:id="@+id/btnChange3"
-                            android:layout_width="60dp"
-                            android:layout_height="40dp"
-                            android:layout_marginRight="10dp"
-                            android:text="변경"
-                            android:textStyle="bold"/>
-                        <Button
-                            android:id="@+id/btnRemove3"
-                            android:layout_width="60dp"
-                            android:layout_height="40dp"
-                            android:layout_marginRight="11dp"
-                            android:text="삭제"
-                            android:textStyle="bold"/>
-
-                    </LinearLayout>
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:text=" "
+                        android:background="@drawable/layout_background"
+                        android:layout_centerHorizontal="true"/>
 
 
                 </LinearLayout>

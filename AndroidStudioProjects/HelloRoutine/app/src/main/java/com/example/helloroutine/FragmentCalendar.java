@@ -46,10 +46,9 @@ public class FragmentCalendar extends Fragment {
     GridAdapter adt;
     Calendar cal;
     TextView date, txt1, txt2, txt3, txt4;
-    ImageButton pre, next, addPlan, addPlan2, addPlan3;
+    ImageButton pre, next;
     LinearLayout dialogView;
     EditText exeType, exeNum, exeSet, exeWeight, exeTime;
-    Button btnChange, btnRemove, btnChange2, btnRemove2, btnChange3, btnRemove3;
     Context mContext;
     boolean img;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -70,27 +69,11 @@ public class FragmentCalendar extends Fragment {
         txt2 = view.findViewById(R.id.calPlan2);
         txt3 = view.findViewById(R.id.calPlan3);
         txt4 = view.findViewById(R.id.calPlan4);
-        btnChange = view.findViewById(R.id.btnChange);
-        btnRemove = view.findViewById(R.id.btnRemove);
-        btnChange2 = view.findViewById(R.id.btnChange2);
-        btnRemove2 = view.findViewById(R.id.btnRemove2);
-        btnChange3 = view.findViewById(R.id.btnChange3);
-        btnRemove3 = view.findViewById(R.id.btnRemove3);
-        addPlan = view.findViewById(R.id.btnAdd1);
-        addPlan2 = view.findViewById(R.id.btnAdd2);
-        addPlan3 = view.findViewById(R.id.btnAdd3);
+
         txt2.setVisibility(INVISIBLE);
         txt3.setVisibility(INVISIBLE);
         txt4.setVisibility(INVISIBLE);
-        btnChange.setVisibility(INVISIBLE);
-        btnRemove.setVisibility(INVISIBLE);
-        btnChange2.setVisibility(INVISIBLE);
-        btnRemove2.setVisibility(INVISIBLE);
-        btnChange3.setVisibility(INVISIBLE);
-        btnRemove3.setVisibility(INVISIBLE);
-        addPlan.setVisibility(INVISIBLE);
-        addPlan2.setVisibility(INVISIBLE);
-        addPlan3.setVisibility(INVISIBLE);
+
 
         //달력표시
         cal = Calendar.getInstance();
@@ -130,12 +113,6 @@ public class FragmentCalendar extends Fragment {
                 clickDB = clickDate;
                 txt1.setText(clickDB);
                 txt2.setVisibility(VISIBLE);
-                btnChange2.setVisibility(INVISIBLE);
-                btnRemove2.setVisibility(INVISIBLE);
-                btnChange3.setVisibility(INVISIBLE);
-                btnRemove3.setVisibility(INVISIBLE);
-                addPlan2.setVisibility(INVISIBLE);
-                addPlan3.setVisibility(INVISIBLE);
                 writeDownload(clickDate);
                 writeDownload2(clickDate);
                 writeDownload3(clickDate);
@@ -158,26 +135,20 @@ public class FragmentCalendar extends Fragment {
                 });
                 thread.start();
 
-                addPlan.setVisibility(VISIBLE);
-                addPlan.setOnClickListener(new Button.OnClickListener() {
+
+                txt2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //
-                        showDialog(clickDB);
+                        Toast.makeText(getActivity().getApplicationContext(), "짧게누르기 테스트", Toast.LENGTH_LONG).show();
                     }
                 });
-                addPlan2.setOnClickListener(new Button.OnClickListener() {
+
+                txt2.setOnLongClickListener(new View.OnLongClickListener(){
                     @Override
-                    public void onClick(View v) {
-                        //
-                        showDialog2(clickDB);
-                    }
-                });
-                addPlan3.setOnClickListener(new Button.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //
-                        showDialog3(clickDB);
+                    public boolean onLongClick(View v) {
+
+                        Toast.makeText(getActivity().getApplicationContext(), "길게누르기 테스트", Toast.LENGTH_LONG).show();
+                        return true;  //true 설정
                     }
                 });
 
@@ -584,14 +555,12 @@ public class FragmentCalendar extends Fragment {
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String x = str1.substring(0, str1.indexOf("}"));
                         txt2.setText(" "+x);
-                        btnChange.setVisibility(VISIBLE);
-                        btnRemove.setVisibility(VISIBLE);
                         //txt3.setText(" 새로운 목표을 설정하세요.");
                         txt3.setVisibility(VISIBLE);
-                        addPlan2.setVisibility(VISIBLE);
+
                     } else {
                         txt3.setVisibility(INVISIBLE);
-                        addPlan2.setVisibility(INVISIBLE);
+
                         txt2.setText(" 새로운 목표을 설정하세요.");
 
                     }
@@ -617,14 +586,12 @@ public class FragmentCalendar extends Fragment {
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String x = str1.substring(0, str1.indexOf("}"));
                         txt3.setText(" "+x);
-                        btnChange2.setVisibility(VISIBLE);
-                        btnRemove2.setVisibility(VISIBLE);
                         //txt4.setText(" 새로운 목표을 설정하세요.");
                         txt4.setVisibility(VISIBLE);
-                        addPlan3.setVisibility(VISIBLE);
+
                     } else {
                         txt4.setVisibility(INVISIBLE);
-                        addPlan3.setVisibility(INVISIBLE);
+
                         txt3.setText(" 새로운 목표을 설정하세요.");
 
                     }
@@ -650,8 +617,6 @@ public class FragmentCalendar extends Fragment {
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String x = str1.substring(0, str1.indexOf("}"));
                         txt4.setText(" "+x);
-                        btnChange3.setVisibility(VISIBLE);
-                        btnRemove3.setVisibility(VISIBLE);
                     } else {
                         txt4.setText(" 새로운 목표을 설정하세요.");
                     }

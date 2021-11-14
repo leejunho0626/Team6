@@ -27,6 +27,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +43,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -80,6 +83,11 @@ public class FragmentHome extends Fragment {
     ArrayList<String> idList = new ArrayList<>();
     HomeListAdapter adapter2;
     String x;
+    SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
+    String format_1 = format.format(System.currentTimeMillis());
+    String format_2 = null;
+    String cnt;
+    boolean check = true;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -253,6 +261,7 @@ public class FragmentHome extends Fragment {
                 "&ny=" +ny;
         NetworkTask networkTask = new NetworkTask(url, null);
         networkTask.execute(); //날씨 실행
+        totalAttendance(format_1);
 
         //로딩화면 종료
         Thread thread = new Thread(new Runnable() {
@@ -273,6 +282,139 @@ public class FragmentHome extends Fragment {
         thread.start();
 
         return view;
+    }
+    public void totalAttendance(String today){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendance")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        format_2 = str1.substring(0, str1.indexOf("}"));
+
+                        saveDate(today);
+
+                        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendanceCnt")
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                        String str1 = document.getData().toString();
+                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                        cnt = str1.substring(0, str1.indexOf("}"));
+                                        cnt = caldate(format_1, format_2, cnt);
+
+                                        saveCnt(cnt);
+
+                                    } else {
+
+                                    }
+                                }
+                                else {
+                                }
+                            }
+                        });
+
+                    } else {
+
+                    }
+                }
+                else {
+                    cnt ="1";
+                    check = false;
+
+                }
+            }
+        });
+
+    }
+
+
+    public static String caldate(String nowdate, String secdate, String cnt) { // nowdate = 오늘 날짜, secdate 전에 로그에 찍혀있는 날, cnt 몇일 연속 접속이였는지
+        SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        boolean check = true;
+
+        Date d1 = null;
+        Date d2 = null;
+        try {
+            d1 = format.parse(nowdate);
+            d2 = format.parse(secdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        cal1.setTime(d1);
+        cal2.setTime(d2);
+        cal2.add(Calendar.DATE, 1);
+        if(check)
+        {
+            if(format.format(cal1.getTime()).equals(format.format(cal2.getTime()))) {
+                int i = Integer.parseInt(cnt);
+                i++;
+                check = false;
+                cnt=Integer.toString(i);
+
+            }
+            cal2.add(Calendar.DATE, -1);
+            if(format.format(cal1.getTime()).equals(format.format(cal2.getTime())));
+            else if(check) cnt = "1";
+        }
+
+
+
+        return cnt;
+
+    }
+
+    //진행도 점수 저장하기
+    public void saveCnt(String total){
+        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserWrite userWrite = new UserWrite(total);
+        db.collection("DB").document("User").collection(user1.getUid()).document("TotalAttendanceCnt").set(userWrite)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+    }
+    //진행도 점수 저장하기
+    public void saveDate(String total){
+        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserWrite userWrite = new UserWrite(total);
+        db.collection("DB").document("User").collection(user1.getUid()).document("TotalAttendance").set(userWrite)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                    }
+                });
+
     }
 
     //플로팅메뉴 애니메이션
