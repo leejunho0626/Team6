@@ -1,20 +1,29 @@
 package com.example.helloroutine;
 
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +31,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,10 +42,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.kakao.auth.Session;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,16 +59,20 @@ public class FragmentCalendar extends Fragment {
     GridView grid;
     GridAdapter adt;
     Calendar cal;
-    TextView date, txt1, txt2, txt3, txt4;
-    ImageButton pre, next;
-    LinearLayout dialogView;
-    EditText exeType, exeNum, exeSet, exeWeight, exeTime;
+    TextView date, txt1;
+    ImageButton pre, next, btnAdd;
+    ScrollView dialogView;
+    EditText exeType, exeTime, exeNum, exeSet, exeWeight;
     Context mContext;
     boolean img;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    static String clickDB;
     ProgressDialog customProgressDialog;
     String x;
+    Dialog dialog;
+    SimpleDateFormat format = new SimpleDateFormat ( "yyyy.MM.dd일");
+    String format_1 = format.format(System.currentTimeMillis());
+    final CharSequence[] oItems = {"팔 운동", "어깨 운동", "다리 운동", "가슴 운동", "등 운동"};
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -66,16 +84,9 @@ public class FragmentCalendar extends Fragment {
         pre = view.findViewById(R.id.pre);
         next = view.findViewById(R.id.next);
         txt1 = view.findViewById(R.id.calPlan1);
-        txt2 = view.findViewById(R.id.calPlan2);
-        txt3 = view.findViewById(R.id.calPlan3);
-        txt4 = view.findViewById(R.id.calPlan4);
+        btnAdd = view.findViewById(R.id.btnAddPlan);
 
-        txt2.setVisibility(INVISIBLE);
-        txt3.setVisibility(INVISIBLE);
-        txt4.setVisibility(INVISIBLE);
-
-
-        //달력표시
+           //달력표시
         cal = Calendar.getInstance();
         int y = cal.get(Calendar.YEAR);
         int m = cal.get(Calendar.MONTH) + 1;
@@ -86,6 +97,25 @@ public class FragmentCalendar extends Fragment {
         customProgressDialog = new ProgressDialog(getActivity());
         //로딩창을 투명하게
         customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        txt1.setText(format_1);
+
+
+
+        btnAdd.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //showDialog(clickDate);
+                AddPlan addPlan= new AddPlan();
+                //addPlan.writeUpload(clickDate, "test11", user.getUid().toString());
+                Intent intent = new Intent(getActivity(), AddPlan.class); //메인화면으로 이동
+                intent.putExtra("date",format_1);
+                startActivity(intent);
+
+
+            }
+        });
+
         
         //날짜 클릭 시
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -110,12 +140,26 @@ public class FragmentCalendar extends Fragment {
                 }
                 //클릭한 날짜 데이터
                 String clickDate = adt.mItem.get(i).year()+"."+month+"."+day+"일";
-                clickDB = clickDate;
-                txt1.setText(clickDB);
-                txt2.setVisibility(VISIBLE);
+
+                txt1.setText(clickDate);
+
+
                 writeDownload(clickDate);
                 writeDownload2(clickDate);
                 writeDownload3(clickDate);
+
+                btnAdd.setOnClickListener(new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       //showDialog(clickDate);
+                        AddPlan addPlan= new AddPlan();
+                        //addPlan.writeUpload(clickDate, "test11", user.getUid().toString());
+                        Intent intent = new Intent(getActivity(), AddPlan.class); //메인화면으로 이동
+                        intent.putExtra("date",clickDate);
+                        startActivity(intent);
+
+                    }
+                });
 
                 //로딩 쓰레드
                 Thread thread = new Thread(new Runnable() {
@@ -135,23 +179,6 @@ public class FragmentCalendar extends Fragment {
                 });
                 thread.start();
 
-
-                txt2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getActivity().getApplicationContext(), "짧게누르기 테스트", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-                txt2.setOnLongClickListener(new View.OnLongClickListener(){
-                    @Override
-                    public boolean onLongClick(View v) {
-
-                        Toast.makeText(getActivity().getApplicationContext(), "길게누르기 테스트", Toast.LENGTH_LONG).show();
-                        return true;  //true 설정
-                    }
-                });
-
             }
         });
 
@@ -170,6 +197,7 @@ public class FragmentCalendar extends Fragment {
 
         return view;
     }
+
 
     //달력 표시
     private void show()
@@ -318,7 +346,7 @@ public class FragmentCalendar extends Fragment {
                         @Override
                         public void onSuccess(Void avoid) {
                             Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
-                            txt2.setText(" "+edit);
+
 
                             loadingTotalPlan();
 
@@ -346,7 +374,7 @@ public class FragmentCalendar extends Fragment {
                         @Override
                         public void onSuccess(Void avoid) {
                             Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
-                            txt3.setText(" "+edit);
+
                             loadingTotalPlan();
                         }
                     })
@@ -372,7 +400,7 @@ public class FragmentCalendar extends Fragment {
                         @Override
                         public void onSuccess(Void avoid) {
                             Toast.makeText(getActivity().getApplicationContext(), "묙표가 저장되었습니다.", Toast.LENGTH_LONG).show();
-                            txt4.setText(" "+edit);
+
                             loadingTotalPlan();
                         }
                     })
@@ -390,13 +418,12 @@ public class FragmentCalendar extends Fragment {
     //목표 설정 메뉴1
     public void showDialog(String date) {
 
-        dialogView = (LinearLayout) View.inflate(getActivity(),R.layout.dialog_plan,null);
+        dialogView = (ScrollView) View.inflate(getActivity(),R.layout.dialog_plan,null);
         //다이얼로그 메뉴
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
         AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
         builder.setView(dialogView);
-        builder.setTitle("운동 목표 설정");
-        builder.setMessage(date);
+        builder.setTitle(date);
         builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -405,11 +432,12 @@ public class FragmentCalendar extends Fragment {
                 exeSet=dialogView.findViewById(R.id.exeSet);
                 exeWeight=dialogView.findViewById(R.id.exeWeight);
                 exeTime=dialogView.findViewById(R.id.exeTime);
+
+
                 String edit = exeType.getText().toString()+" : "+exeNum.getText().toString()+"회 "+exeSet.getText().toString()+"세트 "
                         +exeWeight.getText().toString()+"kg "+exeTime.getText().toString()+"시간"; //입력한 값
-                if(edit.length()>0){
-                    builder1.setTitle("");
-                    builder1.setMessage("저장하시겠습니까?");
+                if(exeType.getText().toString().length()>0){
+                    builder1.setTitle("저장하시겠습니까?");
                     builder1.setPositiveButton("네", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -419,29 +447,33 @@ public class FragmentCalendar extends Fragment {
                     builder1.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(getActivity().getApplicationContext(), "취소", Toast.LENGTH_LONG).show();
+
+                            Toast.makeText(getActivity().getApplicationContext(), "취소되었습니다.", Toast.LENGTH_LONG).show();
                         }
                     });
                     builder1.show();
                 }
                 else{
+                    builder1.setCancelable(false);
                     Toast.makeText(getActivity().getApplicationContext(), "내용을 입력하세요.", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                Toast.makeText(getActivity().getApplicationContext(), "취소되었습니다.", Toast.LENGTH_LONG).show();
             }
         });
+        builder.setCancelable(false);
         builder.show();
     }
 
     //목표 설정 메뉴2
     public void showDialog2(String date) {
 
-        dialogView = (LinearLayout) View.inflate(getActivity(),R.layout.dialog_plan,null);
+        dialogView = (ScrollView) View.inflate(getActivity(),R.layout.dialog_plan,null);
         //다이얼로그 메뉴
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog);
         AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
@@ -492,7 +524,8 @@ public class FragmentCalendar extends Fragment {
     //목표 설정 메뉴3
     public void showDialog3(String date) {
 
-        dialogView = (LinearLayout) View.inflate(getActivity(),R.layout.dialog_plan,null);
+
+        dialogView = (ScrollView) View.inflate(getActivity(),R.layout.dialog_plan,null);
         //다이얼로그 메뉴
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog);
         AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
@@ -507,6 +540,8 @@ public class FragmentCalendar extends Fragment {
                 exeSet=dialogView.findViewById(R.id.exeSet);
                 exeWeight=dialogView.findViewById(R.id.exeWeight);
                 exeTime=dialogView.findViewById(R.id.exeTime);
+                exeType.setClickable(false);
+                exeType.setFocusable(false);
                 String edit = exeType.getText().toString()+" : "+exeNum.getText().toString()+"회 "+exeSet.getText().toString()+"세트 "
                         +exeWeight.getText().toString()+"kg "+exeTime.getText().toString()+"시간"; //입력한 값
                 if(edit.length()>0){
@@ -554,14 +589,12 @@ public class FragmentCalendar extends Fragment {
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String x = str1.substring(0, str1.indexOf("}"));
-                        txt2.setText(" "+x);
-                        //txt3.setText(" 새로운 목표을 설정하세요.");
-                        txt3.setVisibility(VISIBLE);
+
+
+
 
                     } else {
-                        txt3.setVisibility(INVISIBLE);
 
-                        txt2.setText(" 새로운 목표을 설정하세요.");
 
                     }
                 } else {
@@ -585,14 +618,10 @@ public class FragmentCalendar extends Fragment {
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String x = str1.substring(0, str1.indexOf("}"));
-                        txt3.setText(" "+x);
-                        //txt4.setText(" 새로운 목표을 설정하세요.");
-                        txt4.setVisibility(VISIBLE);
+
 
                     } else {
-                        txt4.setVisibility(INVISIBLE);
 
-                        txt3.setText(" 새로운 목표을 설정하세요.");
 
                     }
                 } else {
@@ -616,9 +645,8 @@ public class FragmentCalendar extends Fragment {
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String x = str1.substring(0, str1.indexOf("}"));
-                        txt4.setText(" "+x);
                     } else {
-                        txt4.setText(" 새로운 목표을 설정하세요.");
+
                     }
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "목표 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();

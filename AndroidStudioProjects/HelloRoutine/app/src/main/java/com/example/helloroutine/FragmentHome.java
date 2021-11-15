@@ -438,7 +438,7 @@ public class FragmentHome extends Fragment {
     //설정한 목표 표시1
     public void writeDownload(String date){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("1")
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document("팔운동")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -104,6 +105,7 @@ public class Friend extends AppCompatActivity {
                 builder.setTitle("친구 추가하기");
                 builder.setMessage("복사한 친구의 UID를 입력하세요.");
                 builder.setView(editText);
+
                 builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

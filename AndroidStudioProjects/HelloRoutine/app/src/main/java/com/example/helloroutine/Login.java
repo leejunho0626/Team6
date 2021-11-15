@@ -82,6 +82,7 @@ public class Login extends AppCompatActivity {
         if(firebaseAuth.getCurrentUser() != null){
             Intent intent = new Intent(this, MainActivity.class); //메인화면으로 이동
             startActivity(intent);
+            finish();
         }
 
         //카카오 로그인 콜백 초기화
