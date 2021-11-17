@@ -2,9 +2,12 @@ package com.example.timerpush;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     NotificationManager manager;
     NotificationCompat.Builder builder;
 
-    private static String CHANNEL_ID = "channel1";
-    private static String CHANEL_NAME = "Channel1";
+    private static String CHANNEL_ID = "TimerPushAlarm";
+    private static String CHANEL_NAME = "PushAlarm";
 
     FrameLayout setting;
     FrameLayout timer;
@@ -138,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    showNoti();
+                    showNotify();
                 }
             }.start();
 
@@ -171,7 +174,11 @@ public class MainActivity extends AppCompatActivity {
             cntText.setText(timeLeftText);
         }
 
-    public void showNoti(){
+    public void showNotify(){
+        Vibrator vib = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+        Uri ringing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        
+        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringing);
 
         builder = null;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); //버전 오레오 이상일 경우
@@ -183,14 +190,17 @@ public class MainActivity extends AppCompatActivity {
         } else {
             builder = new NotificationCompat.Builder(this);
         }
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
         //알림창 제목
         builder.setContentTitle("타이머 종료");
         //알림창 메시지
         builder.setContentText("타이머가 종료되었습니다.");
         //알림창 아이콘
-        builder.setSmallIcon(R.drawable.icon);
+        builder.setSmallIcon(R.drawable.ic_stat_name);
         Notification notification = builder.build();
         //알림창 실행
+        vib.vibrate(2000);
+        ringtone.play();
         manager.notify(1,notification);
     }
 
