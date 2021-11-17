@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "393964681243",
-    "project_id": "pushalram-71a9f",
-    "storage_bucket": "pushalram-71a9f.appspot.com"
+    "project_number": "420375962297",
+    "project_id": "myalram3",
+    "storage_bucket": "myalram3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:393964681243:android:a2d4d17c9f4e70199020be",
+        "mobilesdk_app_id": "1:420375962297:android:5f07705b9b08d0a37db168",
         "android_client_info": {
           "package_name": "com.example.timerpush"
         }
       },
       "oauth_client": [
         {
-          "client_id": "393964681243-b9ullgt98anld18t6r4tftc29dpkhgt0.apps.googleusercontent.com",
+          "client_id": "420375962297-ehbfamtesquja8h535tc3coalbgnegr8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBBGFVAtIEuLvcYvdmclfa6-mkDuaGmRaI"
+          "current_key": "AIzaSyBGkGdNF5rtym8P9zSt6J2-gqx3Vv0dK6Y"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "393964681243-b9ullgt98anld18t6r4tftc29dpkhgt0.apps.googleusercontent.com",
+              "client_id": "420375962297-ehbfamtesquja8h535tc3coalbgnegr8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

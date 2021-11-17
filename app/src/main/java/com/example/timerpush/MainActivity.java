@@ -1,6 +1,8 @@
 package com.example.timerpush;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -8,6 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import androidx.core.app.NotificationCompat;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,15 +38,18 @@ public class MainActivity extends AppCompatActivity {
 
     int cnt = 0;
 
+    NotificationManager manager;
+    NotificationCompat.Builder builder;
+
+    private static String CHANNEL_ID = "channel1";
+    private static String CHANEL_NAME = "Channel1";
 
     FrameLayout setting;
     FrameLayout timer;
 
-
-
     @Override
-    protected void onCreate(Bundle saveInstanceState) {
-        super.onCreate(saveInstanceState);
+    protected void onCreate(Bundle saveInstanceStat) {
+        super.onCreate(saveInstanceStat);
         setContentView(R.layout.activity_main);
 
         cntText = findViewById(R.id.cnt_text);
@@ -53,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
         setting = findViewById(R.id.setting);
         timer = findViewById(R.id.timer);
-
 
             startBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -129,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
+                    showNoti();
                 }
             }.start();
 
@@ -160,4 +170,28 @@ public class MainActivity extends AppCompatActivity {
 
             cntText.setText(timeLeftText);
         }
+
+    public void showNoti(){
+
+        builder = null;
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); //버전 오레오 이상일 경우
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(
+                    new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            );
+            builder = new NotificationCompat.Builder(this,CHANNEL_ID); //하위 버전일 경우
+        } else {
+            builder = new NotificationCompat.Builder(this);
+        }
+        //알림창 제목
+        builder.setContentTitle("타이머 종료");
+        //알림창 메시지
+        builder.setContentText("타이머가 종료되었습니다.");
+        //알림창 아이콘
+        builder.setSmallIcon(R.drawable.icon);
+        Notification notification = builder.build();
+        //알림창 실행
+        manager.notify(1,notification);
+    }
+
 }
