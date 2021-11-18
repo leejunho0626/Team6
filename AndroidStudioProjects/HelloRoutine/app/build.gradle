@@ -4,14 +4,7 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('E:\\User\\LJH\\Key\\team6_1.0.jks')
-            storePassword '123456'
-            keyPassword '123456'
-            keyAlias 'key0'
-        }
-    }
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 

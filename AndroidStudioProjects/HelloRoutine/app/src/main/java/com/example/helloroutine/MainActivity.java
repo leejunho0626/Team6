@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
     private FragmentCalendar fragmentCalendar = new FragmentCalendar();
     private FragmentChallenge fragmentChallenge = new FragmentChallenge();
 
-    private final long FINISH_INTERVAL_TIME = 2000;
-    private long backPressedTime = 0;
-    ProgressDialog customProgressDialog;
+    private static final long FINISH_INTERVAL_TIME = 2000;
+    private static long backPressedTime = 0;
+    static ProgressDialog customProgressDialog;
 
 
     @Override

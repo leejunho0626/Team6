@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9370DB"
+    android:background="@color/white"
     android:orientation="vertical"
     android:id="@+id/challengeFragment">
 
@@ -19,7 +19,7 @@
             android:textStyle="bold"
             android:textSize="25dp"
             android:textColor="@color/black"
-            android:backgroundTint="@color/purple_200"/>
+            android:backgroundTint="#C5C4C6"/>
 
         <Button
             android:id="@+id/btnFavorite"
@@ -31,7 +31,7 @@
             android:textStyle="bold"
             android:textSize="25dp"
             android:textColor="@color/black"
-            android:backgroundTint="@color/purple_200"/>
+            android:backgroundTint="#C5C4C6"/>
 
         <Button
             android:id="@+id/btnComplete"
@@ -41,7 +41,7 @@
             android:textStyle="bold"
             android:textSize="25dp"
             android:textColor="@color/black"
-            android:backgroundTint="@color/purple_200"/>
+            android:backgroundTint="#C5C4C6"/>
     </LinearLayout>
 
     <FrameLayout
