@@ -437,9 +437,6 @@ public class FragmentHome extends Fragment {
 
 
                     } else {
-                        challengeAdapter.setArrayData("걷거나 뛴 거리 3km", 0, 0);
-                        challengeAdapter.setArrayData("걷거나 뛴 거리 5km", 0, 0);
-                        recyclerView2.setAdapter(challengeAdapter);
                     }
                 }
                 else {
@@ -471,9 +468,6 @@ public class FragmentHome extends Fragment {
 
 
                     } else {
-                        challengeAdapter.setArrayData("운동 일정 10개 추가", 0, 0);
-                        challengeAdapter.setArrayData("운동 일정 10개 추가", 0, 0);
-                        recyclerView2.setAdapter(challengeAdapter);
                     }
                 }
                 else {
@@ -620,7 +614,7 @@ public class FragmentHome extends Fragment {
                     pcp.setText("강수량 : " +PCP);
                 }
                 pop.setText("강수확률 : "+POP+"%");
-                time3.setText("기준 : " + time() + "시");
+                time3.setText("기준 : " + time().substring(0,2) + "시");
                 Log.d("onpostEx", "출력 값 : "+s);
 
 

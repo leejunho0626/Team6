@@ -30,7 +30,7 @@ import static android.content.ContentValues.TAG;
 public class Register extends AppCompatActivity {
 
     TextView txtError1, txtError2, txtError3; //경고메시지 텍스트
-    EditText edtID, edtPw, edtPW2, pickEmail; //아이디, 비밀번호, 이메일 입력텍스트
+    EditText edtID, edtPw, edtPW2; //아이디, 비밀번호, 이메일 입력텍스트
     Button btnRegister, btnCheckId; //중복확인, 최종 회원가입 버튼
     private FirebaseAuth firebaseAuth; //FirebaseAuth 선언
 
@@ -46,15 +46,11 @@ public class Register extends AppCompatActivity {
         edtID = findViewById(R.id.edtID);
         edtPw = findViewById(R.id.edtPW);
         edtPW2 = findViewById(R.id.edtPW2);
-
         btnRegister = findViewById(R.id.btnSignUp);
         btnCheckId = findViewById(R.id.btnCheckID);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
-
-
-
 
 
         //아이디 중복확인
@@ -64,39 +60,45 @@ public class Register extends AppCompatActivity {
         btnCheckId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String id = edtID.getText().toString().trim()+"@"+pickEmail.getText().toString().trim(); //입력한 아이디와 선택한 이메일
+                final String id = edtID.getText().toString().trim(); //입력한 아이디와 선택한 이메일
                 final String tempPW = "tempPW"; //임시 비밀번호
-                //계정 생성
-                firebaseAuth.createUserWithEmailAndPassword(id, tempPW).addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //계정 생성 성공
-                        if (task.isSuccessful()) {
-                            txtError1.setText("사용 가능한 아이디입니다."); //경고 메시지
-                            txtError1.setTextColor(Color.parseColor("#4CAF50"));
-                            edtID.setBackgroundResource(R.drawable.white_edittext);  //테투리 흰색으로 변경
-                            pickEmail.setBackgroundResource(R.drawable.white_edittext);  //테투리 흰색으로 변경
-                        }
-                        //계정 생성 실패
-                        else {
-                            //입력한 아이디가 없음
-                            if(edtID.getText().toString().length()==0){
-                                txtError1.setText("아이디를 입력하세요."); //경고 메시지
+                if(id.length()==0){
+                    txtError1.setText("아이디를 입력하세요."); //경고 메시지
+                    txtError1.setTextColor(Color.RED); //경고 메시지 색상
+                    edtID.setBackgroundResource(R.drawable.red_edittext);  //테투리 빨간색으로 변경
+                }
+                else{
+                    //계정 생성
+                    firebaseAuth.createUserWithEmailAndPassword(id, tempPW).addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            //계정 생성 성공
+                            if (task.isSuccessful()) {
+                                txtError1.setText("사용 가능한 아이디입니다."); //경고 메시지
+                                txtError1.setTextColor(Color.parseColor("#4CAF50"));
+                                edtID.setBackgroundResource(R.drawable.white_edittext);  //테투리 흰색으로 변경
                             }
-                            //입력한 아이디가 있지만 이메일을 선택하지 않음
-                            else if(edtID.getText().toString().length()>0&&pickEmail.getText().toString().length()==0){
-                                txtError1.setText("아이디를 입력하세요."); //경고 메시지
-                            }
-                            //아이디 중복
+                            //계정 생성 실패
                             else {
-                                txtError1.setText("이미 등록된 아이디입니다."); //경고 메시지
+                                //입력한 아이디가 없음
+                                if(edtID.getText().toString().length()==0){
+                                    txtError1.setText("아이디를 입력하세요."); //경고 메시지
+                                }
+                                //입력한 아이디가 있지만 이메일을 선택하지 않음
+                                else if(!edtID.getText().toString().contains("@")){
+                                    txtError1.setText("올바른 이메일 형식으로 입력하세요."); //경고 메시지
+                                }
+                                //아이디 중복
+                                else {
+                                    txtError1.setText("사용할 수 없습니다."); //경고 메시지
+                                }
+                                txtError1.setTextColor(Color.RED); //경고 메시지 색상
+                                edtID.setBackgroundResource(R.drawable.red_edittext);  //테투리 빨간색으로 변경
                             }
-                            txtError1.setTextColor(Color.RED); //경고 메시지 색상
-                            edtID.setBackgroundResource(R.drawable.red_edittext);  //테투리 빨간색으로 변경
-                            pickEmail.setBackgroundResource(R.drawable.red_edittext);  //테투리 빨간색으로 변경
                         }
-                    }
-                });
+                    });
+                }
+
             }
         });
 
@@ -144,6 +146,11 @@ public class Register extends AppCompatActivity {
                     txtError3.setTextColor(Color.RED);
                     edtPW2.setBackgroundResource(R.drawable.red_edittext);  // 적색 테두리 적용
                 }
+                else if(edtPW2.getText().toString().length()<6){
+                    txtError3.setText("올바른 비밀번호를 입력해주세요.");    // 경고 메세지
+                    txtError3.setTextColor(Color.RED);
+                    edtPW2.setBackgroundResource(R.drawable.red_edittext);  // 적색 테두리 적용
+                }
                 else{
                     txtError3.setText("동일합니다.");
                     txtError3.setTextColor(Color.parseColor("#4CAF50"));
@@ -168,7 +175,7 @@ public class Register extends AppCompatActivity {
          3. 회원가입 후 Firestore에 계정 정보 저장
     */
     public void register(){
-        final String id = edtID.getText().toString().trim()+"@"+pickEmail.getText().toString().trim(); //입력한 아이디와 선택한 이메일
+        final String id = edtID.getText().toString().trim(); //입력한 아이디와 선택한 이메일
         final String adminPW= "tempPW";
         //입력한 아이디가 있을 경우
         if(id.length()>0&&adminPW.length()>0){
@@ -206,7 +213,7 @@ public class Register extends AppCompatActivity {
                                 Toast.makeText(Register.this, "회원가입을 축하합니다.", Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                Toast.makeText(getApplicationContext(),"회원가입 오류",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호를 입력하세요.(회원가입)",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -277,13 +284,19 @@ public class Register extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                //
-                Log.d(TAG, "delete");
-            }
-        });
+        if(firebaseAuth.getCurrentUser() != null){
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    //
+                    Log.d(TAG, "delete");
+                }
+            });
+        }
+        else{
+            finish();
+        }
+
     }
 }
