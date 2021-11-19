@@ -37,6 +37,7 @@
         <activity android:name=".Navermap"/>
         <activity android:name=".AddPlan"/>
         <activity android:name=".FriendPlan"/>
+        <activity android:name=".RequestList"/>
 
     </application>
 

@@ -34,24 +34,6 @@ public class FragmentChallenge extends Fragment {
 
         FragmentView(Fragment_1);
 
-        btnList.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                FragmentView(Fragment_1);
-            }
-        });
-
-
-
-        btnComplete.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                FragmentView(Fragment_3);
-            }
-        });
-
 
 
         return view;

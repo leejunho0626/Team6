@@ -112,6 +112,7 @@ public class FragmentUser extends Fragment {
                                     }
                                 });
                                 startActivity(intent);
+
                             }
                         })
                         .setNegativeButton("아니요", new DialogInterface.OnClickListener() {

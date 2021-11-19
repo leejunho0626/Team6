@@ -4,17 +4,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +39,7 @@ import static android.content.ContentValues.TAG;
 
 public class Friend extends AppCompatActivity {
 
-    Button btnAddFr;
+    Button btnAddFr, btnRq;
     ProgressDialog customProgressDialog;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -58,6 +62,7 @@ public class Friend extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         btnAddFr = findViewById(R.id.btnAddFriend);
+        btnRq = findViewById(R.id.btnRQ);
         listView = findViewById(R.id.listView);
         listView2 = findViewById(R.id.listView2);
         frAdapter = new FriendListAdapter(this);
@@ -125,7 +130,7 @@ public class Friend extends AppCompatActivity {
                         String edit = editText.getText().toString(); //입력한 값
                         if(edit.length()>0){
                             builder1.setTitle("");
-                            builder1.setMessage("추가하시겠습니까?");
+                            builder1.setMessage("친구 요청을 하시겠습니까?");
                             builder1.setPositiveButton("네", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -156,17 +161,52 @@ public class Friend extends AppCompatActivity {
 
             }
         });
+
+        //친구 요청 목록
+        btnRq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Friend.this, RequestList.class); //화면 전환
+                startActivity(intent);
+
+            }
+        });
     }
     //친구 추가
     public void addFriend(String uid){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if(uid.length()>0){
             UserFriend userFriend = new UserFriend(uid);
-            db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(uid).set(userFriend)
+            db.collection("DB").document("User").collection(user.getUid()).document("RQ_Friend").collection("Uid").document(uid).set(userFriend)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void avoid) {
-                            Toast.makeText(getApplicationContext(), "추가되었습니다.", Toast.LENGTH_LONG).show();
+                            receiveMsg(uid);
+                            Toast.makeText(getApplicationContext(), "요청을 보냈습니다.", Toast.LENGTH_LONG).show();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }else{
+            Toast.makeText(getApplicationContext(), "UID을 다시 입력하세요.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //친구 추가
+    public void receiveMsg(String uid){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if(uid.length()>0){
+            UserFriend userFriend = new UserFriend(user.getUid());
+            db.collection("DB").document("User").collection(uid).document("AS_Friend").collection("Uid").document(user.getUid()).set(userFriend)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void avoid) {
+                            Log.d(TAG, " 요청 성공 ");
 
                         }
                     })

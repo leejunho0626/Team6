@@ -32,8 +32,6 @@ public class Register extends AppCompatActivity {
     TextView txtError1, txtError2, txtError3; //경고메시지 텍스트
     EditText edtID, edtPw, edtPW2, pickEmail; //아이디, 비밀번호, 이메일 입력텍스트
     Button btnRegister, btnCheckId; //중복확인, 최종 회원가입 버튼
-    Spinner spinner; //이메일 선택 스피너
-    String[] items = {"","daum.net","nate.com","yahoo.com","hanmail.com","직접입력"}; //이메일 선택
     private FirebaseAuth firebaseAuth; //FirebaseAuth 선언
 
     @Override
@@ -197,11 +195,12 @@ public class Register extends AppCompatActivity {
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Log.d(TAG, "fail");
+                                                Log.d(TAG, "fail(general");
                                             }
                                         });
                                 saveScore();
                                 saveFriend();
+                                saveID();
                                 firebaseAuth.signOut(); //로그아웃
                                 finish();
                                 Toast.makeText(Register.this, "회원가입을 축하합니다.", Toast.LENGTH_SHORT).show();
@@ -215,6 +214,24 @@ public class Register extends AppCompatActivity {
         else{
             Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호를 입력하세요.(회원가입)",Toast.LENGTH_SHORT).show();
         }
+    }
+    public void saveID(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserWrite userWrite = new UserWrite(user.getUid());
+        db.collection("DB").document("ID").collection(user.getEmail()).document("uid").set(userWrite) //경로
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        Log.d(TAG, "save success(id)");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "save fail(id)");
+                    }
+                });
     }
 
     public void saveScore(){
