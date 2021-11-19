@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9370DB"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,7 +18,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="60dp"
             android:layout_marginBottom="20dp"
-            android:text="Login"
+            android:text="로고"
             android:textStyle="bold"
             android:textSize="40dp"/>
 
@@ -29,7 +28,7 @@
             android:id="@+id/loginID"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="100dp"
             android:background="@drawable/layout_background"
             android:ems="17"
             android:hint="아이디(E-mail)를 입력하세요"
@@ -70,16 +69,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            //회원가입 버튼
-            <Button
-                android:id="@+id/btnRegister"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00ff0000"
-                android:text="회원가입"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                tools:ignore="MissingConstraints" />
+
 
         </LinearLayout>
 
@@ -87,7 +77,7 @@
             android:id="@+id/btnLogin"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#3F51B5"
+            android:backgroundTint="#8F64DC"
             android:text="로그인"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -95,14 +85,20 @@
             tools:layout_editor_absoluteX="100dp"
             tools:layout_editor_absoluteY="405dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="90dp"
-            android:text="소셜 계정으로 로그인"
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#BB9AF8"
+            android:text="회원가입"
+            android:layout_marginTop="80dp"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            android:textSize="20dp"/>
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="405dp" />
+
+
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -3,6 +3,7 @@ package com.example.helloroutine;
 public class ListItem {
 
     private String title;
+    private String frList;
     private String sub;
     private int progress;
     boolean check;
@@ -13,6 +14,14 @@ public class ListItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getFrList() {
+        return frList;
+    }
+
+    public void setFrList(String frList) {
+        this.frList = frList;
     }
 
     public String getSub() {

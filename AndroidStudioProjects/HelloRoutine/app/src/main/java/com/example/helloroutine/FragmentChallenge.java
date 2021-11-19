@@ -30,39 +30,24 @@ public class FragmentChallenge extends Fragment {
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_challenge, container, false);
 
-        btnList = (Button) view.findViewById(R.id.btnList);
-        btnFav = (Button) view.findViewById(R.id.btnFavorite);
-        btnComplete = (Button) view.findViewById(R.id.btnComplete);
-        btnFav.setBackgroundColor(Color.parseColor("#9370DB"));
-        btnComplete.setBackgroundColor(Color.parseColor("#9370DB"));
+
+
         FragmentView(Fragment_1);
 
         btnList.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnList.setBackgroundColor(Color.parseColor("#FFBB86FC"));
-                btnFav.setBackgroundColor(Color.parseColor("#9370DB"));
-                btnComplete.setBackgroundColor(Color.parseColor("#9370DB"));
+
                 FragmentView(Fragment_1);
             }
         });
 
-        btnFav.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btnList.setBackgroundColor(Color.parseColor("#9370DB"));
-                btnFav.setBackgroundColor(Color.parseColor("#FFBB86FC"));
-                btnComplete.setBackgroundColor(Color.parseColor("#9370DB"));
-                FragmentView(Fragment_2);
-            }
-        });
+
 
         btnComplete.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnList.setBackgroundColor(Color.parseColor("#9370DB"));
-                btnFav.setBackgroundColor(Color.parseColor("#9370DB"));
-                btnComplete.setBackgroundColor(Color.parseColor("#FFBB86FC"));
+
                 FragmentView(Fragment_3);
             }
         });
@@ -80,12 +65,6 @@ public class FragmentChallenge extends Fragment {
             case 1:
                 FragmentList fragmentList = new FragmentList();
                 transaction.replace(R.id.fragment_challenge, fragmentList);
-                transaction.commit();
-                break;
-
-            case 2:
-                FragmentFav fragmentFav = new FragmentFav();
-                transaction.replace(R.id.fragment_challenge, fragmentFav);
                 transaction.commit();
                 break;
 

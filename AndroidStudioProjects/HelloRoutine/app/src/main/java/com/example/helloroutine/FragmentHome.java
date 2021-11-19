@@ -148,7 +148,7 @@ public class FragmentHome extends Fragment {
 
         //현재 날짜
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
-        SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy.MM.dd일");
+        SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy.MM.dd");
         String format_time1 = format1.format (System.currentTimeMillis());
         String format_time2 = format2.format (System.currentTimeMillis());
 
@@ -494,33 +494,17 @@ public class FragmentHome extends Fragment {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
-                        if(document.exists()){
-                            if(document.getId().equals("0")){
-                                //adapter2.addItem("걷거나 뛴 거리 3km", Integer.toString(value)+"%", value);
-                                challengeAdapter.setArrayData("걷거나 뛴 거리 3km", value, value);
-                            }
-                            else if(document.getId().equals("1")){
-                                //adapter2.addItem("걷거나 뛴 거리 5km", Integer.toString(value2)+"%", value2);
-                                challengeAdapter.setArrayData("걷거나 뛴 거리 5km", value2, value2);
-                            }
-                            else if(document.getId().equals("2")){
-                                //adapter2.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value);
-                                challengeAdapter.setArrayData("운동 일정 10개 추가", value, value);
-                            }
 
-                            else {
-                                //adapter2.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2);
-                                challengeAdapter.setArrayData("운동 일정 30개 추가", value2, value2);
-                            }
+                        if(document.exists()) if (document.getId().equals("0"))
+                            challengeAdapter.setArrayData("걷거나 뛴 거리 3km", value, value);
+                        else if (document.getId().equals("1"))
+                            challengeAdapter.setArrayData("걷거나 뛴 거리 5km", value2, value2);
+                        else if (document.getId().equals("2"))
+                            challengeAdapter.setArrayData("운동 일정 10개 추가", value, value);
 
-                        }
-                        else {
-
-                            
-                        }
-
+                        else challengeAdapter.setArrayData("운동 일정 30개 추가", value2, value2);
                         recyclerView2.setAdapter(challengeAdapter);
-                        //adapter2.notifyDataSetChanged();
+
                     } else {
                         Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
                     }
@@ -583,7 +567,6 @@ public class FragmentHome extends Fragment {
             return result;
         }
 
-        @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             String TMP = null;   // 1시간 기온
@@ -595,57 +578,58 @@ public class FragmentHome extends Fragment {
             int cnt = 1;
 
 
-            StringTokenizer st = new StringTokenizer(s, "\"", true);
+            try {
+                StringTokenizer st = new StringTokenizer(s, "\"", true);
 
+                while(st.hasMoreTokens()) {
+                    if(cnt==91) TMP = st.nextToken();
+                    else if(cnt==371) SKY = st.nextToken();
+                    else if(cnt==427) PTY = st.nextToken();
+                    else if(cnt==483) POP = st.nextToken();
+                    else if(cnt==595) PCP = st.nextToken();
+                    else if(cnt==707) SNO = st.nextToken();
+                    else st.nextToken();
+                    cnt++;
+                }
+                tmp.setText(TMP+"도");
+                if(PTY.equals("0")) {
+                    pty.setText("");
+                    if(SKY.equals("1"))
+                        sky.setText("맑음");
+                    if(SKY.equals("3"))
+                        sky.setText("구름 많음");
+                    if(SKY.equals("4"))
+                        sky.setText("흐림");
+                }
 
-            while(st.hasMoreTokens()) {
-                if(cnt==91) TMP = st.nextToken();
-                else if(cnt==371) SKY = st.nextToken();
-                else if(cnt==427) PTY = st.nextToken();
-                else if(cnt==483) POP = st.nextToken();
-                else if(cnt==595) PCP = st.nextToken();
-                else if(cnt==707) SNO = st.nextToken();
-                else st.nextToken();
-                cnt++;
-            }
-            tmp.setText(TMP+"도");
-            if(PTY.equals("0")) {
-                pty.setText("");
-                if(SKY.equals("1"))
-                    sky.setText("맑음");
-                if(SKY.equals("3"))
-                    sky.setText("구름 많음");
-                if(SKY.equals("4"))
-                    sky.setText("흐림");
-            }
-
-            if(PTY.equals("1")) {
-                pty.setText("비");
-                pcp.setText("강수량 : " +PCP);
-            }
-            if(PTY.equals("2")) {
-                pty.setText("눈비");
-                pcp.setText("강수량 : " +PCP);
-                sno.setText("적설량 : " +SNO);
-            }
-            if(PTY.equals("3")) {
-                pty.setText("눈");
-                sno.setText("적설량 : " +SNO);
-            }
-            if(PTY.equals("4")) {
-                pty.setText("소나기");
-                pcp.setText("강수량 : " +PCP);
-            }
-
-            pop.setText("강수확률 : "+POP+"%");
-
-            if(time().equals("-1")){
-                time3.setText("기준 : 2300시");
-            }
-            else {
+                if(PTY.equals("1")) {
+                    pty.setText("비");
+                    pcp.setText("강수량 : " +PCP);
+                }
+                if(PTY.equals("2")) {
+                    pty.setText("눈비");
+                    pcp.setText("강수량 : " +PCP);
+                    sno.setText("적설량 : " +SNO);
+                }
+                if(PTY.equals("3")) {
+                    pty.setText("눈");
+                    sno.setText("적설량 : " +SNO);
+                }
+                if(PTY.equals("4")) {
+                    pty.setText("소나기");
+                    pcp.setText("강수량 : " +PCP);
+                }
+                pop.setText("강수확률 : "+POP+"%");
                 time3.setText("기준 : " + time() + "시");
+                Log.d("onpostEx", "출력 값 : "+s);
+
+
+            } catch (NullPointerException e) {
+
+                pty.setText("기상정보를 불러올 수 없습니다.");
+                tmp.setText("");
+
             }
-            Log.d("onpostEx", "출력 값 : "+s);
         }
     }
 

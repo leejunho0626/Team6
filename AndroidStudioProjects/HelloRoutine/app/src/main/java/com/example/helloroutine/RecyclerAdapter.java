@@ -28,6 +28,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.textView.setText(text);
     }
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+    @Override
     public int getItemCount() {
         return arrayList.size();
     }

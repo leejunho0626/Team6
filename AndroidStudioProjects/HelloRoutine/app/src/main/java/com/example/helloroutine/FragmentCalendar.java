@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -38,10 +41,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.kakao.auth.Session;
 
 import java.text.SimpleDateFormat;
@@ -69,9 +75,12 @@ public class FragmentCalendar extends Fragment {
     ProgressDialog customProgressDialog;
     String x;
     Dialog dialog;
-    SimpleDateFormat format = new SimpleDateFormat ( "yyyy.MM.dd일");
+    SimpleDateFormat format = new SimpleDateFormat ( "yyyy.MM.dd");
     String format_1 = format.format(System.currentTimeMillis());
     final CharSequence[] oItems = {"팔 운동", "어깨 운동", "다리 운동", "가슴 운동", "등 운동"};
+    static RecyclerView recyclerView;
+    static RecyclerAdapter recyclerAdapter;
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -85,8 +94,11 @@ public class FragmentCalendar extends Fragment {
         next = view.findViewById(R.id.next);
         txt1 = view.findViewById(R.id.calPlan1);
         btnAdd = view.findViewById(R.id.btnAddPlan);
+        recyclerView = (RecyclerView)view.findViewById(R.id.recyceler_clickPlan);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false)) ;
+        recyclerAdapter = new RecyclerAdapter();
 
-           //달력표시
+        //달력표시
         cal = Calendar.getInstance();
         int y = cal.get(Calendar.YEAR);
         int m = cal.get(Calendar.MONTH) + 1;
@@ -97,26 +109,26 @@ public class FragmentCalendar extends Fragment {
         customProgressDialog = new ProgressDialog(getActivity());
         //로딩창을 투명하게
         customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        SimpleDateFormat format2 = new SimpleDateFormat ( "MM월 dd일");
+        String format_1_1 = format2.format(System.currentTimeMillis());
 
-        txt1.setText(format_1);
+        txt1.setText(format_1_1);
 
 
 
         btnAdd.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showDialog(clickDate);
-                AddPlan addPlan= new AddPlan();
-                //addPlan.writeUpload(clickDate, "test11", user.getUid().toString());
+
                 Intent intent = new Intent(getActivity(), AddPlan.class); //메인화면으로 이동
                 intent.putExtra("date",format_1);
                 startActivity(intent);
 
-
             }
         });
 
-        
+
+
         //날짜 클릭 시
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -139,19 +151,17 @@ public class FragmentCalendar extends Fragment {
                     day = adt.mItem.get(i).day();
                 }
                 //클릭한 날짜 데이터
-                String clickDate = adt.mItem.get(i).year()+"."+month+"."+day+"일";
+                String clickDate = adt.mItem.get(i).year()+"."+month+"."+day;
+                String clickDate2 = month+"월 "+day+"일";
 
-                txt1.setText(clickDate);
+                txt1.setText(clickDate2);
 
-
-                writeDownload(clickDate);
-                writeDownload2(clickDate);
-                writeDownload3(clickDate);
+                showPlanList(clickDate);
 
                 btnAdd.setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       //showDialog(clickDate);
+                        //showDialog(clickDate);
                         AddPlan addPlan= new AddPlan();
                         //addPlan.writeUpload(clickDate, "test11", user.getUid().toString());
                         Intent intent = new Intent(getActivity(), AddPlan.class); //메인화면으로 이동
@@ -185,7 +195,7 @@ public class FragmentCalendar extends Fragment {
         pre.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-              pre();
+                pre();
             }
         });
         next.setOnClickListener(new Button.OnClickListener() {
@@ -333,6 +343,37 @@ public class FragmentCalendar extends Fragment {
         });
     }
 
+
+    //일정 표시
+    public void showPlanList(String date){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            //DB 필드명 표시 지워서 데이터 값만 표시
+                            String str2 = document.getData().toString();
+                            str2 = str2.substring(str2.indexOf("=")+1);
+                            String y = str2.substring(0, str2.indexOf("}"));
+
+                            recyclerAdapter.setArrayData(y);
+                            recyclerView.setAdapter(recyclerAdapter);
+
+                        } else {
+
+                        }
+
+                    }
+
+                } else {
+                    Toast.makeText(getContext().getApplicationContext(), "일정 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 
 
     //목표 설정1

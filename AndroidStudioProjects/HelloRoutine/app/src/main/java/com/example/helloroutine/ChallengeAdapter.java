@@ -43,8 +43,9 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void setArrayData(String strData, int value, int value2) {
 
-        arrayList.add(strData);
-        arrayList2.add(value);
-        arrayList3.add(value2);
+        arrayList.add(0,strData);
+        arrayList2.add(0, value);
+        arrayList3.add(0, value2);
+
     }
 }

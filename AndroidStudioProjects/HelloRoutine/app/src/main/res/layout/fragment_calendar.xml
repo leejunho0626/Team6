@@ -2,31 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#9370DB">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@color/white">
+            android:orientation="vertical">
             <LinearLayout
                 android:gravity="center"
-                android:background="#453F51B5"
+                android:background="@color/white"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
 
                 <ImageButton
                     android:id="@+id/pre"
                     android:layout_centerHorizontal="true"
-                    android:textColor="@color/white"
-                    android:backgroundTint="#9370DB"
+                    android:backgroundTint="@color/white"
                     android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -34,7 +30,7 @@
                 <TextView
                     android:id="@+id/date"
                     android:textSize="30dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:gravity="center"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:layout_weight="1"
@@ -44,8 +40,7 @@
                 <ImageButton
                     android:id="@+id/next"
                     android:layout_centerHorizontal="true"
-                    android:textColor="@color/white"
-                    android:backgroundTint="#9370DB"
+                    android:backgroundTint="@color/white"
                     android:layout_marginRight="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -120,12 +115,18 @@
             <GridView
                 android:id="@+id/grid"
                 android:layout_width="fill_parent"
-                android:layout_height="290dp"
+                android:layout_height="wrap_content"
+                android:background="#FAFAFA"
                 android:numColumns="7"
                 android:padding="3dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:background="@color/gray"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -133,32 +134,45 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_margin="10dp"
-                    android:background="@drawable/shape_text"
                     android:backgroundTint="#E3E0E0">
 
-                    <TextView
-                        android:id="@+id/calPlan1"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="10dp"
-                        android:gravity="center"
-                        android:text=" "
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/calPlan1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_margin="10dp"
+                            android:gravity="left"
+                            android:text=" "
+                            android:textColor="@color/black"
+                            android:textSize="25dp"
+                            android:textStyle="bold" />
 
-                    <ListView
-                        android:id="@+id/cal_listView"
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+                        <ImageButton
+                            android:id="@+id/btnAddPlan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:background="@drawable/ic_baseline_add_box_24"/>
+
+                    </LinearLayout>
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyceler_clickPlan"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp" />
+                        android:layout_height="wrap_content"/>
 
-                    <ImageButton
-                        android:id="@+id/btnAddPlan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:background="@drawable/ic_baseline_add_box_24"/>
+
+
 
                 </LinearLayout>
 
@@ -169,7 +183,9 @@
 
         </LinearLayout>
 
+
     </LinearLayout>
+
 
 
 </LinearLayout>

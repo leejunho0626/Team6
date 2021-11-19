@@ -88,7 +88,24 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
 
         double time_ = 0;
         time_ = receive_intent_.getDoubleExtra("Key03", 0); // 총 이동시간을 가져옴 단위 1000당 1초
-        textView.setText("이동시간" + Double.toString(time_/1000) + "초");
+
+        int num = (int) Math.round(time_);
+        int sec = (num/1000) % 60;
+        int min = (num/1000/60) % 60 ;
+        int hour = (num/1000/60/60) % 60 ;
+        if(hour==0) {
+            if(min==0)
+            {
+                textView.setText("이동시간 : " + sec + "초");
+            }
+            else {
+                textView.setText("이동시간 : " + min+"분"+sec + "초");
+            }
+        }
+        else {
+            textView.setText("이동시간 : " +hour+"시"+min+"분"+sec + "초");
+        }
+
 
 
         double avgspeed = (speed/1000)/(time_/1000/60/60); // 평균 속력을 Km/h로 보여줌

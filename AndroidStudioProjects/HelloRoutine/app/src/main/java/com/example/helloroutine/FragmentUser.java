@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class FragmentUser extends Fragment {
     Button btnFriend, btnCopy, btnLogout, btnRemove;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    LinearLayout ly_fr;
     private GoogleSignInClient mGoogleSignInClient;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,24 +54,17 @@ public class FragmentUser extends Fragment {
 
         txtID = view.findViewById(R.id.txtUserID);
         txtUid = view.findViewById(R.id.txtUID);
-        btnFriend = view.findViewById(R.id.btnFriend);
         btnCopy = view.findViewById(R.id.btnCopy);
         btnLogout = view.findViewById(R.id.btnLogout);
         btnRemove = view.findViewById(R.id.btnRemove);
+        ly_fr = view.findViewById(R.id.user_fr);
 
         if(firebaseAuth.getCurrentUser() != null){
             txtID.setText(firebaseAuth.getCurrentUser().getEmail());
         }
         txtUid.setText(firebaseAuth.getUid());
 
-        //친구목록
-        btnFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), Friend.class);
-                startActivity(intent);
-            }
-        });
+
 
         btnCopy.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -82,25 +77,51 @@ public class FragmentUser extends Fragment {
             }
         });
 
+        ly_fr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Friend.class);
+                startActivity(intent);
+
+            }
+        });
+
+
+
+
         //로그아웃 버튼 클릭
         btnLogout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new AlertDialog.Builder(getActivity())
+                        .setMessage("정말 로그아웃하시겠습니까?")
+                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                signOut(); //파이어베이스 로그아웃
+                                firebaseAuth.signOut(); //구글 로그아웃
+                                Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(), Login.class);
+                                //카카오 로그아웃
+                                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                                    @Override
+                                    public void onCompleteLogout() {
+                                        Intent intent = new Intent(getActivity(), Login.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                    }
+                                });
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
 
-                signOut(); //파이어베이스 로그아웃
-                firebaseAuth.signOut(); //구글 로그아웃
-                Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), Login.class);
-                //카카오 로그아웃
-                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onCompleteLogout() {
-                        Intent intent = new Intent(getActivity(), Login.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                });
-                startActivity(intent);
+
 
             }
         });

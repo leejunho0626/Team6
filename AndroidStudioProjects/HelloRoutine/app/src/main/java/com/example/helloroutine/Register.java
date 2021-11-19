@@ -48,39 +48,16 @@ public class Register extends AppCompatActivity {
         edtID = findViewById(R.id.edtID);
         edtPw = findViewById(R.id.edtPW);
         edtPW2 = findViewById(R.id.edtPW2);
-        pickEmail = findViewById(R.id.edtEmail);
+
         btnRegister = findViewById(R.id.btnSignUp);
         btnCheckId = findViewById(R.id.btnCheckID);
-        spinner = findViewById(R.id.spinner);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //이메일 선택 스피너
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                pickEmail.setText(items[i]);
-                pickEmail.setClickable(false);
-                pickEmail.setFocusable(false);
-                if(i==0){
-                    pickEmail.setFocusableInTouchMode(true);
-                    pickEmail.setFocusable(true);
-                    pickEmail.setText(null);
-                }
-                if(i==5){
-                    pickEmail.setFocusableInTouchMode(true);
-                    pickEmail.setFocusable(true);
-                    pickEmail.setText(null);
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
 
-            }
-        });
+
+
 
         //아이디 중복확인
         /*

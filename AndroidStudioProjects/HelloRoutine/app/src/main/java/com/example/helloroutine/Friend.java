@@ -5,11 +5,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +49,7 @@ public class Friend extends AppCompatActivity {
     ArrayAdapter<String> adapter3;
     ArrayAdapter<String> adapter4;
     ListView listView, listView2;
+    FriendListAdapter frAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class Friend extends AppCompatActivity {
         btnAddFr = findViewById(R.id.btnAddFriend);
         listView = findViewById(R.id.listView);
         listView2 = findViewById(R.id.listView2);
+        frAdapter = new FriendListAdapter(this);
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(this);
@@ -89,10 +93,19 @@ public class Friend extends AppCompatActivity {
                 };
 
                 Timer timer = new Timer();
-                timer.schedule(task, 1500);
+                timer.schedule(task, 1000);
             }
         });
         thread.start();
+
+        listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(Friend.this, FriendPlan.class); //화면 전환
+                intent.putExtra("id",friendList.get(i));
+                startActivity(intent);
+            }
+        });
 
         btnAddFr.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -240,7 +253,7 @@ public class Friend extends AppCompatActivity {
                                                             }
                                                             idScoreList.clear();
                                                             for (int i =0; i < idList.size() ; i++ ){
-                                                                idScoreList.add(idList.get(i)+ " / " + scoreList.get(i));
+                                                                idScoreList.add(i+1+". "+idList.get(i)+ " / " + scoreList.get(i));
 
                                                             }
                                                             adapter.notifyDataSetChanged();

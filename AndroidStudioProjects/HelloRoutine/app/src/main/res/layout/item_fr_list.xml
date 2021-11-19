@@ -10,7 +10,7 @@
         android:text="loding..."
         android:textSize="20dp"
         android:gravity="center_vertical"
-        android:id="@+id/textView"/>
+        android:id="@+id/fr_textView"/>
 
 
 </RelativeLayout>

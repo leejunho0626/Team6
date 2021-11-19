@@ -74,47 +74,54 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
         btn1.setOnClickListener(new TextView.OnClickListener() {
             @Override
             public void onClick(View v) {
+                GpsTracker gpsTracker_ = new GpsTracker(Route.this);
+                double latitude_ = gpsTracker_.getLatitude();// 위도
+                double longitude_ = gpsTracker_.getLongitude(); // 경도
 
-                if (btnbool == false) {
-                    btnbool = true;
-                    listA.clear();
-                    listB.clear();
-                    speedlist.clear();
-                    listC.clear();
-                    new Thread(new Runnable() {
+                if(latitude_ == 0.0 && longitude_ == 0.0) Toast.makeText(getApplicationContext(), "GPS가 연결되어있지 않습니다.", Toast.LENGTH_SHORT).show();
+                else{
+
+                    if (btnbool == false) {
+                        btnbool = true;
+                        listA.clear();
+                        listB.clear();
+                        speedlist.clear();
+                        listC.clear();
+                        new Thread(new Runnable() {
 
 
-                        int value = 0;
+                            int value = 0;
 
-                        @Override
-                        public void run() {
-                            isRun = true;
-                            abc.setText("시작");  // 거리측정이 시작이 되면 abc textview가 시작으로 바뀜.
-                            firstTime = format1.format(System.currentTimeMillis()); // 시작시간 측정
-                            while ((isRun)) { // 정지버튼이 눌리기 전까지 반복.
-                                handler2.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        GpsTracker gpsTracker = new GpsTracker(Route.this);
-                                        double latitude = gpsTracker.getLatitude();// 위도
-                                        double longitude = gpsTracker.getLongitude(); // 경도
-                                        listA.add(latitude);
-                                        listB.add(longitude);
+                            @Override
+                            public void run() {
+                                isRun = true;
+                                abc.setText("시작");  // 거리측정이 시작이 되면 abc textview가 시작으로 바뀜.
+                                firstTime = format1.format(System.currentTimeMillis()); // 시작시간 측정
+                                while ((isRun)) { // 정지버튼이 눌리기 전까지 반복.
+                                    handler2.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            GpsTracker gpsTracker = new GpsTracker(Route.this);
+                                            double latitude = gpsTracker.getLatitude();// 위도
+                                            double longitude = gpsTracker.getLongitude(); // 경도
+                                            listA.add(latitude);
+                                            listB.add(longitude);
+                                            abc.setText(latitude + " / " + longitude);
+                                        }
+                                    });
+                                    try {
+                                        Thread.sleep(500);  // 0.5초마다 반복
+                                    } catch (Exception e) {
                                     }
-                                });
-                                try {
-                                    Thread.sleep(500);  // 0.5초마다 반복
-                                } catch (Exception e) {
                                 }
                             }
-                        }
-                    }).start();
-                }
-                else Toast.makeText(getApplicationContext(), "이미 시작버튼이 눌려있습니다.", Toast.LENGTH_SHORT).show();
+                        }).start();
+                    } else
+                        Toast.makeText(getApplicationContext(), "이미 시작버튼이 눌려있습니다.", Toast.LENGTH_SHORT).show();
 
+                }
             }
         });
-
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,7 +189,22 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
                     }
                     double diff = d2.getTime() - d1.getTime();
                     intent.putExtra("Key03", diff);
-                    textView.setText("이동시간" + Double.toString(diff / 1000) + "초");
+                    int num = (int) Math.round(diff);
+                    int sec = (num/1000) % 60;
+                    int min = (num/1000/60) % 60 ;
+                    int hour = (num/1000/60/60) % 60 ;
+                    if(hour==0) {
+                        if(min==0)
+                        {
+                            textView.setText("이동시간 : " + sec + "초");
+                        }
+                        else {
+                            textView.setText("이동시간 : " + min+"분"+sec + "초");
+                        }
+                    }
+                    else {
+                        textView.setText("이동시간 : " +hour+"시"+min+"분"+sec + "초");
+                    }
 
 
                     startActivity(intent);
