@@ -36,6 +36,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         return arrayList.size();
     }
     public void setArrayData(String strData) {
+
         arrayList.add(0,strData);
     }
 }

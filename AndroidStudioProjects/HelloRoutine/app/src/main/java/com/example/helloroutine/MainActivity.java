@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             };
                             Timer timer = new Timer();
-                            timer.schedule(task, 1500);
+                            timer.schedule(task, 1000);
                         }
                     });
                     thread1.start();

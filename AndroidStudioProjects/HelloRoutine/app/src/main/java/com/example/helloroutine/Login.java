@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -21,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,7 +51,7 @@ public class Login extends AppCompatActivity {
     EditText edtID, edtPw;
     Button btnLogin, btnRegister;
     ImageButton btnKakao;
-    ImageView btnGoogle;
+    //ImageView btnGoogle;
     ProgressDialog customProgressDialog;
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -57,6 +59,7 @@ public class Login extends AppCompatActivity {
     private SessionCallback sessionCallback;
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
+    static SignInButton signInButton;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +72,9 @@ public class Login extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
         btnKakao = findViewById(R.id.btnKakao);
-        btnGoogle = findViewById(R.id.btnGoogle);
-        btnGoogle.setClipToOutline(true);
+        signInButton = findViewById(R.id.signInButton);
+        //btnGoogle = findViewById(R.id.btnGoogle);
+        //btnGoogle.setClipToOutline(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -115,6 +119,9 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        TextView textView = (TextView) signInButton.getChildAt(0);
+        textView.setText("Google로 시작하기");
+
         //구글 로그인
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -123,7 +130,7 @@ public class Login extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         //구글 로그인 버튼 클릭
-        btnGoogle.setOnClickListener(new View.OnClickListener() {
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -188,7 +195,7 @@ public class Login extends AppCompatActivity {
                                 intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
 
-                                //회원가입 후 Firestore에 아이디(Eamil) 저장
+                                //Firestore에 아이디(Eamil) 저장
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 UserWrite userWrite = new UserWrite(user.getEmail());
@@ -205,6 +212,7 @@ public class Login extends AppCompatActivity {
                                             }
                                         });
                                 saveFriend();
+                                saveID();
                             }
                             else {
                                 Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호가 틀렸습니다.",Toast.LENGTH_SHORT).show();
@@ -274,8 +282,12 @@ public class Login extends AppCompatActivity {
                                             }
                                         });
                                 saveFriend();
+                                saveScore();
+                                saveID();
                                 Intent intent = new Intent(Login.this, MainActivity.class); //메인화면으로 이동
                                 startActivity(intent);
+                                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                                finish();
                             }
                             //FirebaseAuth에 등록된 계정이 있을 때
                             else {
@@ -359,6 +371,26 @@ public class Login extends AppCompatActivity {
             finish();
         }
     }
+
+    public void saveFriend(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserWrite userWrite = new UserWrite(user.getUid());
+        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(user.getUid()).set(userWrite) //경로
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        Log.d(TAG, "save success(score)");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "save fail(score)");
+                    }
+                });
+    }
+
     public void saveScore(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -378,21 +410,21 @@ public class Login extends AppCompatActivity {
                 });
     }
 
-    public void saveFriend(){
+    public void saveID(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserWrite userWrite = new UserWrite(user.getUid());
-        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(user.getUid()).set(userWrite) //경로
+        db.collection("DB").document("ID").collection(user.getEmail()).document("uid").set(userWrite) //경로
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
-                        Log.d(TAG, "save success(score)");
+                        Log.d(TAG, "save success(id)");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "save fail(score)");
+                        Log.d(TAG, "save fail(id)");
                     }
                 });
     }

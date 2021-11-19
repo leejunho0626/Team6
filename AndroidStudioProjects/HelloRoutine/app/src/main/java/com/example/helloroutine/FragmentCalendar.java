@@ -62,22 +62,18 @@ import static android.view.View.VISIBLE;
 
 public class FragmentCalendar extends Fragment {
 
-    GridView grid;
-    GridAdapter adt;
-    Calendar cal;
-    TextView date, txt1;
-    ImageButton pre, next, btnAdd;
-    ScrollView dialogView;
-    EditText exeType, exeTime, exeNum, exeSet, exeWeight;
-    Context mContext;
-    boolean img;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    ProgressDialog customProgressDialog;
-    String x;
-    Dialog dialog;
-    SimpleDateFormat format = new SimpleDateFormat ( "yyyy.MM.dd");
-    String format_1 = format.format(System.currentTimeMillis());
-    final CharSequence[] oItems = {"팔 운동", "어깨 운동", "다리 운동", "가슴 운동", "등 운동"};
+    static GridView grid;
+    static GridAdapter adt;
+    static Calendar cal;
+    static TextView date, txt1;
+    static ImageButton pre, next, btnAdd;
+    static ScrollView dialogView;
+    static EditText exeType, exeTime, exeNum, exeSet, exeWeight;
+    static boolean img;
+    static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    static String x;
+    static SimpleDateFormat format = new SimpleDateFormat ( "yyyy.MM.dd");
+    static String format_1 = format.format(System.currentTimeMillis());
     static RecyclerView recyclerView;
     static RecyclerAdapter recyclerAdapter;
 
@@ -105,14 +101,13 @@ public class FragmentCalendar extends Fragment {
         cal.set(y, m - 1, 1);
         show();
 
-        //로딩창 객체 생성
-        customProgressDialog = new ProgressDialog(getActivity());
-        //로딩창을 투명하게
-        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         SimpleDateFormat format2 = new SimpleDateFormat ( "MM월 dd일");
+        SimpleDateFormat format3 = new SimpleDateFormat ( "yyyy.MM.dd");
         String format_1_1 = format2.format(System.currentTimeMillis());
+        String format_2_1 = format3.format(System.currentTimeMillis());
 
         txt1.setText(format_1_1);
+        showPlanList(format_2_1);
 
 
 
@@ -120,7 +115,7 @@ public class FragmentCalendar extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), AddPlan.class); //메인화면으로 이동
+                Intent intent = new Intent(getActivity(), AddPlan.class);
                 intent.putExtra("date",format_1);
                 startActivity(intent);
 
@@ -133,8 +128,7 @@ public class FragmentCalendar extends Fragment {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // 로딩창 보여주기
-                customProgressDialog.show();
+
                 //한 자리수 날짜 오류 수정
                 String month = null;
                 if(adt.mItem.get(i).month().length()<2){
@@ -156,6 +150,7 @@ public class FragmentCalendar extends Fragment {
 
                 txt1.setText(clickDate2);
 
+                recyclerAdapter.arrayList.clear();
                 showPlanList(clickDate);
 
                 btnAdd.setOnClickListener(new Button.OnClickListener() {
@@ -170,24 +165,6 @@ public class FragmentCalendar extends Fragment {
 
                     }
                 });
-
-                //로딩 쓰레드
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TimerTask task = new TimerTask(){
-                            @Override
-                            public void run() {
-                                customProgressDialog.dismiss();
-
-                            }
-                        };
-
-                        Timer timer = new Timer();
-                        timer.schedule(task, 1500);
-                    }
-                });
-                thread.start();
 
             }
         });

@@ -99,10 +99,8 @@ public class FragmentUser extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                signOut(); //파이어베이스 로그아웃
-                                firebaseAuth.signOut(); //구글 로그아웃
-                                Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getActivity(), Login.class);
+                                firebaseAuth.signOut(); //파이어베이스 로그아웃
+                                signOut(); //구글 로그아웃
                                 //카카오 로그아웃
                                 UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
                                     @Override
@@ -110,6 +108,8 @@ public class FragmentUser extends Fragment {
 
                                     }
                                 });
+                                Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(), Login.class);
                                 startActivity(intent);
                                 getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                                 getActivity().finish();
@@ -122,8 +122,6 @@ public class FragmentUser extends Fragment {
                                 dialog.dismiss();
                             }
                         }).show();
-
-
 
             }
         });
@@ -173,6 +171,7 @@ public class FragmentUser extends Fragment {
                                                 Toast.makeText(getActivity().getApplicationContext(), "회원탈퇴에 성공했습니다.", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(getActivity(), Login.class);
                                                 startActivity(intent);
+                                                getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                                                 getActivity().finish();
                                             }
                                         });

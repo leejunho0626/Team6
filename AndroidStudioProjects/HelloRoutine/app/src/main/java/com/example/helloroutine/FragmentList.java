@@ -84,7 +84,7 @@ public class FragmentList extends Fragment {
                 };
 
                 Timer timer = new Timer();
-                timer.schedule(task, 1000);
+                timer.schedule(task, 500);
             }
         });
         thread.start();
@@ -142,9 +142,8 @@ public class FragmentList extends Fragment {
 
                     } else {
 
-                        adapter.addItem("걷거나 뛴 거리 3km", Integer.toString(0)+"%", 0, false);
-                        adapter.addItem("걷거나 뛴 거리 5km", Integer.toString(0)+"%", 0, false);
-                        adapter.notifyDataSetChanged();
+                        showBtnFav("0", 0, 0);
+                        showBtnFav("1", 0, 0);
                     }
                 }
                 else {
@@ -211,9 +210,8 @@ public class FragmentList extends Fragment {
 
 
                     } else {
-                        adapter.addItem("운동 일정 10개 추가", Integer.toString(0)+"%", 0, false);
-                        adapter.addItem("운동 일정 30개 추가", Integer.toString(0)+"%", 0, false);
-                        adapter.notifyDataSetChanged();
+                        showBtnFav("2", 0, 0);
+                        showBtnFav("3", 0, 0);
                     }
                 }
                 else {

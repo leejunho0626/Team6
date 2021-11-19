@@ -436,7 +436,10 @@ public class FragmentHome extends Fragment {
                         showBtnFav("1", value, value2);
 
 
-                    } else {
+                    } 
+                    else {
+                        showBtnFav("0", 0, 0);
+                        showBtnFav("1", 0, 0);
                     }
                 }
                 else {
@@ -468,6 +471,8 @@ public class FragmentHome extends Fragment {
 
 
                     } else {
+                        showBtnFav("2", 0, 0);
+                        showBtnFav("3", 0, 0);
                     }
                 }
                 else {
