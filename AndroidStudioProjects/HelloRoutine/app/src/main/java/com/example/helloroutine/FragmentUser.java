@@ -2,8 +2,10 @@ package com.example.helloroutine;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +41,7 @@ public class FragmentUser extends Fragment {
     Button btnFriend, btnCopy, btnLogout, btnRemove;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    LinearLayout ly_fr;
+    LinearLayout layouty_fr;
     private GoogleSignInClient mGoogleSignInClient;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,14 +59,12 @@ public class FragmentUser extends Fragment {
         btnCopy = view.findViewById(R.id.btnCopy);
         btnLogout = view.findViewById(R.id.btnLogout);
         btnRemove = view.findViewById(R.id.btnRemove);
-        ly_fr = view.findViewById(R.id.user_fr);
+        layouty_fr = view.findViewById(R.id.user_fr);
 
         if(firebaseAuth.getCurrentUser() != null){
             txtID.setText(firebaseAuth.getCurrentUser().getEmail());
         }
         txtUid.setText(firebaseAuth.getUid());
-
-
 
         btnCopy.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -77,7 +77,7 @@ public class FragmentUser extends Fragment {
             }
         });
 
-        ly_fr.setOnClickListener(new View.OnClickListener() {
+        layouty_fr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Friend.class);
@@ -86,42 +86,25 @@ public class FragmentUser extends Fragment {
             }
         });
 
-
-
-
         //로그아웃 버튼 클릭
         btnLogout.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(getActivity())
-                        .setMessage("정말 로그아웃하시겠습니까?")
-                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                FirebaseAuth.getInstance().signOut(); //파이어베이스 로그아웃
+                signOut(); //구글 로그아웃
+                //카카오 로그아웃
+                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onCompleteLogout() {
 
-                                firebaseAuth.signOut(); //파이어베이스 로그아웃
-                                signOut(); //구글 로그아웃
-                                //카카오 로그아웃
-                                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                                    @Override
-                                    public void onCompleteLogout() {
+                    }
+                });
+                Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다", Toast.LENGTH_SHORT).show();
 
-                                    }
-                                });
-                                Toast.makeText(getActivity().getApplicationContext(), "로그아웃이 되었습니다", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getActivity(), Login.class);
-                                startActivity(intent);
-                                getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-                                getActivity().finish();
-
-                            }
-                        })
-                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                getActivity().finish();
+                Intent intent = new Intent(getActivity(), Login.class);
+                startActivity(intent);
 
             }
         });

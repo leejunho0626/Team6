@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
-    static ArrayList<String> arrayList;
+    ArrayList<String> arrayList;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     public ReceiveAdapter() {
         arrayList = new ArrayList<>();
@@ -42,7 +42,15 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.btnRefuse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteRv(arrayList.get(position));
+                refuseRv(arrayList.get(position));
+
+            }
+        });
+
+        holder.btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                acceptRv(arrayList.get(position));
 
             }
         });
@@ -60,7 +68,8 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
         arrayList.add(0,strData);
     }
 
-    public void deleteRv(String id){
+    //거절
+    public void refuseRv(String id){
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("ID").collection(id).document("uid")
@@ -109,9 +118,101 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         });
 
+    }
+
+    //수락
+    public void acceptRv(String id){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("ID").collection(id).document("uid")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    //DB 필드명 표시 지워서 데이터 값만 표시
+                    String str2 = document.getData().toString();
+                    str2 = str2.substring(str2.indexOf("=")+1);
+                    String uid = str2.substring(0, str2.indexOf("}")); //상대 id의 uid
+
+                    addFriend(uid);
+                    deletList(uid);
+
+
+
+                } else {
+
+                }
+            }
+        });
 
 
     }
+    //친구 추가
+    public void addFriend(String uid){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserFriend userFriend = new UserFriend(uid);
+        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(uid).set(userFriend)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+
+                        UserFriend userFriend = new UserFriend(user.getUid());
+                        db.collection("DB").document("User").collection(uid).document("Friend").collection("Uid").document(user.getUid()).set(userFriend)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void avoid) {
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
+
+    //목록 삭제
+    public void deletList(String uid){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("AS_Friend").collection("Uid").document(uid)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        db.collection("DB").document("User").collection(uid).document("RQ_Friend").collection("Uid").document(user.getUid())
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
+
+
+
 
 
 }

@@ -77,6 +77,7 @@ public class Login extends AppCompatActivity {
         //btnGoogle.setClipToOutline(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        //firebaseAuth.signOut();
 
         //로딩창 객체 생성
         customProgressDialog = new ProgressDialog(this);
@@ -368,6 +369,7 @@ public class Login extends AppCompatActivity {
                         }
                     });
             saveFriend();
+            saveID();
             finish();
         }
     }

@@ -53,7 +53,6 @@ public class Friend extends AppCompatActivity {
     ArrayAdapter<String> adapter3;
     ArrayAdapter<String> adapter4;
     ListView listView, listView2;
-    FriendListAdapter frAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class Friend extends AppCompatActivity {
         btnRq = findViewById(R.id.btnRQ);
         listView = findViewById(R.id.listView);
         listView2 = findViewById(R.id.listView2);
-        frAdapter = new FriendListAdapter(this);
+
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(this);
@@ -224,17 +223,18 @@ public class Friend extends AppCompatActivity {
     //친구 표시
     public void showFriendList(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //친구 uid 검색
         db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
                         if (document.exists()) {
                             //DB 필드명 표시 지워서 데이터 값만 표시
                             String str1 = document.getId().toString(); //uid
 
+                            //친구uid로 아이디 검색
                             db.collection("DB").document("User").collection(str1).document("ID")
                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
                                 @Override
@@ -245,19 +245,18 @@ public class Friend extends AppCompatActivity {
                                             //DB 필드명 표시 지워서 데이터 값만 표시
                                             String str2 = document.getData().toString();
                                             str2 = str2.substring(str2.indexOf("=")+1);
-                                            String y = str2.substring(0, str2.indexOf("}"));
+                                            String id = str2.substring(0, str2.indexOf("}")); //아이디
 
-                                            Log.d(TAG, "ID" + " => " +y);
-
-                                            friendList.add(y);
+                                            //친구 배열에 아이디 추가, 자신 아이디 제거
+                                            friendList.add(id);
                                             for (int i =0; i < friendList.size() ; i++ ){
                                                 if(friendList.get(i).toString().equals(user.getEmail())){
                                                     friendList.remove(i);
                                                 }
                                             }
-
                                             adapter2.notifyDataSetChanged();
 
+                                            //친구 점수 검색
                                             db.collection("DB").document("User").collection(str1).document("Score")
                                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
                                                 @Override
@@ -302,8 +301,27 @@ public class Friend extends AppCompatActivity {
 
                                                         }
                                                         else{
-                                                            idScoreList.add(user.getEmail()+ " / " + "0");
-                                                            adapter.notifyDataSetChanged();
+                                                            //친구 점수 검색
+                                                            db.collection("DB").document("User").collection(str1).document("ID")
+                                                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        DocumentSnapshot document = task.getResult();
+                                                                        if (document.exists()) {
+                                                                            //DB 필드명 표시 지워서 데이터 값만 표시
+                                                                            String str2 = document.getData().toString();
+                                                                            str2 = str2.substring(str2.indexOf("=")+1);
+                                                                            String id = str2.substring(0, str2.indexOf("}")); //아이디
+                                                                            idScoreList.add("- "+id+ " / " + 0);
+                                                                            adapter.notifyDataSetChanged();
+                                                                        }
+                                                                    }
+                                                                }
+
+
+                                                            });
+
                                                         }
                                                     }
                                                 }

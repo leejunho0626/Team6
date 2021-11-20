@@ -1,15 +1,23 @@
 package com.example.helloroutine;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 
+import static android.content.ContentValues.TAG;
+
 public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
-    static ArrayList<String> arrayList;
+    ArrayList<String> arrayList;
+
     public RecyclerAdapter() {
         arrayList = new ArrayList<>();
     }
@@ -26,6 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String text = position+1+". "+arrayList.get(position);
         holder.textView.setText(text);
+
     }
     @Override
     public int getItemViewType(int position) {
@@ -37,6 +46,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
     public void setArrayData(String strData) {
 
-        arrayList.add(0,strData);
+        arrayList.add(strData);
+        notifyDataSetChanged();
+
     }
 }

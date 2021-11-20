@@ -29,8 +29,8 @@ import static android.content.ContentValues.TAG;
 public class FriendPlan extends AppCompatActivity {
 
     TextView clickID ,txtDate;
-    static RecyclerView recyclerView;
-    static RecyclerAdapter recyclerAdapter;
+    RecyclerView recyclerView;
+    RecyclerAdapter recyclerAdapter;
 
 
 

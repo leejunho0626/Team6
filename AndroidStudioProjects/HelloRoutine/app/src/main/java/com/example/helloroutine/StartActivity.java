@@ -18,6 +18,7 @@ public class StartActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(StartActivity.this, Login.class); //화면 전환
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 finish();
             }
         }, 500);

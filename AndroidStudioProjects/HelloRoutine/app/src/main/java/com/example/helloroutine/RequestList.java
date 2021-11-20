@@ -29,10 +29,10 @@ public class RequestList extends AppCompatActivity {
 
     TextView txtId;
     Button btnCancel;
-    static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    static RecyclerView recyclerView, recyclerView2;
-    static RequestAdapter requestAdapter;
-    static ReceiveAdapter receiveAdapter;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    RecyclerView recyclerView, recyclerView2;
+    RequestAdapter requestAdapter;
+    ReceiveAdapter receiveAdapter;
 
 
     @Override

@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 class ViewHolder extends RecyclerView.ViewHolder {
-    public static TextView textView, textView2, textView3, txtRqId, txtRvId;
-    public static ProgressBar progressBar;
-    public static Button btnCancel, btnRefuse, btnAccept;
+    TextView textView, textView2, textView3, txtRqId, txtRvId;
+    ProgressBar progressBar;
+    Button btnCancel, btnRefuse, btnAccept;
 
     ViewHolder(Context context, View itemView) {
         super(itemView);

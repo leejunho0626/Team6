@@ -62,21 +62,22 @@ public class FragmentHome extends Fragment {
     private static LocationSource mLocationSource;
     static GridView grid;
     static GridAdapter adt;
-    static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     static ProgressDialog customProgressDialog;
     private static Animation fab_open, fab_close;
     private static Boolean isFabOpen = false;
     private static FloatingActionButton fab, fab1, fab2;
     static  LinearLayout linearLayout;
-    static String x;
-    static SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
-    static String format_1 = format.format(System.currentTimeMillis());
+    String x;
+    SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
+    String format_1 = format.format(System.currentTimeMillis());
     static String format_2 = null;
     static String cnt;
     static boolean check = true;
     static RecyclerView recyclerView,recyclerView2;
     static RecyclerAdapter recyclerAdapter;
     static ChallengeAdapter challengeAdapter;
+    String base_time = time();
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -147,9 +148,8 @@ public class FragmentHome extends Fragment {
         });
 
         //현재 날짜
-        SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
+
         SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy.MM.dd");
-        String format_time1 = format1.format (System.currentTimeMillis());
         String format_time2 = format2.format (System.currentTimeMillis());
 
         //목표 표시
@@ -158,86 +158,9 @@ public class FragmentHome extends Fragment {
         //도전과제 표시
         totalDistance(); //거리 DB 불러오기 - 진행도 표시
         totalPlan();
+        showWeather();
 
-        //날씨
-        String strline = "";
-        InputStream inputStream = getResources().openRawResource(R.raw.weather_address_final);
-        InputStreamReader inputreader = new InputStreamReader(inputStream);
-        BufferedReader buffreader = new BufferedReader(inputreader);
-        String line;
-        try {
-            while (( line = buffreader.readLine()) != null) {
-                strline = strline + line;
-            }
-        } catch (IOException e) {
 
-        }
-        StringTokenizer st = new StringTokenizer(strline);
-        String nx=null;
-        String ny=null;
-        String we="1";
-        int num = 1;
-        int i=0;
-        String[] add_ = new String[7];
-        StringTokenizer st_ = new StringTokenizer(getaddress_());
-        while(st_.hasMoreTokens())
-        {
-            add_[i] =st_.nextToken();
-            i++;
-        }
-        while(st.hasMoreTokens())
-        {
-
-            if(num>20) {
-                if((num-21)%14 == 0) {
-                    we = st.nextToken();
-                    num++;
-                }
-                else if((num-22)%14 == 0) {
-                    nx = st.nextToken();
-                    num++;
-                }
-                else if((num-23)%14 == 0) {
-                    ny = st.nextToken();
-                    num++;
-                }
-                else {
-                    st.nextToken();
-                    num++;
-                }
-            }
-            else {
-                st.nextToken();
-                num++;
-            }
-
-            if(we.equals(add_[i-2])) break;
-        }
-        String service_key = "Qq0ncOZYtzwIBrVT5cMMrn%2BKP7nlXYXT52ZR%2FpoM6l%2B5W6ch9YeTupmGsrR6bfVDSvXVdI7Gl6sRzKhrkgQbHw%3D%3D";
-        String num_of_rows = "12";
-        String page_no = "1";
-        String date_type = "JSON";
-        String base_date = format_time1; // date
-        String base_time = time();   // time
-        if(time().equals("-1")) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(new Date());
-            cal.add(Calendar.DATE, -1);
-            base_date =  format1.format(cal.getTime());
-            base_time = "2300";
-            cal.add(Calendar.DATE, 1);
-        }
-        String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?" +
-                "serviceKey=" +service_key+
-                "&pageNo=" +page_no+
-                "&numOfRows=" +num_of_rows+
-                "&dataType=" +date_type+
-                "&base_date=" +base_date+
-                "&base_time=" +base_time+
-                "&nx=" +nx+
-                "&ny=" +ny;
-        NetworkTask networkTask = new NetworkTask(url, null);
-        networkTask.execute(); //날씨 실행
         //totalAttendance(format_1);
 
         //로딩화면 종료
@@ -545,6 +468,94 @@ public class FragmentHome extends Fragment {
         });
     }
 
+    public void showWeather(){
+
+        SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
+        String format_time1 = format1.format (System.currentTimeMillis());
+
+
+        //날씨
+        String strline = "";
+        InputStream inputStream = getResources().openRawResource(R.raw.weather_address_final);
+        InputStreamReader inputreader = new InputStreamReader(inputStream);
+        BufferedReader buffreader = new BufferedReader(inputreader);
+        String line;
+        try {
+            while (( line = buffreader.readLine()) != null) {
+                strline = strline + line;
+            }
+        } catch (IOException e) {
+
+        }
+        StringTokenizer st = new StringTokenizer(strline);
+        String nx=null;
+        String ny=null;
+        String we="1";
+        int num = 1;
+        int i=0;
+        String[] add_ = new String[7];
+        StringTokenizer st_ = new StringTokenizer(getaddress_());
+        while(st_.hasMoreTokens())
+        {
+            add_[i] =st_.nextToken();
+            i++;
+        }
+        while(st.hasMoreTokens())
+        {
+
+            if(num>20) {
+                if((num-21)%14 == 0) {
+                    we = st.nextToken();
+                    num++;
+                }
+                else if((num-22)%14 == 0) {
+                    nx = st.nextToken();
+                    num++;
+                }
+                else if((num-23)%14 == 0) {
+                    ny = st.nextToken();
+                    num++;
+                }
+                else {
+                    st.nextToken();
+                    num++;
+                }
+            }
+            else {
+                st.nextToken();
+                num++;
+            }
+
+            if(we.equals(add_[i-2])) break;
+        }
+        String service_key = "Qq0ncOZYtzwIBrVT5cMMrn%2BKP7nlXYXT52ZR%2FpoM6l%2B5W6ch9YeTupmGsrR6bfVDSvXVdI7Gl6sRzKhrkgQbHw%3D%3D";
+        String num_of_rows = "12";
+        String page_no = "1";
+        String date_type = "JSON";
+        String base_date = format_time1; // date
+        // time
+        if(time().equals("-1")) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, -1);
+            base_date =  format1.format(cal.getTime());
+            base_time = "2300";
+            cal.add(Calendar.DATE, 1);
+        }
+        String url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?" +
+                "serviceKey=" +service_key+
+                "&pageNo=" +page_no+
+                "&numOfRows=" +num_of_rows+
+                "&dataType=" +date_type+
+                "&base_date=" +base_date+
+                "&base_time=" +base_time+
+                "&nx=" +nx+
+                "&ny=" +ny;
+        NetworkTask networkTask = new NetworkTask(url, null);
+        networkTask.execute(); //날씨 실행
+    }
+
+
 
 
     //날씨
@@ -619,7 +630,7 @@ public class FragmentHome extends Fragment {
                     pcp.setText("강수량 : " +PCP);
                 }
                 pop.setText("강수확률 : "+POP+"%");
-                time3.setText("기준 : " + time().substring(0,2) + "시");
+                time3.setText("기준 : " + base_time.substring(0,2) + "시");
                 Log.d("onpostEx", "출력 값 : "+s);
 
 

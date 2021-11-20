@@ -43,7 +43,7 @@ public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteRq(arrayList.get(position));
+                cancelRq(arrayList.get(position));
 
             }
         });
@@ -60,7 +60,7 @@ public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         arrayList.add(0,strData);
     }
 
-    public void deleteRq(String id){
+    public void cancelRq(String id){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("ID").collection(id).document("uid")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
