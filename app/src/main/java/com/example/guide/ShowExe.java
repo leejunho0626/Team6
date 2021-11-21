@@ -85,6 +85,7 @@ public class ShowExe extends AppCompatActivity {
             txt.setText(R.string.top_body_1);
         } else if (date.equals("2")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images2));
+            txt.setText(R.string.top_body_2);
         }  else if (date.equals("3")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images3));
         } else if (date.equals("4")) {
