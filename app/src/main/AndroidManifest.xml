@@ -17,6 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TOP"/>
+        <activity android:name=".Bottom"/>
+        <activity android:name=".Allbody"/>
         <activity android:name=".ShowExe"/>
     </application>
 

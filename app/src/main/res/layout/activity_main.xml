@@ -18,13 +18,16 @@
             android:layout_margin="20dp"
             android:text="상체"/>
 
+
         <Button
+            android:id="@+id/btnBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="하체"/>
 
         <Button
+            android:id="@+id/btnAllbody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
