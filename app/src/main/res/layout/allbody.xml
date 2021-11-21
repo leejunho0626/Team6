@@ -26,28 +26,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="13"/>
+                android:text="플랭크"/>
 
             <Button
                 android:id="@+id/btn14"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="14"/>
+                android:text="플랭크잭"/>
 
             <Button
                 android:id="@+id/btn15"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="15"/>
+                android:text="마운틴 클라이머"/>
 
             <Button
                 android:id="@+id/btn16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="16"/>
+                android:text="사이드플랭크워크"/>
 
 
 
@@ -69,28 +69,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="17"/>
+                android:text="벤트 오버로윙"/>
 
             <Button
                 android:id="@+id/btn18"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="18"/>
+                android:text="데드리프트"/>
 
             <Button
                 android:id="@+id/btn19"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="19"/>
+                android:text="행잉 레그 레이즈"/>
 
             <Button
                 android:id="@+id/btn20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="20"/>
+                android:text="시티드 로윙"/>
 
 
         </LinearLayout>

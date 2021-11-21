@@ -83,45 +83,82 @@ public class ShowExe extends AppCompatActivity {
         if (date.equals("1")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images));
             txt.setText(R.string.top_body_1);
-        } else if (date.equals("2")) {
+        }
+        else if (date.equals("2")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images2));
             txt.setText(R.string.top_body_2);
-        }  else if (date.equals("3")) {
+        }
+        else if (date.equals("3")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images3));
-        } else if (date.equals("4")) {
+            txt.setText(R.string.top_body_3);
+        }
+        else if (date.equals("4")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images4));
-        } else if (date.equals("5")) {
+            txt.setText(R.string.top_machine_4);
+        }
+        else if (date.equals("5")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images5));
-        } else if (date.equals("6")) {
+            txt.setText(R.string.top_machine_5);
+        }
+        else if (date.equals("6")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images6));
-        } else if (date.equals("7")) {
+            txt.setText(R.string.top_machine_6);
+        }
+        else if (date.equals("7")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images7));
-        }else if (date.equals("8")) {
+            txt.setText(R.string.bottom_body_1);
+        }
+        else if (date.equals("8")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images8));
-        }else if (date.equals("9")) {
+            txt.setText(R.string.bottom_body_2);
+        }
+        else if (date.equals("9")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images9));
-        }else if (date.equals("10")) {
+            txt.setText(R.string.bottom_body_3);
+        }
+        else if (date.equals("10")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images10));
-        }else if (date.equals("11")) {
+            txt.setText(R.string.bottom_machine_4);
+        }
+        else if (date.equals("11")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images11));
-        }else if (date.equals("12")) {
+            txt.setText(R.string.bottom_machine_5);
+        }
+        else if (date.equals("12")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images12));
-        }else if (date.equals("13")) {
+            txt.setText(R.string.bottom_machine_6);
+        }
+        else if (date.equals("13")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images13));
-        }else if (date.equals("14")) {
+            txt.setText(R.string.all_body_1);
+        }
+        else if (date.equals("14")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images14));
-        }else if (date.equals("15")) {
+            txt.setText(R.string.all_body_2);
+        }
+        else if (date.equals("15")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images15));
-        }else if (date.equals("16")) {
+            txt.setText(R.string.all_body_3);
+        }
+        else if (date.equals("16")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images16));
-        }else if (date.equals("17")) {
+            txt.setText(R.string.all_body_4);
+        }
+        else if (date.equals("17")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images17));
-        }else if (date.equals("18")) {
+            txt.setText(R.string.all_machine_5);
+        }
+        else if (date.equals("18")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images18));
-        }else if (date.equals("19")) {
+            txt.setText(R.string.all_machine_6);
+        }
+        else if (date.equals("19")) {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images19));
-        }else {
+            txt.setText(R.string.all_machine_7);
+        }
+        else {
             sliderViewPager.setAdapter(new ImageSliderAdapter(this, images20));
+            txt.setText(R.string.all_machine_8);
         }
         sliderViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
