@@ -39,6 +39,7 @@ import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.LoginButton;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeV2ResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
@@ -60,6 +61,7 @@ public class Login extends AppCompatActivity {
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
     static SignInButton signInButton;
+    LoginButton loginButton;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,7 @@ public class Login extends AppCompatActivity {
         edtPw = findViewById(R.id.loginPW);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
-        btnKakao = findViewById(R.id.btnKakao);
+        loginButton = findViewById(R.id.btnKakao);
         signInButton = findViewById(R.id.signInButton);
         //btnGoogle = findViewById(R.id.btnGoogle);
         //btnGoogle.setClipToOutline(true);
@@ -112,7 +114,7 @@ public class Login extends AppCompatActivity {
         });
 
         //카카오 로그인 버튼 클릭
-        btnKakao.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, Login.this); //카카오 로그인 화면으로 이동
@@ -121,7 +123,10 @@ public class Login extends AppCompatActivity {
         });
 
         TextView textView = (TextView) signInButton.getChildAt(0);
-        textView.setText("Google로 시작하기");
+        textView.setText("구글계정으로 로그인");
+        textView.setTextSize(18);
+        textView.setPadding(240,0,0,0);
+
 
         //구글 로그인
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

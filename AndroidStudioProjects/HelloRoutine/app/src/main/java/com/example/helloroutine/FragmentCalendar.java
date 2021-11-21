@@ -47,6 +47,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.kakao.auth.Session;
@@ -77,7 +78,7 @@ public class FragmentCalendar extends Fragment {
     SimpleDateFormat format = new SimpleDateFormat ( "yyyy.MM.dd");
     String format_1 = format.format(System.currentTimeMillis());
     RecyclerView recyclerView;
-    RecyclerAdapter recyclerAdapter;
+    PlanAdapter planAdapter;
 
 
 
@@ -94,7 +95,7 @@ public class FragmentCalendar extends Fragment {
         btnAdd = view.findViewById(R.id.btnAddPlan);
         recyclerView = (RecyclerView)view.findViewById(R.id.recyceler_clickPlan);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false)) ;
-        recyclerAdapter = new RecyclerAdapter();
+        planAdapter = new PlanAdapter();
 
         //달력표시
         cal = Calendar.getInstance();
@@ -152,19 +153,61 @@ public class FragmentCalendar extends Fragment {
 
                 txt1.setText(clickDate2);
 
-                recyclerAdapter.arrayList.clear();
-                showPlanList(clickDate);
+                planAdapter.arrayList.clear();
+                //showPlanList(clickDate);
+                findData(clickDate);
 
                 btnAdd.setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //showDialog(clickDate);
-                        AddPlan addPlan= new AddPlan();
-                        //addPlan.writeUpload(clickDate, "test11", user.getUid().toString());
-                        Intent intent = new Intent(getActivity(), AddPlan.class); //메인화면으로 이동
+                        Intent intent = new Intent(getActivity(), AddPlan.class);
                         intent.putExtra("date",clickDate);
                         startActivity(intent);
 
+                    }
+                });
+                planAdapter.setOnItemClicklistener(new OnPlanItemClickListener() {
+                    @Override
+                    public void OnItemClick(PlanAdapter.ViewHolder holder, View view, int position) {
+                        String item = planAdapter.getItem(position);
+                        String temp = item.substring(0,item.indexOf(":"));
+
+                        if(!item.contains("새로운")){
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle(clickDate)
+                                    .setMessage(item)
+                                    .setPositiveButton("변경", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            Intent intent = new Intent(getActivity(), AddPlan.class);
+                                            intent.putExtra("date",clickDate);
+                                            intent.putExtra("exeType",temp);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton("삭제", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(clickDate).document(temp)
+                                                    .delete()
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Toast.makeText(getContext().getApplicationContext(), "삭제했습니다.", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+
+                                                        }
+                                                    });
+
+                                        }
+                                    }).show();
+                        }
                     }
                 });
 
@@ -254,13 +297,14 @@ public class FragmentCalendar extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
+
                         //DB 필드명 표시 지워서 데이터 값만 표시
                         String str2 = document.getData().toString();
                         str2 = str2.substring(str2.indexOf("=")+1);
                         String y = str2.substring(0, str2.indexOf("}"));
 
-                        recyclerAdapter.setArrayData(y);
-                        recyclerView.setAdapter(recyclerAdapter);
+                        planAdapter.setArrayData(y);
+                        recyclerView.setAdapter(planAdapter);
                     }
 
 
@@ -270,6 +314,28 @@ public class FragmentCalendar extends Fragment {
             }
         });
     }
+
+    public void findData(String data){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(data)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot document = task.getResult();
+                if (!document.isEmpty()) {
+                    showPlanList(data);
+
+                } else {
+                    planAdapter.setArrayData("새로운 일정을 추가하세요.");
+                    recyclerView.setAdapter(planAdapter);
+                }
+            }
+
+        });
+
+
+    }
+
 
 
 

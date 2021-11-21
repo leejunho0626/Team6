@@ -57,31 +57,40 @@ public class AddPlan extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String date = bundle.getString("date");
+        String txtType = bundle.getString("exeType");
+        if(txtType==null){
+            exeType.setText("선택하기");
+            exeType.setOnClickListener(new TextView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final CharSequence[] oItems = {"팔 운동", "어깨 운동", "다리 운동", "가슴 운동", "등 운동", "복근 운동"};
+
+                    AlertDialog.Builder oDialog = new AlertDialog.Builder(AddPlan.this);
+
+                    oDialog.setTitle("해야 할 운동을 선택하세요")
+                            .setItems(oItems, new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    exeType.setText(oItems[which]);
+                                }
+                            })
+                            .show();
+
+                }
+            });
+        }
+        else {
+            //DB 필드명 표시 지워서 데이터 값만 표시
+            exeType.setText(txtType);
+
+        }
         clickDate.setText(date);
 
-        exeType.setOnClickListener(new TextView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                final CharSequence[] oItems = {"팔 운동", "어깨 운동", "다리 운동", "가슴 운동", "등 운동"};
 
-                AlertDialog.Builder oDialog = new AlertDialog.Builder(AddPlan.this,
-                        android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
-
-                oDialog.setTitle("해야 할 운동을 선택하세요")
-                        .setItems(oItems, new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                exeType.setText(oItems[which]);
-                            }
-                        })
-                        .setCancelable(false)
-                        .show();
-
-            }
-        });
         exeTime.setOnClickListener(new TextView.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,14 +111,14 @@ public class AddPlan extends AppCompatActivity {
         btnSave.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String edit = exeType.getText().toString()+" : "+exeNum.getText().toString()+"회 "+exeSet.getText().toString()+"세트 "
+                String edit = exeType.getText().toString()+": "+exeNum.getText().toString()+"회 "+exeSet.getText().toString()+"세트 "
                         +exeWeight.getText().toString()+"kg "+exeTime.getText().toString()+"시간"; //입력한 값
                 //Toast.makeText(getApplicationContext(), edit, Toast.LENGTH_LONG).show();
                 Intent intent = getIntent();
                 Bundle bundle = intent.getExtras();
                 String date = bundle.getString("date");
                 writeUpload(date, edit, exeType.getText().toString());
-                Toast.makeText(getApplicationContext(), "일정을 추가했습니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "저장했습니다.", Toast.LENGTH_LONG).show();
                 finish();
 
             }

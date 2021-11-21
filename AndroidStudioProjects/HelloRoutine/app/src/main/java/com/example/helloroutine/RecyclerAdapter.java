@@ -5,7 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +20,7 @@ import static android.content.ContentValues.TAG;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     ArrayList<String> arrayList;
+    Context context;
 
     public RecyclerAdapter() {
         arrayList = new ArrayList<>();
@@ -34,6 +38,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String text = position+1+". "+arrayList.get(position);
         holder.textView.setText(text);
+
 
     }
     @Override
