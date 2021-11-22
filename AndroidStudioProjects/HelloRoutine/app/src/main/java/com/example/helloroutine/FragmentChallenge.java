@@ -1,10 +1,18 @@
 package com.example.helloroutine;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +21,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +31,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.content.Context.VIBRATOR_SERVICE;
 import static java.lang.Thread.sleep;
 
 public class FragmentChallenge extends Fragment {
@@ -35,6 +47,10 @@ public class FragmentChallenge extends Fragment {
     String x;
     ListView listView;
     ListAdapter adapter;
+    NotificationManager manager;
+    NotificationCompat.Builder builder;
+    private static String CHANNEL_ID = "TimerPushAlarm";
+    private static String CHANEL_NAME = "PushAlarm";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -208,6 +224,9 @@ public class FragmentChallenge extends Fragment {
                             }
                             else if(document.getId().equals("2")){
                                 adapter.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value, true);
+                                if(value==100) {
+                                    showNoti();
+                                }
                             }
 
                             else {
@@ -243,6 +262,37 @@ public class FragmentChallenge extends Fragment {
             e.printStackTrace();
         }
     }
+
+    public void showNoti(){
+        Vibrator vib = (Vibrator)getActivity().getSystemService(VIBRATOR_SERVICE);
+        Uri ringing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        Ringtone ringtone = RingtoneManager.getRingtone(getContext().getApplicationContext(), ringing);
+
+        builder = null;
+        manager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE); //버전 오레오 이상일 경우
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(
+                    new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            );
+            builder = new NotificationCompat.Builder(getActivity(),CHANNEL_ID); //하위 버전일 경우
+        } else {
+            builder = new NotificationCompat.Builder(getActivity());
+        }
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        //알림창 제목
+        builder.setContentTitle("타이머 종료");
+        //알림창 메시지
+        builder.setContentText("타이머가 종료되었습니다.");
+        //알림창 아이콘
+        builder.setSmallIcon(R.drawable.ic_stat_name);
+        Notification notification = builder.build();
+        //알림창 실행
+        vib.vibrate(2000);
+        ringtone.play();
+        manager.notify(1,notification);
+    }
+
 
     /*//출석일수 DB 불러오기
     public void totalAttendance(){
