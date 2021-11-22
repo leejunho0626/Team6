@@ -59,17 +59,16 @@ public class FragmentChallenge extends Fragment {
         customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // 로딩화면 보여주기
         customProgressDialog.show();
-        totalDistance(); //거리 DB 불러오기 - 진행도 표시
-        totalPlan(); //일정 DB 불러오기 - 진행도 표시
 
-        /*try {
+
+        try {
             totalDistance(); //거리 DB 불러오기 - 진행도 표시
             sleep(2000);
 
             totalPlan();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
 
         //totalAttendance();
 

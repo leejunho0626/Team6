@@ -142,7 +142,7 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View v) {
                 //
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/results?search_query=%ED%94%BC%EC%A7%80%EC%BB%AC%EA%B0%A4%EB%9F%AC%EB%A6%AC"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/results?search_query=%EB%AC%B8%ED%99%94%EC%B2%B4%EC%9C%A1%EA%B4%80%EA%B4%91%EB%B6%80+%EC%9A%B4%EB%8F%99"));
                 startActivity(intent);
             }
         });

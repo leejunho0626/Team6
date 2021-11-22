@@ -305,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_margin="10dp"
-                    android:background="@color/purple_200">
+                    android:background="@color/logo3">
 
                     <TextView
                         android:id="@+id/txtGuide"
@@ -344,9 +344,9 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="165dp"
         android:layout_marginRight="15sp"
-        android:src="@drawable/ic_baseline_directions_walk_24"
+        android:src="@drawable/ic_baseline_timer_24"
         android:visibility="invisible"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="@color/logo3"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
         android:contentDescription="TODO" />
@@ -359,9 +359,9 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="105dp"
         android:layout_marginRight="15sp"
-        android:src="@drawable/ic_baseline_directions_run_24"
+        android:src="@drawable/ic_baseline_location_on_24"
         android:visibility="invisible"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="@color/logo3"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
@@ -372,7 +372,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="45sp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/logo3"
         android:src="@drawable/ic_baseline_addw_24"
         app:borderWidth="0dp"/>
 
