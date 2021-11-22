@@ -2,6 +2,7 @@ package com.example.timerpush;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -50,10 +51,29 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout setting;
     FrameLayout timer;
 
+    private Button onBtn, offBtn;
+
     @Override
     protected void onCreate(Bundle saveInstanceStat) {
         super.onCreate(saveInstanceStat);
         setContentView(R.layout.activity_main);
+        onBtn= (Button)findViewById(R.id.button);
+        offBtn= (Button)findViewById(R.id.button2);
+        onBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ScreenService.class);
+                startService(intent);
+            }
+
+        });
+        offBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ScreenService.class);
+                stopService(intent);
+            }
+        });
 
         cntText = findViewById(R.id.cnt_text);
         startBtn = findViewById(R.id.cntdown_btn);
@@ -141,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    showNotify();
+                    showNoti();
                 }
             }.start();
 
@@ -174,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
             cntText.setText(timeLeftText);
         }
 
-    public void showNotify(){
+    public void showNoti(){
         Vibrator vib = (Vibrator)getSystemService(VIBRATOR_SERVICE);
         Uri ringing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         
