@@ -1,15 +1,11 @@
 package com.example.helloroutine;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 
 public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -96,7 +91,6 @@ public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         });
 
     }
-
 
     public void deleteOpponent(String user, String uid){
         FirebaseFirestore db = FirebaseFirestore.getInstance();

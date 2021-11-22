@@ -6,16 +6,11 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
 import android.view.MenuItem;
-
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,11 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private FragmentUser fragmentUser = new FragmentUser();
     private FragmentCalendar fragmentCalendar = new FragmentCalendar();
     private FragmentChallenge fragmentChallenge = new FragmentChallenge();
-
     private static final long FINISH_INTERVAL_TIME = 2000;
     private static long backPressedTime = 0;
     static ProgressDialog customProgressDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

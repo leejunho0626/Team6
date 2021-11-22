@@ -3,28 +3,22 @@ package com.example.helloroutine;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.Calendar;
-
-import static android.content.ContentValues.TAG;
 
 public class FriendPlan extends AppCompatActivity {
 
@@ -56,15 +50,13 @@ public class FriendPlan extends AppCompatActivity {
         int nMon = c.get(Calendar.MONTH);
         int nDay = c.get(Calendar.DAY_OF_MONTH);
 
-        //일반 로그인 버튼 클릭
         txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 DatePickerDialog.OnDateSetListener mDateSetListener =
                         new DatePickerDialog.OnDateSetListener() {
-                            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                                  int dayOfMonth) {
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 String strDate = String.valueOf(year) + ".";
                                 strDate += String.valueOf(monthOfYear+1) + ".";
                                 strDate += String.valueOf(dayOfMonth);
@@ -74,9 +66,7 @@ public class FriendPlan extends AppCompatActivity {
                             }
 
                         };
-
-                DatePickerDialog oDialog = new DatePickerDialog(FriendPlan.this, android.R.style.Theme_DeviceDefault_Light_Dialog,
-                        mDateSetListener, nYear, nMon, nDay);
+                DatePickerDialog oDialog = new DatePickerDialog(FriendPlan.this, android.R.style.Theme_DeviceDefault_Light_Dialog, mDateSetListener, nYear, nMon, nDay);
                 oDialog.show();
 
             }

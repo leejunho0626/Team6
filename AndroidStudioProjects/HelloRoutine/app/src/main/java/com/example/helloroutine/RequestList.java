@@ -1,22 +1,15 @@
 package com.example.helloroutine;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,13 +20,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class RequestList extends AppCompatActivity {
 
-    TextView txtId;
-    Button btnCancel;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     RecyclerView recyclerView, recyclerView2;
     RequestAdapter requestAdapter;
     ReceiveAdapter receiveAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +40,6 @@ public class RequestList extends AppCompatActivity {
 
         rqList();
         rvList();
-
-
-
-
 
     }
     //보낸 요청
@@ -144,11 +130,4 @@ public class RequestList extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
-
-
 }

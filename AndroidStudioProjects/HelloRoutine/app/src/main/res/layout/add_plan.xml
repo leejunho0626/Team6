@@ -128,34 +128,7 @@
             android:paddingLeft="10dp"
             android:singleLine="true"
             tools:ignore="MissingConstraints" />
-        <TextView
-            android:id="@+id/txt4"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            android:paddingTop="10dp"
-            android:text="무게"
-            android:layout_gravity="left"
-            android:textSize="19dp"
-            android:textColor="@color/black"
-            android:paddingLeft="10dp"
-            tools:ignore="MissingConstraints" />
 
-        <EditText
-            android:id="@+id/exeWeight"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/layout_background"
-            android:ems="17"
-            android:hint="kg"
-            android:maxLength="30"
-            android:paddingLeft="10dp"
-            android:singleLine="true"
-            tools:ignore="MissingConstraints" />
 
 
         <LinearLayout

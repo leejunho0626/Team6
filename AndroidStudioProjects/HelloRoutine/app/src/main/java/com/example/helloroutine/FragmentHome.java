@@ -27,8 +27,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +41,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -134,6 +131,8 @@ public class FragmentHome extends Fragment {
             public void onClick(View v) {
                 //
                 anim();
+                Intent intent = new Intent(getActivity(), Timer_function.class);
+                startActivity(intent);
             }
         });
 
@@ -160,7 +159,6 @@ public class FragmentHome extends Fragment {
         totalPlan();
         showWeather();
 
-
         //totalAttendance(format_1);
 
         //로딩화면 종료
@@ -174,7 +172,6 @@ public class FragmentHome extends Fragment {
 
                     }
                 };
-
                 Timer timer = new Timer();
                 timer.schedule(task, 1500);
             }
@@ -357,7 +354,6 @@ public class FragmentHome extends Fragment {
 
                         showBtnFav("0", value, value2);
                         showBtnFav("1", value, value2);
-
 
                     } 
                     else {

@@ -30,8 +30,6 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
     Button btn2;
     TextView abc;
     TextView textView;
-    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
-    private static final int PERMISSION_REQUEST_CODE = 100;
     SimpleDateFormat format1 = new SimpleDateFormat ( "HHmmss");
     ArrayList<Double> listA = new <Double>ArrayList();      // 위도
     ArrayList <Double>listB = new <Double>ArrayList();      // 경도
@@ -216,8 +214,6 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
 
-
-
     }
 
     public void onRequestPermissionsResult(int requestCode,
@@ -241,12 +237,5 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
         UiSettings uiSettings = naverMap.getUiSettings();
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
         uiSettings.setLocationButtonEnabled(true);
-
-
-
-
     }
-
-
-
 }

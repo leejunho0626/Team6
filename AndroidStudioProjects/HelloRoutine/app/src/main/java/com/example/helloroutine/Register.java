@@ -6,11 +6,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -24,7 +21,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import static android.content.ContentValues.TAG;
 
 public class Register extends AppCompatActivity {
@@ -49,9 +45,7 @@ public class Register extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnSignUp);
         btnCheckId = findViewById(R.id.btnCheckID);
 
-
         firebaseAuth = FirebaseAuth.getInstance();
-
 
         //아이디 중복확인
         /*

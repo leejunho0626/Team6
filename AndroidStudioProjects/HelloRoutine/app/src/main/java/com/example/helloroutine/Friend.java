@@ -4,23 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -64,7 +58,6 @@ public class Friend extends AppCompatActivity {
         btnRq = findViewById(R.id.btnRQ);
         listView = findViewById(R.id.listView);
         listView2 = findViewById(R.id.listView2);
-
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(this);
@@ -117,7 +110,7 @@ public class Friend extends AppCompatActivity {
 
                 final EditText editText = new EditText(Friend.this); //입력창
                 //다이얼로그 메뉴
-                AlertDialog.Builder builder = new AlertDialog.Builder(Friend.this, android.R.style.Theme_DeviceDefault_Light_Dialog);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Friend.this);
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(Friend.this);
                 builder.setTitle("친구 추가하기");
                 builder.setMessage("복사한 친구의 UID를 입력하세요.");
@@ -133,7 +126,6 @@ public class Friend extends AppCompatActivity {
                             builder1.setPositiveButton("네", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-
                                     addFriend(edit);
                                 }
                             });
@@ -337,7 +329,6 @@ public class Friend extends AppCompatActivity {
 
                             });
                         } else {
-
 
                         }
 

@@ -6,17 +6,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,10 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.kakao.auth.ApiErrorCode;
-import com.kakao.network.ErrorResult;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapFragment;
@@ -36,9 +29,7 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.PathOverlay;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
     private static NaverMap naverMap;
@@ -47,7 +38,6 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
     TextView km;
     Button btnOut;
     double speed = 0;
-    FirebaseAuth firebaseAuth;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String x; //최종 거리값
 
@@ -78,9 +68,6 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
 
         mapFragment.getMapAsync(this);
 
-
-
-
         Intent receive_intent_ = getIntent();
         speed = receive_intent_.getDoubleExtra("Key02", 0);  // 이동거리 관련 Key값 m 값을 가져옴
         speed_.setText("이동 거리 " + Double.toString(Math.round((speed/1000)*100)/100.0) + "km"); // Km값으로 소수점 2번째 자리까지 보여줌.
@@ -106,10 +93,7 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
             textView.setText("이동시간 : " +hour+"시"+min+"분"+sec + "초");
         }
 
-
-
         double avgspeed = (speed/1000)/(time_/1000/60/60); // 평균 속력을 Km/h로 보여줌
-
 
         km.setText("평균 속력" + Double.toString(Math.round(avgspeed*100)/100.0) + "km/h"); // km/h값을 소수점 2번째 자리까지 보여줌
 
@@ -224,16 +208,12 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
         markerfn.setCaptionTextSize(16);
         markerfn.setMap(naverMap);
 
-
-
         //경로선 표시
         PathOverlay path = new PathOverlay();
         path.setCoords(listC);
         path.setColor(Color.GREEN);
         path.setWidth(25);
         path.setMap(naverMap);
-
-
 
     }
 

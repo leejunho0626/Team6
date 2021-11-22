@@ -5,21 +5,16 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,14 +23,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import static android.content.ContentValues.TAG;
 import static java.lang.Thread.sleep;
 
-public class AddPlan extends AppCompatActivity {
+public class Add_plan extends AppCompatActivity {
 
     TextView exeType, exeTime, clickDate;
-    EditText exeNum, exeSet, exeWeight;
+    EditText exeNum, exeSet;
     Button btnSave;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -43,13 +36,12 @@ public class AddPlan extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_plan);
+        setContentView(R.layout.add_plan);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); //다크모드 해제
 
         exeType = findViewById(R.id.exeType);
         exeNum = findViewById(R.id.exeNUm);
         exeSet = findViewById(R.id.exeSet);
-        exeWeight = findViewById(R.id.exeWeight);
         exeTime = findViewById(R.id.exeTime);
         btnSave = findViewById(R.id.btnSave_plan);
         clickDate = findViewById(R.id.clickDate);
@@ -64,9 +56,9 @@ public class AddPlan extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    final CharSequence[] oItems = {"팔 운동", "어깨 운동", "다리 운동", "가슴 운동", "등 운동", "복근 운동"};
+                    final CharSequence[] oItems = {"어깨 운동", "팔 운동", "등 운동", "가슴 운동", "복근 운동", "다리 운동"};
 
-                    AlertDialog.Builder oDialog = new AlertDialog.Builder(AddPlan.this);
+                    AlertDialog.Builder oDialog = new AlertDialog.Builder(Add_plan.this);
 
                     oDialog.setTitle("해야 할 운동을 선택하세요")
                             .setItems(oItems, new DialogInterface.OnClickListener()
@@ -101,7 +93,7 @@ public class AddPlan extends AppCompatActivity {
                             }
                         };
 
-                TimePickerDialog oDialog = new TimePickerDialog(AddPlan.this, android.R.style.Theme_DeviceDefault_Light_Dialog, mTimeSetListener, 0, 0, false);
+                TimePickerDialog oDialog = new TimePickerDialog(Add_plan.this, android.R.style.Theme_DeviceDefault_Light_Dialog, mTimeSetListener, 0, 0, false);
                 oDialog.show();
 
             }
@@ -111,9 +103,8 @@ public class AddPlan extends AppCompatActivity {
         btnSave.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String edit = exeType.getText().toString()+": "+exeNum.getText().toString()+"회 "+exeSet.getText().toString()+"세트 "
-                        +exeWeight.getText().toString()+"kg "+exeTime.getText().toString()+"시간"; //입력한 값
-                //Toast.makeText(getApplicationContext(), edit, Toast.LENGTH_LONG).show();
+                String edit = exeType.getText().toString()+": "+exeSet.getText().toString()+"세트 "+exeNum.getText().toString()+"회/ "
+                        +"예정 시간 : "+exeTime.getText().toString(); //입력한 값
                 Intent intent = getIntent();
                 Bundle bundle = intent.getExtras();
                 String date = bundle.getString("date");
@@ -123,24 +114,18 @@ public class AddPlan extends AppCompatActivity {
 
             }
         });
-
-
-
     }
+
     //뒤로 가기 버튼 클릭 시
     @Override
     public void onBackPressed(){
         super.onBackPressed();
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         finish();
-
     }
-
-
 
     //목표 설정1
     public void writeUpload(String date, String edit, String type){
-
         if(edit.length()>0){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             UserWrite userWrite = new UserWrite(edit);
@@ -180,9 +165,9 @@ public class AddPlan extends AppCompatActivity {
                     }
                 });
     }
+
     //최종 일정 횟수 불러오기
     public void loadingTotalPlan(){
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -197,7 +182,7 @@ public class AddPlan extends AppCompatActivity {
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
                         String data = str1.substring(0, str1.indexOf("}")); //일정 쵯수
-                        
+
                         //데이터 값
                         int value = Integer.parseInt(data)*10; //도전과제
                         int value2 = (int) Math.round(Double.parseDouble(data)/30*100); //도전과제
@@ -240,9 +225,7 @@ public class AddPlan extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
 
-
                                         } else {
-
 
                                         }
                                     }
@@ -250,26 +233,22 @@ public class AddPlan extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), "일정 횟수 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
                                     }
                                 }
-
                             });
                         }catch (InterruptedException e) {
                             e.printStackTrace();
                         }
 
-
                     }
                 }
                 else {
 
-
                 }
             }
-
         });
     }
+
     //진행도 점수 저장하기
     public void saveScore(String total){
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserRank userRank = new UserRank(user.getEmail(),total);
         db.collection("DB").document("User").collection(user.getUid()).document("Score").set(userRank)
@@ -287,6 +266,7 @@ public class AddPlan extends AppCompatActivity {
                 });
 
     }
+
     public void loadScore(String data){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("User").collection(user.getUid()).document("Score")
@@ -309,7 +289,6 @@ public class AddPlan extends AppCompatActivity {
                         int total = nowScore+addScore;
 
                         saveScore(Integer.toString(total)); //추가할 점수 + 기존 점수
-
 
                     }
                     else {
@@ -336,10 +315,7 @@ public class AddPlan extends AppCompatActivity {
                                             int total = nowScore+addScore;
                                             saveScore(Integer.toString(total)); //추가할 점수 + 기존 점수
 
-
-
                                         } else {
-
 
                                         }
                                     } else {
@@ -353,16 +329,11 @@ public class AddPlan extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "일정 횟수 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
                 }
             }
-
         });
     }
-
-
-
 }

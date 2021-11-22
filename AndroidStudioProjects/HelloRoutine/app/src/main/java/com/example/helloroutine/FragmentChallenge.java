@@ -1,9 +1,7 @@
 package com.example.helloroutine;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,8 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -60,7 +56,6 @@ public class FragmentChallenge extends Fragment {
         // 로딩화면 보여주기
         customProgressDialog.show();
 
-
         try {
             totalDistance(); //거리 DB 불러오기 - 진행도 표시
             sleep(2000);
@@ -92,26 +87,6 @@ public class FragmentChallenge extends Fragment {
 
 
         return view;
-    }
-
-    //진행도 점수 저장하기
-    public void saveScore(String total){
-        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserRank userRank = new UserRank(user1.getEmail(),total);
-        db.collection("DB").document("User").collection(user1.getUid()).document("Score").set(userRank)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void avoid) {
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
-                    }
-                });
-
     }
 
     //거리 DB 불러오기
@@ -193,8 +168,6 @@ public class FragmentChallenge extends Fragment {
 
                                         String sum = Integer.toString(nowScore+value+value2); //기존점수와 더하기
 
-
-
                                     } else {
 
                                     }
@@ -204,16 +177,12 @@ public class FragmentChallenge extends Fragment {
                             }
                         });
 
-
-
-
                     } else {
                         showBtnFav("2", 0, 0);
                         showBtnFav("3", 0, 0);
                     }
                 }
                 else {
-
 
                 }
             }
@@ -260,10 +229,7 @@ public class FragmentChallenge extends Fragment {
                                 adapter.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2, false);
                             }
 
-
-
                         }
-
 
                         adapter.notifyDataSetChanged();
                     } else {

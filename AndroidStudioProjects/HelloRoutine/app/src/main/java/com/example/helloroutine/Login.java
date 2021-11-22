@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -44,15 +42,12 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeV2ResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.util.exception.KakaoException;
-
 import static android.content.ContentValues.TAG;
 
 public class Login extends AppCompatActivity {
 
     EditText edtID, edtPw;
     Button btnLogin, btnRegister;
-    ImageButton btnKakao;
-    //ImageView btnGoogle;
     ProgressDialog customProgressDialog;
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -75,11 +70,8 @@ public class Login extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         loginButton = findViewById(R.id.btnKakao);
         signInButton = findViewById(R.id.signInButton);
-        //btnGoogle = findViewById(R.id.btnGoogle);
-        //btnGoogle.setClipToOutline(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        //firebaseAuth.signOut();
 
         //로딩창 객체 생성
         customProgressDialog = new ProgressDialog(this);
@@ -126,7 +118,6 @@ public class Login extends AppCompatActivity {
         textView.setText("구글계정으로 로그인");
         textView.setTextSize(18);
         textView.setPadding(240,0,0,0);
-
 
         //구글 로그인
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
