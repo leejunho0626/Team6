@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:paddingEnd="12dp"
+        android:layout_width="0dp"
+        android:gravity="end|center"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:paddingRight="12dp">
+
+        <CheckBox
+            android:id="@+id/cbFav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:button="@drawable/btn_star"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/body"
+
+        android:gravity="center|start"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6">
+
+
+        <TextView
+            android:id="@+id/title"
+            android:textSize="20sp"
+            android:text="Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/sub"
+            android:textSize="15sp"
+            android:text="000%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:paddingEnd="12dp"
+        android:layout_width="0dp"
+        android:gravity="end|center"
+        android:layout_weight="5"
+        android:layout_height="match_parent"
+        android:paddingRight="12dp">
+
+        <ProgressBar
+            android:id="@+id/prg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:max = "100"
+            style="?android:attr/progressBarStyleHorizontal"/>
+
+    </LinearLayout>
+</LinearLayout>

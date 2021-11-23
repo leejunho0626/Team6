@@ -1,10 +1,18 @@
 package com.example.helloroutine;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.NotificationCompat;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +41,10 @@ public class Add_plan extends AppCompatActivity {
     EditText exeNum, exeSet;
     Button btnSave;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    NotificationManager manager;
+    NotificationCompat.Builder builder;
+    private static String CHANNEL_ID = "TimerPushAlarm";
+    private static String CHANEL_NAME = "PushAlarm";
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -191,6 +205,9 @@ public class Add_plan extends AppCompatActivity {
                         data = Integer.toString(temp);
                         //String distance = listC.toString();
                         addTotalPlan(data); //일정 횟수 추가
+                        if(temp==10){
+                            showNoti("도전과제 완료", "운동 일정 10개 추가");
+                        }
                         loadScore(sum);
 
                     }
@@ -288,6 +305,7 @@ public class Add_plan extends AppCompatActivity {
                         int addScore = Integer.parseInt(data);
                         int total = nowScore+addScore;
 
+
                         saveScore(Integer.toString(total)); //추가할 점수 + 기존 점수
 
                     }
@@ -335,5 +353,36 @@ public class Add_plan extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    public void showNoti(String title, String text){
+        Vibrator vib = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+        Uri ringing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringing);
+
+        builder = null;
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); //버전 오레오 이상일 경우
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(
+                    new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            );
+            builder = new NotificationCompat.Builder(this,CHANNEL_ID); //하위 버전일 경우
+        } else {
+            builder = new NotificationCompat.Builder(this);
+        }
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        //알림창 제목
+        builder.setContentTitle(title);
+        //알림창 메시지
+        builder.setContentText(text);
+        //알림창 아이콘
+        builder.setSmallIcon(R.drawable.ic_stat_name);
+        Notification notification = builder.build();
+        //알림창 실행
+        vib.vibrate(2000);
+        ringtone.play();
+        manager.notify(1,notification);
     }
 }

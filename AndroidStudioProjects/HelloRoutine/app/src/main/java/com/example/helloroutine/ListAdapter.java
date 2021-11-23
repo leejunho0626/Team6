@@ -82,7 +82,7 @@ public class ListAdapter extends BaseAdapter {
                     deleteFav1(Integer.toString(position));
                 }
 
-                Toast.makeText(mContext, "click switch view "+position, Toast.LENGTH_SHORT).show();}
+            }
         });
 
         return convertView;

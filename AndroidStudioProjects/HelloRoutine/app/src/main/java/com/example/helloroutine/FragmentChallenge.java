@@ -23,12 +23,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,6 +57,11 @@ public class FragmentChallenge extends Fragment {
     NotificationCompat.Builder builder;
     private static String CHANNEL_ID = "TimerPushAlarm";
     private static String CHANEL_NAME = "PushAlarm";
+    final String[] list = {"운동 일정 10개 추가", "운동 일정 30개 추가", "운동 일정 50개 추가", "걷거나 뛴 거리 1km", "걷거나 뛴 거리 3km", "걷거나 뛴 거리 5km","걷거나 뛴 거리 42.195km"
+    ,"출석 횟수 3일","출석 횟수 7일", "출석 횟수 15일","출석 횟수 30일"};
+
+    RecyclerView recyclerView;
+    Challenge_Adapter challenge_adapter;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -64,6 +75,9 @@ public class FragmentChallenge extends Fragment {
         adapter = new ListAdapter((getActivity()));
         listView.setAdapter(adapter);
         firebaseAuth = FirebaseAuth.getInstance();
+        challenge_adapter = new Challenge_Adapter();
+        recyclerView = (RecyclerView)view.findViewById(R.id.recyceler_challengeList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false)) ;
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -71,6 +85,7 @@ public class FragmentChallenge extends Fragment {
         customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // 로딩화면 보여주기
         customProgressDialog.show();
+        showChallengeList();
 
         try {
             totalDistance(); //거리 DB 불러오기 - 진행도 표시
@@ -127,9 +142,6 @@ public class FragmentChallenge extends Fragment {
                         showBtnFav("0", value, value2);
                         showBtnFav("1", value, value2);
                         String sum = Integer.toString(value+value2);
-
-
-
 
 
                     } else {
@@ -224,9 +236,6 @@ public class FragmentChallenge extends Fragment {
                             }
                             else if(document.getId().equals("2")){
                                 adapter.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value, true);
-                                if(value==100) {
-                                    showNoti();
-                                }
                             }
 
                             else {
@@ -263,35 +272,15 @@ public class FragmentChallenge extends Fragment {
         }
     }
 
-    public void showNoti(){
-        Vibrator vib = (Vibrator)getActivity().getSystemService(VIBRATOR_SERVICE);
-        Uri ringing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    //오늘의 일정 표시
+    public void showChallengeList() {
+        for (int i = 0; i < list.length; i++) {
+            challenge_adapter.setArrayData(list[i],0,true);
+            recyclerView.setAdapter(challenge_adapter);
 
-        Ringtone ringtone = RingtoneManager.getRingtone(getContext().getApplicationContext(), ringing);
-
-        builder = null;
-        manager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE); //버전 오레오 이상일 경우
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            manager.createNotificationChannel(
-                    new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-            );
-            builder = new NotificationCompat.Builder(getActivity(),CHANNEL_ID); //하위 버전일 경우
-        } else {
-            builder = new NotificationCompat.Builder(getActivity());
         }
-        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        //알림창 제목
-        builder.setContentTitle("타이머 종료");
-        //알림창 메시지
-        builder.setContentText("타이머가 종료되었습니다.");
-        //알림창 아이콘
-        builder.setSmallIcon(R.drawable.ic_stat_name);
-        Notification notification = builder.build();
-        //알림창 실행
-        vib.vibrate(2000);
-        ringtone.play();
-        manager.notify(1,notification);
     }
+
 
 
     /*//출석일수 DB 불러오기
