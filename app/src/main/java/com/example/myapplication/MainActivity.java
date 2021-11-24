@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private FusedLocationSource mLocationSource;
 
 
+    String nx=null;
+    String ny=null;
+
+
 
 
     @Override
@@ -74,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
         StringTokenizer st = new StringTokenizer(strline);
 
-        String nx=null;
-        String ny=null;
         String we="1";
         int num = 1;
         int i=0;
@@ -118,7 +120,14 @@ public class MainActivity extends AppCompatActivity {
                 num++;
             }
 
-            if(we.equals(add_[i-2])) break;
+
+            try {
+                if(we.equals(add_[i-3])) break;
+            }
+
+            catch(IndexOutOfBoundsException e){
+
+            }
         }
 
 
@@ -187,51 +196,60 @@ public class MainActivity extends AppCompatActivity {
             String POP = null;   // 강수확률
             int cnt = 1;
 
+            try {
+                StringTokenizer st = new StringTokenizer(s, "\"", true);
 
-            StringTokenizer st = new StringTokenizer(s, "\"", true);
 
-
-            while(st.hasMoreTokens()) {
-                if(cnt==91) TMP = st.nextToken();
-                else if(cnt==371) SKY = st.nextToken();
-                else if(cnt==427) PTY = st.nextToken();
-                else if(cnt==483) POP = st.nextToken();
-                else if(cnt==595) PCP = st.nextToken();
-                else if(cnt==707) SNO = st.nextToken();
-                else st.nextToken();
-                cnt++;
-            }
-            tmp.setText(TMP+"도");
-            if(PTY.equals("0")) {
-                pty.setText("");
-                if(SKY.equals("1"))
+                while(st.hasMoreTokens()) {
+                    if(cnt==91) TMP = st.nextToken();
+                    else if(cnt==371) SKY = st.nextToken();
+                    else if(cnt==427) PTY = st.nextToken();
+                    else if(cnt==483) POP = st.nextToken();
+                    else if(cnt==595) PCP = st.nextToken();
+                    else if(cnt==707) SNO = st.nextToken();
+                    else st.nextToken();
+                    cnt++;
+                }
+                tmp.setText(TMP+"도");
+                if(PTY.equals("0")) {
+                    pty.setText("");
+                    if(SKY.equals("1"))
                         sky.setText("맑음");
-                if(SKY.equals("3"))
-                    sky.setText("구름 많음");
-                if(SKY.equals("4"))
-                    sky.setText("흐림");
+                    if(SKY.equals("3"))
+                        sky.setText("구름 많음");
+                    if(SKY.equals("4"))
+                        sky.setText("흐림");
+                }
+
+                if(PTY.equals("1")) {
+                    pty.setText("비");
+                    pcp.setText("강수량 : " +PCP);
+                }
+                if(PTY.equals("2")) {
+                    pty.setText("눈비");
+                    pcp.setText("강수량 : " +PCP);
+                    sno.setText("적설량 : " +SNO);
+                }
+                if(PTY.equals("3")) {
+                    pty.setText("눈");
+                    sno.setText("적설량 : " +SNO);
+                }
+                if(PTY.equals("4")) {
+                    pty.setText("소나기");
+                    pcp.setText("강수량 : " +PCP);
+                }
+                pop.setText("강수확률 : "+POP+"%");
+                time3.setText("기준 : " + time() + "시" + nx + ny);
+                Log.d("onpostEx", "출력 값 : "+s);
+
+
+            } catch (NullPointerException e) {
+                pty.setText("기상정보를 불러올 수 없습니다.");
+                tmp.setText("");
+
             }
 
-            if(PTY.equals("1")) {
-                pty.setText("비");
-                pcp.setText("강수량 : " +PCP);
-            }
-            if(PTY.equals("2")) {
-                pty.setText("눈비");
-                pcp.setText("강수량 : " +PCP);
-                sno.setText("적설량 : " +SNO);
-            }
-            if(PTY.equals("3")) {
-                pty.setText("눈");
-                sno.setText("적설량 : " +SNO);
-            }
-            if(PTY.equals("4")) {
-                pty.setText("소나기");
-                pcp.setText("강수량 : " +PCP);
-            }
-            pop.setText("강수확률 : "+POP+"%");
-            time3.setText("기준 : " + time() + "시");
-            Log.d("onpostEx", "출력 값 : "+s);
+
         }
     }
 
@@ -263,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
 
         return getCurrentAddress(latitude, longitude);
     }
-
 
     public String getCurrentAddress(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
