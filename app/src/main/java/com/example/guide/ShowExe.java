@@ -19,11 +19,11 @@ public class ShowExe extends AppCompatActivity {
 
     //상체
     private int[] images = new int[]{
-            R.drawable.abdominalcrunch, R.drawable.abdominalcrunch2};
+            R.drawable.crunch2, R.drawable.crunch};
     private int[] images2 = new int[]{
-            R.drawable.bicyclecrunch, R.drawable.bicyclecrunch};
+            R.drawable.bicyt1, R.drawable.bicyt22};
     private int[] images3 = new int[]{
-            R.drawable.russianstwist, R.drawable.russiantwitst};
+            R.drawable.rt11 ,R.drawable.rt22};
     private int[] images4 = new int[]{
             R.drawable.ratpulldown1, R.drawable.ratpulldown2};
     private int[] images5 = new int[]{
@@ -47,11 +47,11 @@ public class ShowExe extends AppCompatActivity {
 
     //전신
     private int[] images13 = new int[]{
-            R.drawable.flank, R.drawable.flank};
+            R.drawable.flan, R.drawable.ffllank};
     private int[] images14 = new int[]{
             R.drawable.flankjack, R.drawable.flankjack2};
     private int[] images15 = new int[]{
-            R.drawable.mountainclimber, R.drawable.mountainclimber};
+            R.drawable.mt1, R.drawable.mt1};
     private int[] images16 = new int[]{
             R.drawable.sideflankwalk, R.drawable.sideflankwalk2};
     private int[] images17 = new int[]{
@@ -61,7 +61,7 @@ public class ShowExe extends AppCompatActivity {
     private int[] images19 = new int[]{
             R.drawable.hangingleg, R.drawable.hangingleg2};
     private int[] images20 = new int[]{
-            R.drawable.sittedrowing, R.drawable.sittedrowing2};
+            R.drawable.sitlow, R.drawable.sitlow2};
 
 
     @Override
