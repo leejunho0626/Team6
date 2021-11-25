@@ -40,8 +40,18 @@
         <activity android:name=".FriendPlan"/>
         <activity android:name=".RequestList"/>
         <activity android:name=".Timer_function"/>
+        <activity android:name=".Setting_activity"/>
+        <activity android:name=".Challenge_complete"/>
+        <receiver android:name=".ScreenReceiver"></receiver>
+        <service android:name=".ScreenService"></service>
+        <activity android:name=".LockScreenActivity"></activity>
+        <activity android:name=".LockScreen"></activity>
 
     </application>
+    <!-- API 버전 28 이하 -->
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <!-- API 버전 29 이상 -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
 
 </manifest>

@@ -29,7 +29,7 @@ public class FragmentUser extends Fragment {
     TextView txtID, txtUid;
     Button btnCopy, btnLogout;
     FirebaseAuth firebaseAuth;
-    LinearLayout layouty_fr;
+    LinearLayout layout_fr, layout_set;
     private GoogleSignInClient mGoogleSignInClient;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,7 +46,8 @@ public class FragmentUser extends Fragment {
         txtUid = view.findViewById(R.id.txtUID);
         btnCopy = view.findViewById(R.id.btnCopy);
         btnLogout = view.findViewById(R.id.btnLogout);
-        layouty_fr = view.findViewById(R.id.user_fr);
+        layout_fr = view.findViewById(R.id.user_fr);
+        layout_set= view.findViewById(R.id.user_set);
 
         if(firebaseAuth.getCurrentUser() != null){
             txtID.setText(firebaseAuth.getCurrentUser().getEmail());
@@ -64,10 +65,18 @@ public class FragmentUser extends Fragment {
             }
         });
 
-        layouty_fr.setOnClickListener(new View.OnClickListener() {
+        layout_fr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), Friend.class);
+                startActivity(intent);
+
+            }
+        });
+        layout_set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Setting_activity.class);
                 startActivity(intent);
 
             }

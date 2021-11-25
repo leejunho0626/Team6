@@ -8,11 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
-public class ChallengeAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class Complete_Adapter extends RecyclerView.Adapter<ViewHolder> {
     static ArrayList<String> arrayList;
-    static ArrayList<Integer> arrayList2;
+    static ArrayList<String> arrayList2;
 
-    public ChallengeAdapter() {
+    public Complete_Adapter() {
         arrayList = new ArrayList<>();
         arrayList2 = new ArrayList<>();
 
@@ -22,18 +22,18 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.item_fav, parent, false);
+        View view = inflater.inflate(R.layout.item_complete, parent, false);
         ViewHolder viewholder = new ViewHolder(context, view);
         return viewholder;
     }
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String text = arrayList.get(position);
-        int text2 = arrayList2.get(position);
+        String text2 = arrayList2.get(position);
 
-        holder.textView2.setText(text);
-        holder.textView3.setText(Integer.toString(text2)+"%");
-        holder.progressBar.setProgress(text2);
+        holder.txtCom.setText(text);
+        holder.txtTime.setText("완료 시간 : "+text2);
+
 
     }
     @Override
@@ -41,10 +41,10 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ViewHolder> {
         return arrayList.size();
     }
 
-    public void setArrayData(String strData, int value) {
+    public void setArrayData(String strData, String time) {
 
         arrayList.add(strData);
-        arrayList2.add(value);
+        arrayList2.add(time);
 
 
     }

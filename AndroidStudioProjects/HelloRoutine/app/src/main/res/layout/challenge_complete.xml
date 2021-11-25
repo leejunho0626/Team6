@@ -18,17 +18,9 @@
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyceler_challengeList"
+                    android:id="@+id/recyceler_Complete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-
-                <Button
-                    android:id="@+id/btnComplete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_gravity="right"
-                    android:text="완료 목록"/>
 
 
 

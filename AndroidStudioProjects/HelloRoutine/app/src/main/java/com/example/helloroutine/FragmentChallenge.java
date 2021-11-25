@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Ringtone;
@@ -13,9 +14,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -27,6 +30,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,9 +40,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static java.lang.Thread.sleep;
@@ -51,14 +59,13 @@ public class FragmentChallenge extends Fragment {
     private ProgressBar progressBar;
     ProgressDialog customProgressDialog;
     String x;
-    ListView listView;
-    ListAdapter adapter;
     NotificationManager manager;
     NotificationCompat.Builder builder;
     private static String CHANNEL_ID = "TimerPushAlarm";
     private static String CHANEL_NAME = "PushAlarm";
-    final String[] list = {"운동 일정 10개 추가", "운동 일정 30개 추가", "운동 일정 50개 추가", "걷거나 뛴 거리 1km", "걷거나 뛴 거리 3km", "걷거나 뛴 거리 5km","걷거나 뛴 거리 42.195km"
-    ,"출석 횟수 3일","출석 횟수 7일", "출석 횟수 15일","출석 횟수 30일"};
+    ArrayList<String> list = new ArrayList<>();
+    Button btnComplete;
+
 
     RecyclerView recyclerView;
     Challenge_Adapter challenge_adapter;
@@ -71,13 +78,12 @@ public class FragmentChallenge extends Fragment {
 
         cbFav = view.findViewById(R.id.cbFav);
         progressBar= view.findViewById(R.id.prg);
-        listView = view.findViewById(R.id.listView);
-        adapter = new ListAdapter((getActivity()));
-        listView.setAdapter(adapter);
         firebaseAuth = FirebaseAuth.getInstance();
         challenge_adapter = new Challenge_Adapter();
         recyclerView = (RecyclerView)view.findViewById(R.id.recyceler_challengeList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false)) ;
+        btnComplete = view.findViewById(R.id.btnComplete);
+
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -85,18 +91,17 @@ public class FragmentChallenge extends Fragment {
         customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // 로딩화면 보여주기
         customProgressDialog.show();
-        showChallengeList();
+        addList();
+        totalDistance();
 
-        try {
-            totalDistance(); //거리 DB 불러오기 - 진행도 표시
-            sleep(2000);
+        btnComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), Challenge_complete.class); //화면 전환
+                startActivity(intent);
+            }
+        });
 
-            totalPlan();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //totalAttendance();
 
         //로딩화면 종료
         Thread thread = new Thread(new Runnable() {
@@ -134,152 +139,301 @@ public class FragmentChallenge extends Fragment {
                         //DB 필드명 표시 지워서 데이터 값만 표시
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
-                        x = str1.substring(0, str1.indexOf("}"));
+                        String distance = str1.substring(0, str1.indexOf("}"));
 
-                        int value = (int) Math.round(Double.parseDouble(x)/3*100);
-                        int value2 = (int) Math.round(Double.parseDouble(x)/5*100);
-
-                        showBtnFav("0", value, value2);
-                        showBtnFav("1", value, value2);
-                        String sum = Integer.toString(value+value2);
-
-
-                    } else {
-
-                        showBtnFav("0", 0, 0);
-                        showBtnFav("1", 0, 0);
-                    }
-                }
-                else {
-                }
-            }
-        });
-
-    }
-
-    //일정추가 횟수 DB 불러오기
-    public void totalPlan(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString();
-                        str1 = str1.substring(str1.indexOf("=")+1);
-                        x = str1.substring(0, str1.indexOf("}")); //추가한 일정 횟수
-
-                        int value = Integer.parseInt(x)*10;
-                        int value2 = (int) Math.round(Double.parseDouble(x)/30*100);
-                        showBtnFav("2", value, value2);
-                        showBtnFav("3", value, value2);
-
-                        db.collection("DB").document("User").collection(user.getUid()).document("Score")
+                        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                                 if (task.isSuccessful()) {
                                     DocumentSnapshot document = task.getResult();
                                     if (document.exists()) {
                                         //DB 필드명 표시 지워서 데이터 값만 표시
-                                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
-                                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
-                                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                                        String id2 = id1.substring(0, id1.indexOf("}")); //이메일
+                                        String str1 = document.getData().toString();
+                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                        String plan = str1.substring(0, str1.indexOf("}")); //추가한 일정 횟수
 
-                                        int nowScore = Integer.parseInt(score1); //점수
 
-                                        String sum = Integer.toString(nowScore+value+value2); //기존점수와 더하기
+                                        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendanceCnt")
+                                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()) {
+                                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                                        String str1 = document.getData().toString();
+                                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                                        String x = str1.substring(0, str1.indexOf("}")); //추가한 출석 횟수
+
+
+                                                        for(int i = 0; i<list.size(); i++) {
+                                                            showChallengeList(plan, distance, x,i);
+                                                        }
+
+
+
+
+                                                    } else {
+
+                                                    }
+                                                }
+                                                else {
+
+                                                }
+                                            }
+                                        });
+
+
+
 
                                     } else {
 
                                     }
                                 }
                                 else {
+
                                 }
                             }
                         });
 
+
                     } else {
-                        showBtnFav("2", 0, 0);
-                        showBtnFav("3", 0, 0);
+
                     }
                 }
                 else {
-
                 }
             }
         });
+
     }
-    public void showBtnFav(String position, int value , int value2){
-        try {
-            sleep(500);
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document(position)
-                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if(document.exists()){
-                            if(document.getId().equals("0")){
-                                adapter.addItem("걷거나 뛴 거리 3km", Integer.toString(value)+"%", value, true);
-                            }
-                            else if(document.getId().equals("1")){
-                                adapter.addItem("걷거나 뛴 거리 5km", Integer.toString(value2)+"%", value2, true);
-                            }
-                            else if(document.getId().equals("2")){
-                                adapter.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value, true);
-                            }
+    public void addList(){
+        list.clear();
+        list.add("운동 일정 10개 추가");
+        list.add("운동 일정 30개 추가");
+        list.add("운동 일정 50개 추가");
+        list.add("걷거나 뛴 거리 1km");
+        list.add("걷거나 뛴 거리 3km");
+        list.add("걷거나 뛴 거리 5km");
+        list.add("누적 42.195km 달성");
+        list.add("출석 횟수 3일");
+        list.add("출석 횟수 7일");
+        list.add("출석 횟수 15일");
+    }
 
-                            else {
-                                adapter.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2, true);
-                            }
 
+    public void showChallengeList(String plan ,String distance, String today, int i) {
+
+        int value1 = Integer.parseInt(plan)*10;
+        value1 = checkscore(value1);
+        int value2 = (int) Math.round(Double.parseDouble(plan)/30*100);
+        value2 = checkscore(value2);
+        int value3 = (int) Math.round(Double.parseDouble(plan)/50*100);
+        value3 = checkscore(value3);
+        int dis1 = (int) Math.round(Double.parseDouble(distance)/1*100);
+        dis1 = checkscore(dis1);
+        int dis2 = (int) Math.round(Double.parseDouble(distance)/3*100);
+        dis2 = checkscore(dis2);
+        int dis3 = (int) Math.round(Double.parseDouble(distance)/5*100);
+        dis3 = checkscore(dis3);
+        int dis4 = (int) Math.round(Double.parseDouble(distance)/42.195*100);
+        dis4 = checkscore(dis4);
+        int cnt = (int) Math.round(Double.parseDouble(today)/3*100);
+        cnt = checkscore(cnt);
+        int cnt2 = (int) Math.round(Double.parseDouble(today)/7*100);
+        cnt2 = checkscore(cnt2);
+        int cnt3 = (int) Math.round(Double.parseDouble(today)/15*100);
+        cnt3 = checkscore(cnt3);
+
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        int finalValue = value1;
+        int finalValue2 = value2;
+        int finalValue3 = value3;
+        int finalDis1 = dis1;
+        int finalDis2 = dis2;
+        int finalDis3 = dis3;
+        int finalDis4 = dis4;
+        int finalCnt1 = cnt;
+        int finalCnt2 = cnt2;
+        int finalCnt3 = cnt3;
+
+        SimpleDateFormat format = new SimpleDateFormat ( "yyyy.MM.dd");
+        String format_1 = format.format(System.currentTimeMillis());
+        if (finalValue >= 100) {
+            saveComplete(list.get(0), format_1);
+        }
+        if(finalValue2 >= 100) {
+            saveComplete(list.get(1), format_1);
+        }
+        if(finalValue3 >= 100) {
+            saveComplete(list.get(2), format_1);
+        }
+        if(finalDis1 >= 100) {
+            saveComplete(list.get(3), format_1);
+        }
+        if(finalDis2 >= 100) {
+            saveComplete(list.get(4), format_1);
+        }
+        if(finalDis3 >= 100) {
+            saveComplete(list.get(5), format_1);
+        }
+        if(finalDis4 >= 100) {
+            saveComplete(list.get(6), format_1);
+        }
+        if(finalCnt1 >= 100) {
+            saveComplete(list.get(7), format_1);
+        }
+        if(finalCnt2 >= 100) {
+            saveComplete(list.get(8), format_1);
+        }
+        if(finalCnt3 >= 100) {
+            saveComplete(list.get(9), format_1);
+        }
+        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document(list.get(i))
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+
+                if (task.isSuccessful()) {
+
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        if (list.get(i).equals("운동 일정 10개 추가")) {
+                            challenge_adapter.setArrayData(list.get(i), finalValue, true);
                         }
-                        else {
-                            if(position.equals("0")){
-                                adapter.addItem("걷거나 뛴 거리 3km", Integer.toString(value)+"%", value, false);
-                            }
-                            else if(position.equals("1")){
-                                adapter.addItem("걷거나 뛴 거리 5km", Integer.toString(value2)+"%", value2, false);
-                            }
-                            else if(position.equals("2")){
-                                adapter.addItem("운동 일정 10개 추가", Integer.toString(value)+"%", value, false);
-                            }
-                            else {
-                                adapter.addItem("운동 일정 30개 추가", Integer.toString(value2)+"%", value2, false);
-                            }
-
+                        else if (list.get(i).equals("운동 일정 30개 추가")) {
+                            challenge_adapter.setArrayData(list.get(i), finalValue2, true);
                         }
+                        else if (list.get(i).equals("운동 일정 50개 추가")) {
+                            challenge_adapter.setArrayData(list.get(i), finalValue3, true);
+                        }
+                        else if (list.get(i).equals("걷거나 뛴 거리 1km")) {
+                            challenge_adapter.setArrayData(list.get(i), finalDis1, true);
+                        }
+                        else if (list.get(i).equals("걷거나 뛴 거리 3km")) {
+                            challenge_adapter.setArrayData(list.get(i), finalDis2, true);
+                        }
+                        else if (list.get(i).equals("걷거나 뛴 거리 5km")) {
+                            challenge_adapter.setArrayData(list.get(i), finalDis3, true);
+                        }
+                        else if (list.get(i).equals("누적 42.195km 달성")) {
+                            challenge_adapter.setArrayData(list.get(i), finalDis4, true);
+                        }
+                        else if (list.get(i).equals("출석 횟수 3일")) {
+                            challenge_adapter.setArrayData(list.get(i), finalCnt1, true);
+                        }
+                        else if (list.get(i).equals("출석 횟수 7일")) {
+                            challenge_adapter.setArrayData(list.get(i), finalCnt2, true);
+                        }
+                        else if(list.get(i).equals("출석 횟수 15일")){
+                            challenge_adapter.setArrayData(list.get(i), finalCnt3, true);
+                        }
+                        recyclerView.setAdapter(challenge_adapter);
 
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(mContext.getApplicationContext(), "즐겨찾기 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        if (list.get(i).equals("운동 일정 10개 추가")) {
+                            challenge_adapter.setArrayData(list.get(i), finalValue, false);
+                        }
+                        else if (list.get(i).equals("운동 일정 30개 추가")) {
+                                challenge_adapter.setArrayData(list.get(i), finalValue2, false);
+                        }
+                        else if (list.get(i).equals("운동 일정 50개 추가")) {
+                                challenge_adapter.setArrayData(list.get(i), finalValue3, false);
+                            }
+                        else if (list.get(i).equals("걷거나 뛴 거리 1km")) {
+                                challenge_adapter.setArrayData(list.get(i), finalDis1, false);
+                        }
+                        else  if (list.get(i).equals("걷거나 뛴 거리 3km")) {
+                                challenge_adapter.setArrayData(list.get(i), finalDis2, false);
+                            }
+                        else if (list.get(i).equals("걷거나 뛴 거리 5km")) {
+                                challenge_adapter.setArrayData(list.get(i), finalDis3, false);
+                            }
+                        else if (list.get(i).equals("누적 42.195km 달성")) {
+                                challenge_adapter.setArrayData(list.get(i), finalDis4, false);
+                            }
+                        else if (list.get(i).equals("출석 횟수 3일")) {
+                                challenge_adapter.setArrayData(list.get(i), finalCnt1, false);
+                            }
+                        else if (list.get(i).equals("출석 횟수 7일")) {
+                                challenge_adapter.setArrayData(list.get(i), finalCnt2, false);
+                            }
+                        else if(list.get(i).equals("출석 횟수 15일")){
+                                challenge_adapter.setArrayData(list.get(i), finalCnt3, false);
+                        }
+                        /*for (int i = 0; i < list.size(); i++) {
+
+                            if (list.get(i).equals("운동 일정 10개 추가")) {
+                                challenge_adapter.setArrayData(list.get(i), value1, false);
+                            } else if (list.get(i).equals("운동 일정 30개 추가")) {
+                                challenge_adapter.setArrayData(list.get(i), value2, false);
+                            } else if (list.get(i).equals("운동 일정 50개 추가")) {
+                                challenge_adapter.setArrayData(list.get(i), value3, false);
+                            } else if (list.get(i).equals("걷거나 뛴 거리 1km")) {
+                                challenge_adapter.setArrayData(list.get(i), dis1, false);
+                            } else if (list.get(i).equals("걷거나 뛴 거리 3km")) {
+                                challenge_adapter.setArrayData(list.get(i), dis2, false);
+                            } else if (list.get(i).equals("걷거나 뛴 거리 5km")) {
+                                challenge_adapter.setArrayData(list.get(i), dis3, false);
+                            } else if (list.get(i).equals("누적 42.195km 달성")) {
+                                challenge_adapter.setArrayData(list.get(i), dis4, false);
+                            } else if (list.get(i).equals("출석 횟수 3일")) {
+                                challenge_adapter.setArrayData(list.get(i), 0, false);
+                            } else if (list.get(i).equals("출석 횟수 7일")) {
+                                challenge_adapter.setArrayData(list.get(i), 0, false);
+                            } else {
+                                challenge_adapter.setArrayData(list.get(i), 0, false);
+                            }
+
+                        }*/
+                        recyclerView.setAdapter(challenge_adapter);
                     }
                 }
 
-            });
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            }
+
+        });
+
     }
 
-    //오늘의 일정 표시
-    public void showChallengeList() {
-        for (int i = 0; i < list.length; i++) {
-            challenge_adapter.setArrayData(list[i],0,true);
-            recyclerView.setAdapter(challenge_adapter);
+    public static int checkscore(int score)
+    {
+        if(score>100)
+        {
+            score = 100;
 
+            return score;
         }
+        return score;
+
+
     }
+    //출석 점수 저장하기
+    public void saveComplete(String txt,String time){
+        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        UserRank userRank = new UserRank(txt, time);
+        db.collection("DB").document("User").collection(user1.getUid()).document("Challenge").collection("Complete").document(txt).set(userRank)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+    }
+
 
 
 

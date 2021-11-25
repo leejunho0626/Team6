@@ -103,6 +103,32 @@ public class Friend extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        listView2.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(Friend.this);
+                builder.setMessage("친구를 삭제하시겠습니까?");
+                builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteFriend(friendList.get(position));
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getApplicationContext(), "취소", Toast.LENGTH_LONG).show();
+                    }
+                });
+                builder.show();
+
+                return true;
+            }
+        });
+
+
 
         btnAddFr.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -186,6 +212,66 @@ public class Friend extends AppCompatActivity {
         }else{
             Toast.makeText(getApplicationContext(), "UID을 다시 입력하세요.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    //친구 삭제
+    public void deleteFriend(String id){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //cnt 값 들어오기
+        db.collection("DB").document("ID").collection(id).document("uid")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String uid = str1.substring(0, str1.indexOf("}")); //id 값
+
+                        //본인
+                        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(uid)
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        //상대
+                                        db.collection("DB").document("User").collection(uid).document("Friend").collection("Uid").document(user.getUid())
+                                                .delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(getApplicationContext(), "삭제했습니다.", Toast.LENGTH_LONG).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+
+                                                    }
+                                                });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+
+                    } else {
+
+                    }
+                }
+                else {
+
+
+                }
+            }
+        });
+
     }
 
     //친구 추가

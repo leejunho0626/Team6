@@ -27,6 +27,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +43,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -65,16 +69,20 @@ public class FragmentHome extends Fragment {
     private static Boolean isFabOpen = false;
     private static FloatingActionButton fab, fab1, fab2;
     static  LinearLayout linearLayout;
+    String cnt;
     String x;
     SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
-    String format_1 = format.format(System.currentTimeMillis());
-    static String format_2 = null;
-    static String cnt;
+
+
     static boolean check = true;
     static RecyclerView recyclerView,recyclerView2;
     static RecyclerAdapter recyclerAdapter;
-    static ChallengeAdapter challengeAdapter;
+    static ChallengeAdapter challenge_adapter;
     String base_time = time();
+    ArrayList<String> list = new ArrayList<>();
+
+    String nx=null;
+    String ny=null;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -95,7 +103,7 @@ public class FragmentHome extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false)) ;
         recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false)) ;
         recyclerAdapter = new RecyclerAdapter();
-        challengeAdapter = new ChallengeAdapter();
+        challenge_adapter = new ChallengeAdapter();
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -146,6 +154,9 @@ public class FragmentHome extends Fragment {
             }
         });
 
+        loadDate();
+        addList();
+
         //현재 날짜
 
         SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy.MM.dd");
@@ -155,8 +166,8 @@ public class FragmentHome extends Fragment {
         showPlanList(format_time2);
 
         //도전과제 표시
-        totalDistance(); //거리 DB 불러오기 - 진행도 표시
-        totalPlan();
+        totalDistance();
+
         showWeather();
 
         //totalAttendance(format_1);
@@ -180,102 +191,6 @@ public class FragmentHome extends Fragment {
 
         return view;
     }
-    /*
-    //출석 점수 가져오기
-    public void totalAttendance(String today){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendance")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString();
-                        str1 = str1.substring(str1.indexOf("=")+1);
-                        format_2 = str1.substring(0, str1.indexOf("}"));
-
-                        saveDate(today);
-
-                        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendanceCnt")
-                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        //DB 필드명 표시 지워서 데이터 값만 표시
-                                        String str1 = document.getData().toString();
-                                        str1 = str1.substring(str1.indexOf("=")+1);
-                                        cnt = str1.substring(0, str1.indexOf("}"));
-                                        cnt = caldate(format_1, format_2, cnt);
-
-                                        saveCnt(cnt);
-
-                                    } else {
-
-                                    }
-                                }
-                                else {
-                                }
-                            }
-                        });
-
-                    } else {
-
-                    }
-                }
-                else {
-                    cnt ="1";
-                    check = false;
-
-                }
-            }
-        });
-
-    }
-
-    //출석 날짜
-    public static String caldate(String nowdate, String secdate, String cnt) { // nowdate = 오늘 날짜, secdate 전에 로그에 찍혀있는 날, cnt 몇일 연속 접속이였는지
-        SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
-
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        boolean check = true;
-
-        Date d1 = null;
-        Date d2 = null;
-        try {
-            d1 = format.parse(nowdate);
-            d2 = format.parse(secdate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        cal1.setTime(d1);
-        cal2.setTime(d2);
-        cal2.add(Calendar.DATE, 1);
-        if(check)
-        {
-            if(format.format(cal1.getTime()).equals(format.format(cal2.getTime()))) {
-                int i = Integer.parseInt(cnt);
-                i++;
-                check = false;
-                cnt=Integer.toString(i);
-
-            }
-            cal2.add(Calendar.DATE, -1);
-            if(format.format(cal1.getTime()).equals(format.format(cal2.getTime())));
-            else if(check) cnt = "1";
-        }
-
-
-
-        return cnt;
-
-    }
 
     //출석 일수 저장하기
     public void saveCnt(String total){
@@ -296,6 +211,7 @@ public class FragmentHome extends Fragment {
                 });
 
     }
+
     //출석 점수 저장하기
     public void saveDate(String total){
         FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
@@ -314,7 +230,122 @@ public class FragmentHome extends Fragment {
                     }
                 });
 
-    }*/
+    }
+    public static String caldate(String nowdate, String secdate, String cnt) {
+        SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        boolean check = true;
+
+        Date d1 = null;
+        Date d2 = null;
+        try {
+            d1 = format.parse(nowdate);
+            d2 = format.parse(secdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        cal1.setTime(d1);
+        cal2.setTime(d2);
+        cal2.add(Calendar.DATE, 1);
+        if(check)
+        {
+            if(format.format(cal1.getTime()).equals(format.format(cal2.getTime()))) {
+                int temp = Integer.parseInt(cnt);
+                temp ++;
+                cnt = Integer.toString(temp);
+                check = false;
+
+
+            }
+            cal2.add(Calendar.DATE, -1);
+            if(format.format(cal1.getTime()).equals(format.format(cal2.getTime())));
+            else if(check) cnt = "1";
+        }
+
+
+
+        return cnt;
+
+    }
+
+    //불러오기
+    public void loadDate(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendance")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String x = str1.substring(0, str1.indexOf("}")); //날짜
+
+                        SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
+                        String format_1 = format.format(System.currentTimeMillis());
+                        saveDate(format_1);
+
+                        //cnt 값 들어오기
+                        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendanceCnt")
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                        String str1 = document.getData().toString();
+                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                        cnt = str1.substring(0, str1.indexOf("}")); //cnt 값
+                                        
+                                        cnt=caldate(format_1,x,cnt);
+                                        saveCnt(cnt);
+
+                                    } else {
+
+                                    }
+                                }
+                                else {
+
+
+                                }
+                            }
+                        });
+
+
+
+                    } else {
+                        saveCnt("1");
+                        SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
+                        String format_1 = format.format(System.currentTimeMillis());
+                        saveDate(format_1);
+                    }
+                }
+                else {
+
+
+                }
+            }
+        });
+    }
+    public static int checkscore(int score)
+    {
+        if(score>100)
+        {
+            score = 100;
+
+            return score;
+        }
+        return score;
+
+
+    }
+
 
     //플로팅메뉴 애니메이션
     public void anim() {
@@ -347,18 +378,59 @@ public class FragmentHome extends Fragment {
                         //DB 필드명 표시 지워서 데이터 값만 표시
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
-                        x = str1.substring(0, str1.indexOf("}"));
+                        String distance = str1.substring(0, str1.indexOf("}"));
 
-                        int value = (int) Math.round(Double.parseDouble(x)/3*100);
-                        int value2 = (int) Math.round(Double.parseDouble(x)/5*100);
+                        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                        String str1 = document.getData().toString();
+                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                        String plan = str1.substring(0, str1.indexOf("}"));
 
-                        showBtnFav("0", value, value2);
-                        showBtnFav("1", value, value2);
+                                        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendanceCnt")
+                                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()) {
+                                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                                        String str1 = document.getData().toString();
+                                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                                        String cnt = str1.substring(0, str1.indexOf("}"));
 
-                    } 
+                                                        showChallengeList(plan, distance, cnt);
+
+                                                    } else {
+
+                                                    }
+                                                }
+                                                else {
+
+                                                }
+                                            }
+                                        });
+
+                                    } else {
+
+                                    }
+                                }
+                                else {
+
+
+                                }
+                            }
+                        });
+
+
+                    }
                     else {
-                        showBtnFav("0", 0, 0);
-                        showBtnFav("1", 0, 0);
+
                     }
                 }
                 else {
@@ -368,72 +440,8 @@ public class FragmentHome extends Fragment {
 
     }
 
-    //일정추가 횟수 DB 불러오기
-    public void totalPlan(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString();
-                        str1 = str1.substring(str1.indexOf("=")+1);
-                        x = str1.substring(0, str1.indexOf("}"));
-
-                        int value = Integer.parseInt(x)*10;
-                        int value2 = (int) Math.round(Double.parseDouble(x)/30*100);
-                        showBtnFav("2", value, value2);
-                        showBtnFav("3", value, value2);
 
 
-                    } else {
-                        showBtnFav("2", 0, 0);
-                        showBtnFav("3", 0, 0);
-                    }
-                }
-                else {
-
-
-                }
-            }
-        });
-    }
-
-    public void showBtnFav(String position, int value , int value2){
-        try {
-            sleep(0);
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document(position)
-                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-
-                        if(document.exists()) if (document.getId().equals("0"))
-                            challengeAdapter.setArrayData("걷거나 뛴 거리 3km", value, value);
-                        else if (document.getId().equals("1"))
-                            challengeAdapter.setArrayData("걷거나 뛴 거리 5km", value2, value2);
-                        else if (document.getId().equals("2"))
-                            challengeAdapter.setArrayData("운동 일정 10개 추가", value, value);
-
-                        else challengeAdapter.setArrayData("운동 일정 30개 추가", value2, value2);
-                        recyclerView2.setAdapter(challengeAdapter);
-
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "즐겨찾기 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-            });
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     //오늘의 일정 표시
     public void showPlanList(String today){
@@ -464,6 +472,113 @@ public class FragmentHome extends Fragment {
         });
     }
 
+    public void showChallengeList(String plan ,String distance, String today) {
+
+
+
+        int value1 = Integer.parseInt(plan)*10;
+        value1 = checkscore(value1);
+        int value2 = (int) Math.round(Double.parseDouble(plan)/30*100);
+        value2 = checkscore(value2);
+        int value3 = (int) Math.round(Double.parseDouble(plan)/50*100);
+        value3 = checkscore(value3);
+        int dis1 = (int) Math.round(Double.parseDouble(distance)/1*100);
+        dis1 = checkscore(dis1);
+        int dis2 = (int) Math.round(Double.parseDouble(distance)/3*100);
+        dis2 = checkscore(dis2);
+        int dis3 = (int) Math.round(Double.parseDouble(distance)/5*100);
+        dis3 = checkscore(dis3);
+        int dis4 = (int) Math.round(Double.parseDouble(distance)/42.195*100);
+        dis4 = checkscore(dis4);
+        int cnt = (int) Math.round(Double.parseDouble(today)/3*100);
+        cnt = checkscore(cnt);
+        int cnt2 = (int) Math.round(Double.parseDouble(today)/7*100);
+        cnt2 = checkscore(cnt2);
+        int cnt3 = (int) Math.round(Double.parseDouble(today)/15*100);
+        cnt3 = checkscore(cnt3);
+
+        challenge_adapter.arrayList.clear();
+        challenge_adapter.arrayList2.clear();
+
+        int finalValue = value1;
+        int finalValue2 = value2;
+        int finalValue3 = value3;
+        int finalDis1 = dis1;
+        int finalDis2 = dis2;
+        int finalDis3 = dis3;
+        int finalDis4 = dis4;
+        int finalCnt1 = cnt;
+        int finalCnt2 = cnt2;
+        int finalCnt3 = cnt3;
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot document = task.getResult();
+
+                if (!document.isEmpty()) {
+                    for (QueryDocumentSnapshot document1 : task.getResult()) {
+
+                        if (document1.getId().equals("운동 일정 10개 추가")) {
+                            challenge_adapter.setArrayData(list.get(0), finalValue);
+                        }
+
+                        else if(document1.getId().toString().equals("운동 일정 30개 추가")){
+                            challenge_adapter.setArrayData(list.get(1), finalValue2);
+                        }
+                        else if(document1.getId().toString().equals("운동 일정 50개 추가")){
+                            challenge_adapter.setArrayData(list.get(2), finalValue3);
+                        }
+                        else if(document1.getId().toString().equals("걷거나 뛴 거리 1km")){
+                            challenge_adapter.setArrayData(list.get(3), finalDis1);
+                        }
+                        else if(document1.getId().toString().equals("걷거나 뛴 거리 3km")){
+                            challenge_adapter.setArrayData(list.get(4), finalDis2);
+                        }
+                        else if(document1.getId().toString().equals("걷거나 뛴 거리 5km")){
+                            challenge_adapter.setArrayData(list.get(5), finalDis3);
+                        }
+                        else if(document1.getId().toString().equals("누적 42.195km 달성")){
+                            challenge_adapter.setArrayData(list.get(6), finalDis4);
+                        }
+                        else if(document1.getId().toString().equals("출석 횟수 3일")){
+                            challenge_adapter.setArrayData(list.get(7), finalCnt1);
+                        }
+                        else if(document1.getId().toString().equals("출석 횟수 7일")){
+                            challenge_adapter.setArrayData(list.get(8), finalCnt2);
+                        }
+                        else {
+                            challenge_adapter.setArrayData(list.get(9), finalCnt3);
+                        }
+                        recyclerView2.setAdapter(challenge_adapter);
+
+
+                    }
+                }
+                else {
+
+                }
+            }
+
+        });
+
+    }
+    public void addList(){
+        list.clear();
+        list.add("운동 일정 10개 추가");
+        list.add("운동 일정 30개 추가");
+        list.add("운동 일정 50개 추가");
+        list.add("걷거나 뛴 거리 1km");
+        list.add("걷거나 뛴 거리 3km");
+        list.add("걷거나 뛴 거리 5km");
+        list.add("누적 42.195km 달성");
+        list.add("출석 횟수 3일");
+        list.add("출석 횟수 7일");
+        list.add("출석 횟수 15일");
+    }
+
     public void showWeather(){
 
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
@@ -484,8 +599,6 @@ public class FragmentHome extends Fragment {
 
         }
         StringTokenizer st = new StringTokenizer(strline);
-        String nx=null;
-        String ny=null;
         String we="1";
         int num = 1;
         int i=0;
@@ -522,7 +635,15 @@ public class FragmentHome extends Fragment {
                 num++;
             }
 
-            if(we.equals(add_[i-2])) break;
+            try {
+                Log.d("onpostEx", "출력 값 : "+nx+ny);
+                if(we.equals(add_[i-2])) break;
+            }
+
+            catch(IndexOutOfBoundsException e){
+                nx=Integer.toString(0);
+                ny=Integer.toString(0);
+            }
         }
         String service_key = "Qq0ncOZYtzwIBrVT5cMMrn%2BKP7nlXYXT52ZR%2FpoM6l%2B5W6ch9YeTupmGsrR6bfVDSvXVdI7Gl6sRzKhrkgQbHw%3D%3D";
         String num_of_rows = "12";

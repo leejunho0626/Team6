@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -45,6 +46,7 @@ public class Add_plan extends AppCompatActivity {
     NotificationCompat.Builder builder;
     private static String CHANNEL_ID = "TimerPushAlarm";
     private static String CHANEL_NAME = "PushAlarm";
+    SharedPreferences spref;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -60,10 +62,17 @@ public class Add_plan extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave_plan);
         clickDate = findViewById(R.id.clickDate);
 
+        spref = getSharedPreferences("gref", MODE_PRIVATE);
+
+        String temp1 = spref.getString("push", "사용");
+
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String date = bundle.getString("date");
         String txtType = bundle.getString("exeType");
+        clickDate.setText(date);
+
         if(txtType==null){
             exeType.setText("선택하기");
             exeType.setOnClickListener(new TextView.OnClickListener() {
@@ -93,7 +102,7 @@ public class Add_plan extends AppCompatActivity {
             exeType.setText(txtType);
 
         }
-        clickDate.setText(date);
+
 
 
 
@@ -122,7 +131,7 @@ public class Add_plan extends AppCompatActivity {
                 Intent intent = getIntent();
                 Bundle bundle = intent.getExtras();
                 String date = bundle.getString("date");
-                writeUpload(date, edit, exeType.getText().toString());
+                writeUpload(date, edit, exeType.getText().toString(), temp1);
                 Toast.makeText(getApplicationContext(), "저장했습니다.", Toast.LENGTH_LONG).show();
                 finish();
 
@@ -139,7 +148,7 @@ public class Add_plan extends AppCompatActivity {
     }
 
     //목표 설정1
-    public void writeUpload(String date, String edit, String type){
+    public void writeUpload(String date, String edit, String type, String setting){
         if(edit.length()>0){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             UserWrite userWrite = new UserWrite(edit);
@@ -148,7 +157,7 @@ public class Add_plan extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void avoid) {
                             //
-                            loadingTotalPlan();
+                            loadingTotalPlan(setting);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -181,7 +190,7 @@ public class Add_plan extends AppCompatActivity {
     }
 
     //최종 일정 횟수 불러오기
-    public void loadingTotalPlan(){
+    public void loadingTotalPlan(String setting){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -206,7 +215,13 @@ public class Add_plan extends AppCompatActivity {
                         //String distance = listC.toString();
                         addTotalPlan(data); //일정 횟수 추가
                         if(temp==10){
-                            showNoti("도전과제 완료", "운동 일정 10개 추가");
+                            showNoti("도전과제 완료", "운동 일정 10개 추가", setting);
+                        }
+                        if(temp==30){
+                            showNoti("도전과제 완료", "운동 일정 30개 추가", setting);
+                        }
+                        if(temp==50){
+                            showNoti("도전과제 완료", "운동 일정 50개 추가",setting);
                         }
                         loadScore(sum);
 
@@ -356,7 +371,7 @@ public class Add_plan extends AppCompatActivity {
     }
 
 
-    public void showNoti(String title, String text){
+    public void showNoti(String title, String text ,String setting){
         Vibrator vib = (Vibrator)getSystemService(VIBRATOR_SERVICE);
         Uri ringing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -380,9 +395,11 @@ public class Add_plan extends AppCompatActivity {
         //알림창 아이콘
         builder.setSmallIcon(R.drawable.ic_stat_name);
         Notification notification = builder.build();
-        //알림창 실행
-        vib.vibrate(2000);
-        ringtone.play();
-        manager.notify(1,notification);
+
+        if(setting.equals("사용")){
+            ringtone.play();
+            manager.notify(1,notification);
+        }
+
     }
 }
