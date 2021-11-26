@@ -72,7 +72,53 @@ public class FragmentCalendar extends Fragment {
         String format_2_1 = format3.format(System.currentTimeMillis());
 
         txt1.setText(format_1_1);
-        showPlanList(format_2_1);
+        findData(format_2_1);
+        planAdapter.setOnItemClicklistener(new OnPlanItemClickListener() {
+            @Override
+            public void OnItemClick(PlanAdapter.ViewHolder holder, View view, int position) {
+                String item = planAdapter.getItem(position);
+
+
+                if(!item.contains("새로운")){
+                    String temp = item.substring(0,item.indexOf(":"));
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle(format_2_1)
+                            .setMessage(item)
+                            .setPositiveButton("변경", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    Intent intent = new Intent(getActivity(), Add_plan.class);
+                                    intent.putExtra("date",format_2_1);
+                                    intent.putExtra("exeType",temp);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("삭제", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(format_2_1).document(temp)
+                                            .delete()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(getContext().getApplicationContext(), "삭제했습니다.", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
+
+                                }
+                            }).show();
+                }
+
+            }
+        });
 
         btnAdd.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -128,9 +174,10 @@ public class FragmentCalendar extends Fragment {
                     @Override
                     public void OnItemClick(PlanAdapter.ViewHolder holder, View view, int position) {
                         String item = planAdapter.getItem(position);
-                        String temp = item.substring(0,item.indexOf(":"));
+
 
                         if(!item.contains("새로운")){
+                            String temp = item.substring(0,item.indexOf(":"));
                             new AlertDialog.Builder(getActivity())
                                     .setTitle(clickDate)
                                     .setMessage(item)

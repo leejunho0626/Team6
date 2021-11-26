@@ -416,21 +416,41 @@ public class FragmentChallenge extends Fragment {
     }
     //출석 점수 저장하기
     public void saveComplete(String txt,String time){
-        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserRank userRank = new UserRank(txt, time);
-        db.collection("DB").document("User").collection(user1.getUid()).document("Challenge").collection("Complete").document(txt).set(userRank)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void avoid) {
+
+        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Complete").document(txt)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (!document.exists()) {
+                        UserRank userRank = new UserRank(txt, time);
+                        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Complete").document(txt).set(userRank)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void avoid) {
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+
+                    } else {
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
-                    }
-                });
+                }
+                else {
+
+
+                }
+            }
+        });
+
 
     }
 
