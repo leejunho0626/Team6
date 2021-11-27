@@ -43,7 +43,7 @@ public class Challenge_complete extends AppCompatActivity {
     public void completeList(){
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Complete")
+        db.collection("DB").document(user.getEmail()).collection("Challenge").document("List").collection("Complete")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

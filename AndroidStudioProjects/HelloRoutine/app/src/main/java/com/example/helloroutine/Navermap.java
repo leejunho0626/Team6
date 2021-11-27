@@ -36,7 +36,6 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
     TextView textView;
     TextView speed_;
     TextView km;
-    Button btnOut;
     double speed = 0;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String x; //최종 거리값
@@ -53,7 +52,6 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
         speed_ = findViewById(R.id.speed); // 이동거리
         textView = findViewById(R.id.textView); // 이동시간
         km = findViewById(R.id.km); // 평균 속력
-        btnOut = findViewById(R.id.btnOut);
 
 
 
@@ -70,7 +68,8 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
 
         Intent receive_intent_ = getIntent();
         speed = receive_intent_.getDoubleExtra("Key02", 0);  // 이동거리 관련 Key값 m 값을 가져옴
-        speed_.setText("이동 거리 " + Double.toString(Math.round((speed/1000)*100)/100.0) + "km"); // Km값으로 소수점 2번째 자리까지 보여줌.
+        double total = Math.round((speed/1000)*100)/100.0;
+        speed_.setText("이동 거리 " + Double.toString(total) + "km"); // Km값으로 소수점 2번째 자리까지 보여줌.
         //DB
 
         double time_ = 0;
@@ -97,81 +96,9 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
 
         km.setText("평균 속력" + Double.toString(Math.round(avgspeed*100)/100.0) + "km/h"); // km/h값을 소수점 2번째 자리까지 보여줌
 
-        //나가기
-        btnOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        loadDistance(total);
 
 
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("DB").document("User").collection(user.getUid()).document("TotalDistance")
-                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                //DB 필드명 표시 지워서 데이터 값만 표시
-                                String str1 = document.getData().toString();
-                                str1 = str1.substring(str1.indexOf("=")+1);
-                                 x = str1.substring(0, str1.indexOf("}"));
-
-                            } else {
-                                totalDistance("0"); //문서 생성
-                                db.collection("DB").document("User").collection(user.getUid()).document("TotalDistance")
-                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            DocumentSnapshot document = task.getResult();
-                                            if (document.exists()) {
-                                                //DB 필드명 표시 지워서 데이터 값만 표시
-                                                String str1 = document.getData().toString();
-                                                str1 = str1.substring(str1.indexOf("=")+1);
-                                                x = str1.substring(0, str1.indexOf("}"));
-
-                                            } else {
-
-
-                                            }
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "즐겨찾기 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-
-                                });
-                            }
-                        }
-                        else {
-                        }
-                    }
-
-                });
-                new AlertDialog.Builder(Navermap.this)
-                        .setMessage("저장하시겠습니까?")
-                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                //데이터 값
-                                String distance = Double.toString(Math.round((speed/1000)*100)/100.0);
-                                 double temp = Double.parseDouble(x)+ Double.parseDouble(distance);
-                                 x = Double.toString(temp);
-                                //String distance = listC.toString();
-                                totalDistance(x);
-
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
-            }
-        });
     }
 
 
@@ -217,11 +144,69 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
 
     }
 
-    public void totalDistance(String total){
-        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+    public void loadDistance(double total){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        x = str1.substring(0, str1.indexOf("}"));
+
+
+                        double temp = Double.parseDouble(x)+total;
+                        saveDistance(Double.toString(temp));
+
+
+                    } else {
+                        saveDistance("0"); //문서 생성
+                        db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                        String str1 = document.getData().toString();
+                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                        x = str1.substring(0, str1.indexOf("}")); //0
+
+                                        double temp = Double.parseDouble(x)+total;
+                                        saveDistance(Double.toString(temp));
+
+                                    } else {
+
+
+                                    }
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "거리 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                        });
+                    }
+                }
+                else {
+                }
+            }
+
+        });
+
+    }
+
+
+    public void saveDistance(String total){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserWrite userWrite = new UserWrite(total);
-        db.collection("DB").document("User").collection(user1.getUid()).document("TotalDistance").set(userWrite)
+        db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt").set(userWrite)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {

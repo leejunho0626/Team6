@@ -19,13 +19,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.kakao.auth.ApiErrorCode;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+
+import java.util.Collection;
 
 import static android.content.ContentValues.TAG;
 
@@ -149,6 +155,8 @@ public class Setting_activity extends AppCompatActivity {
                         .setPositiveButton("네", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
+                                allDelete();
                                 UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
                                     @Override
                                     public void onFailure(ErrorResult errorResult) {
@@ -163,10 +171,8 @@ public class Setting_activity extends AppCompatActivity {
 
                                     @Override
                                     public void onSessionClosed(ErrorResult errorResult) {
-                                        Toast.makeText(getApplicationContext(), "로그인 세션이 닫혔습니다. 다시 로그인해 주세요.", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(Setting_activity.this, MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
+                                        //Toast.makeText(getApplicationContext(), "로그인 세션이 닫혔습니다. 다시 로그인해 주세요.", Toast.LENGTH_SHORT).show();
+
                                     }
 
                                     @Override
@@ -179,21 +185,13 @@ public class Setting_activity extends AppCompatActivity {
 
                                     @Override
                                     public void onSuccess(Long result) {
-                                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Toast.makeText(getApplicationContext(), "회원탈퇴에 성공했습니다.", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(Setting_activity.this, Login.class);
-                                                startActivity(intent);
-                                                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-                                                finish();
-                                            }
-                                        });
+                                     allDelete();
 
                                     }
                                 });
 
                                 dialog.dismiss();
+
                             }
                         })
                         .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
@@ -205,5 +203,40 @@ public class Setting_activity extends AppCompatActivity {
             }
         });
     }
+
+    public void allDelete(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document(user.getEmail())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        FirebaseAuth.getInstance().signOut();
+                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(getApplicationContext(), "회원탈퇴에 성공했습니다.", Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(Setting_activity.this, Login.class);
+                                startActivity(intent);
+                                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                                finish();
+
+                            }
+                        });
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+
+    }
+
+
 
 }

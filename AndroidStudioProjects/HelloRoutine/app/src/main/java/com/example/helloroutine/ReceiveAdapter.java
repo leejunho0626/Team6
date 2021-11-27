@@ -68,93 +68,55 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void refuseRv(String id, int postion){
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("ID").collection(id).document("uid")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    //DB 필드명 표시 지워서 데이터 값만 표시
-                    String str2 = document.getData().toString();
-                    str2 = str2.substring(str2.indexOf("=")+1);
-                    String y = str2.substring(0, str2.indexOf("}"));
+        db.collection("DB").document(user.getEmail()).collection("Receive").document(id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        db.collection("DB").document(id).collection("Request").document(user.getEmail())
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        notifyItemRemoved(postion);
 
-                    db.collection("DB").document("User").collection(user.getUid()).document("AS_Friend").collection("Uid").document(y)
-                            .delete()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    db.collection("DB").document("User").collection(y).document("RQ_Friend").collection("Uid").document(user.getUid())
-                                            .delete()
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    notifyItemRemoved(postion);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
 
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-                                                }
-                                            });
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-
-                                }
-                            });
-
-
-                } else {
-
-                }
-            }
-        });
+                    }
+                });
 
     }
 
     //수락
     public void acceptRv(String id){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("ID").collection(id).document("uid")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    //DB 필드명 표시 지워서 데이터 값만 표시
-                    String str2 = document.getData().toString();
-                    str2 = str2.substring(str2.indexOf("=")+1);
-                    String uid = str2.substring(0, str2.indexOf("}")); //상대 id의 uid
-
-                    addFriend(uid);
-                    deletList(uid);
-
-
-
-                } else {
-
-                }
-            }
-        });
+        addFriend(id);
+        deletList(id);
 
 
     }
     //친구 추가
-    public void addFriend(String uid){
+    public void addFriend(String id){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserFriend userFriend = new UserFriend(uid);
-        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(uid).set(userFriend)
+        UserFriend userFriend = new UserFriend(id);
+        db.collection("DB").document(user.getEmail()).collection("Friend").document(id).set(userFriend)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
 
                         UserFriend userFriend = new UserFriend(user.getUid());
-                        db.collection("DB").document("User").collection(uid).document("Friend").collection("Uid").document(user.getUid()).set(userFriend)
+                        db.collection("DB").document(id).collection("Friend").document(user.getEmail()).set(userFriend)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void avoid) {
@@ -177,14 +139,14 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     //목록 삭제
-    public void deletList(String uid){
+    public void deletList(String id){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("AS_Friend").collection("Uid").document(uid)
+        db.collection("DB").document(user.getEmail()).collection("Receive").document(id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        db.collection("DB").document("User").collection(uid).document("RQ_Friend").collection("Uid").document(user.getUid())
+                        db.collection("DB").document(id).collection("Request").document(user.getEmail())
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override

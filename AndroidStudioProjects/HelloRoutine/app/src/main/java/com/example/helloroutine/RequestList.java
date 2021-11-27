@@ -45,7 +45,7 @@ public class RequestList extends AppCompatActivity {
     //보낸 요청
     public void rqList(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("RQ_Friend").collection("Uid")
+        db.collection("DB").document(user.getEmail()).collection("Request")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -55,25 +55,8 @@ public class RequestList extends AppCompatActivity {
                             //DB 필드명 표시 지워서 데이터 값만 표시
                             String str = document.getId();
 
-
-                            db.collection("DB").document("User").collection(str).document("ID")
-                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document = task.getResult();
-                                        //DB 필드명 표시 지워서 데이터 값만 표시
-                                        String str2 = document.getData().toString();
-                                        str2 = str2.substring(str2.indexOf("=")+1);
-                                        String y = str2.substring(0, str2.indexOf("}"));
-                                        requestAdapter.setArrayData(y);
-                                        recyclerView.setAdapter(requestAdapter);
-                                    } else {
-
-                                    }
-                                }
-
-                            });
+                            requestAdapter.setArrayData(str);
+                            recyclerView.setAdapter(requestAdapter);
                         } else {
 
                         }
@@ -90,7 +73,7 @@ public class RequestList extends AppCompatActivity {
     //받은 요청
     public void rvList(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("AS_Friend").collection("Uid")
+        db.collection("DB").document(user.getEmail()).collection("Receive")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -98,26 +81,10 @@ public class RequestList extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         if (document.exists()) {
                             //DB 필드명 표시 지워서 데이터 값만 표시
-                            String str = document.getId().toString();
+                            String str = document.getId().toString(); //아이디
 
-                            db.collection("DB").document("User").collection(str).document("ID")
-                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document = task.getResult();
-                                        //DB 필드명 표시 지워서 데이터 값만 표시
-                                        String str2 = document.getData().toString();
-                                        str2 = str2.substring(str2.indexOf("=")+1);
-                                        String y = str2.substring(0, str2.indexOf("}"));
-                                        receiveAdapter.setArrayData(y);
-                                        recyclerView2.setAdapter(receiveAdapter);
-                                    } else {
-
-                                    }
-                                }
-
-                            });
+                            receiveAdapter.setArrayData(str);
+                            recyclerView2.setAdapter(receiveAdapter);
                         } else {
 
                         }

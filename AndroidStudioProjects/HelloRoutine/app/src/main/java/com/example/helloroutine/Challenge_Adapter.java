@@ -93,7 +93,7 @@ public class Challenge_Adapter extends RecyclerView.Adapter<ViewHolder> {
         if(txt.length()>0){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             UserWrite userWrite = new UserWrite(txt);
-            db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document(txt).set(userWrite)
+            db.collection("DB").document(user.getEmail()).collection("Challenge").document("List").collection("Favorite").document(txt).set(userWrite)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void avoid) {
@@ -116,7 +116,7 @@ public class Challenge_Adapter extends RecyclerView.Adapter<ViewHolder> {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         //첫번째 즐겨찾기 DB 검색
-        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document(txt)
+        db.collection("DB").document(user.getEmail()).collection("Challenge").document("List").collection("Favorite").document(txt)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

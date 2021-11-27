@@ -1,11 +1,15 @@
 package com.example.helloroutine;
 
+import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +28,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,6 +60,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static android.content.ContentValues.TAG;
 import static java.lang.Thread.sleep;
 
 public class FragmentHome extends Fragment {
@@ -73,6 +81,7 @@ public class FragmentHome extends Fragment {
     String cnt;
     String x;
     SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
+    LocationManager mLocMan; // 위치 관리자
 
 
     static boolean check = true;
@@ -110,6 +119,7 @@ public class FragmentHome extends Fragment {
         im1 = view.findViewById(R.id.im1);
         im2 = view.findViewById(R.id.im2);
         im3 = view.findViewById(R.id.im3);
+        mLocMan = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -203,10 +213,9 @@ public class FragmentHome extends Fragment {
 
     //출석 일수 저장하기
     public void saveCnt(String total){
-        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserWrite userWrite = new UserWrite(total);
-        db.collection("DB").document("User").collection(user1.getUid()).document("TotalAttendanceCnt").set(userWrite)
+        db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceCnt").set(userWrite)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
@@ -223,10 +232,9 @@ public class FragmentHome extends Fragment {
 
     //출석 점수 저장하기
     public void saveDate(String total){
-        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserWrite userWrite = new UserWrite(total);
-        db.collection("DB").document("User").collection(user1.getUid()).document("TotalAttendance").set(userWrite)
+        db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceLast").set(userWrite)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
@@ -282,7 +290,7 @@ public class FragmentHome extends Fragment {
     //불러오기
     public void loadDate(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendance")
+        db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceLast")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -299,7 +307,7 @@ public class FragmentHome extends Fragment {
                         saveDate(format_1);
 
                         //cnt 값 들어오기
-                        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendanceCnt")
+                        db.collection("DB").document("User").collection(user.getUid()).document("AttendanceCnt")
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -373,10 +381,10 @@ public class FragmentHome extends Fragment {
             isFabOpen = true;
         }
     }
-    //도전과제 거리 점수 불러오기
+    //도전과제
     public void totalDistance(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalDistance")
+        db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceCnt")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -387,9 +395,9 @@ public class FragmentHome extends Fragment {
                         //DB 필드명 표시 지워서 데이터 값만 표시
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
-                        String distance = str1.substring(0, str1.indexOf("}"));
+                        String day = str1.substring(0, str1.indexOf("}"));
 
-                        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
+                        db.collection("DB").document(user.getEmail()).collection("Total").document("PlanCnt")
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -401,7 +409,7 @@ public class FragmentHome extends Fragment {
                                         str1 = str1.substring(str1.indexOf("=")+1);
                                         String plan = str1.substring(0, str1.indexOf("}"));
 
-                                        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendanceCnt")
+                                        db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
                                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -411,12 +419,13 @@ public class FragmentHome extends Fragment {
                                                         //DB 필드명 표시 지워서 데이터 값만 표시
                                                         String str1 = document.getData().toString();
                                                         str1 = str1.substring(str1.indexOf("=")+1);
-                                                        String cnt = str1.substring(0, str1.indexOf("}"));
+                                                        String distance = str1.substring(0, str1.indexOf("}"));
 
-                                                        showChallengeList(plan, distance, cnt);
+                                                        showChallengeList(plan, distance, day);
 
                                                     } else {
 
+                                                        showChallengeList(plan, "0", day);
                                                     }
                                                 }
                                                 else {
@@ -426,6 +435,30 @@ public class FragmentHome extends Fragment {
                                         });
 
                                     } else {
+
+                                        db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
+                                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()) {
+                                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                                        String str1 = document.getData().toString();
+                                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                                        String distance = str1.substring(0, str1.indexOf("}"));
+
+                                                        showChallengeList("0", distance, day);
+
+                                                    } else {
+                                                        showChallengeList("0", "0", day);
+                                                    }
+                                                }
+                                                else {
+
+                                                }
+                                            }
+                                        });
 
                                     }
                                 }
@@ -455,10 +488,12 @@ public class FragmentHome extends Fragment {
     //오늘의 일정 표시
     public void showPlanList(String today){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(today)
+        db.collection("DB").document(user.getEmail()).collection("Plan").document("plan").collection(today)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         if (document.exists()) {
@@ -468,7 +503,8 @@ public class FragmentHome extends Fragment {
                             recyclerAdapter.setArrayData(str);
                             recyclerView.setAdapter(recyclerAdapter);
 
-                        } else {
+                        }
+                        else{
 
                         }
 
@@ -478,6 +514,7 @@ public class FragmentHome extends Fragment {
                     Toast.makeText(getContext().getApplicationContext(), "일정 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
                 }
             }
+
         });
     }
 
@@ -521,7 +558,7 @@ public class FragmentHome extends Fragment {
         int finalCnt3 = cnt3;
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite")
+        db.collection("DB").document(user.getEmail()).collection("Challenge").document("List").collection("Favorite")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -589,6 +626,31 @@ public class FragmentHome extends Fragment {
     }
 
     public void showWeather(){
+
+        if(!mLocMan.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("위치 서비스 비활성화");
+            builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하실래요 ? ");
+            builder.setCancelable(true);
+
+            builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    // GPS 설정 화면으로 이동
+                    Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(gpsOptionsIntent);
+                }
+            });
+            builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            builder.create().show();
+
+
+        }
 
         SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
         String format_time1 = format1.format (System.currentTimeMillis());
@@ -784,7 +846,7 @@ public class FragmentHome extends Fragment {
                     pcp.setText("강수량 : " +PCP);
                 }
                 pop.setText("강수확률 : "+POP+"%");
-                time3.setText("기준 : " + base_time.substring(0,2) + "시");
+                time3.setText("발표 기준 : " + base_time.substring(0,2) + "시");
                 //Log.d("onpostEx", "출력 값 : "+s);
 
 
@@ -845,7 +907,7 @@ public class FragmentHome extends Fragment {
 
         }
         if (addresses == null || addresses.size() == 0) {
-            Toast.makeText(getActivity(), "주소 미발견", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), "주소 미발견", Toast.LENGTH_LONG).show();
             showDialogForLocationServiceSetting();
             return "주소 미발견";
         }
@@ -854,26 +916,13 @@ public class FragmentHome extends Fragment {
     }
 
     private void showDialogForLocationServiceSetting() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("위치 서비스 비활성화");
-        builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하실래요 ? ");
-        builder.setCancelable(true);
+        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-        builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                Intent callGPSSettingIntent
-                        = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        builder.create().show();
+        if(permissionCheck == PackageManager.PERMISSION_DENIED){ //위치 권한 확인
+
+            //위치 권한 요청
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
     }
 
 }

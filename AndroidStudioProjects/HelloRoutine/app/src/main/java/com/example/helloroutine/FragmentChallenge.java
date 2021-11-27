@@ -128,54 +128,56 @@ public class FragmentChallenge extends Fragment {
     //거리 DB 불러오기
     public void totalDistance(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalDistance")
+        db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceCnt")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    //출석일수 O
                     if (document.exists()) {
+
                         //DB 필드명 표시 지워서 데이터 값만 표시
                         String str1 = document.getData().toString();
                         str1 = str1.substring(str1.indexOf("=")+1);
-                        String distance = str1.substring(0, str1.indexOf("}"));
+                        String day = str1.substring(0, str1.indexOf("}"));
 
-                        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
+                        db.collection("DB").document(user.getEmail()).collection("Total").document("PlanCnt")
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
                                     DocumentSnapshot document = task.getResult();
+                                    //출석일수 O 일정 횟수 O
                                     if (document.exists()) {
                                         //DB 필드명 표시 지워서 데이터 값만 표시
                                         String str1 = document.getData().toString();
                                         str1 = str1.substring(str1.indexOf("=")+1);
                                         String plan = str1.substring(0, str1.indexOf("}")); //추가한 일정 횟수
 
-
-                                        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendanceCnt")
+                                        db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
                                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot document = task.getResult();
+                                                    //출석일수 O 일정 횟수 O 거리 O
                                                     if (document.exists()) {
                                                         //DB 필드명 표시 지워서 데이터 값만 표시
                                                         String str1 = document.getData().toString();
                                                         str1 = str1.substring(str1.indexOf("=")+1);
-                                                        String x = str1.substring(0, str1.indexOf("}")); //추가한 출석 횟수
-
+                                                        String distance = str1.substring(0, str1.indexOf("}"));
 
                                                         for(int i = 0; i<list.size(); i++) {
-                                                            showChallengeList(plan, distance, x,i);
+                                                            showChallengeList(plan, distance, day,i);
                                                         }
 
-
-
-
-                                                    } else {
-
+                                                    }
+                                                    //출석일수 O 일정 횟수 O 거리 X
+                                                    else {
+                                                        for(int i = 0; i<list.size(); i++) {
+                                                            showChallengeList(plan, "0", day,i);
+                                                        }
                                                     }
                                                 }
                                                 else {
@@ -184,10 +186,44 @@ public class FragmentChallenge extends Fragment {
                                             }
                                         });
 
+                                    }
+                                    //출석일수 O 일정 횟수 X
+                                    else {
+
+                                        db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
+                                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document = task.getResult();
+                                                    //출석일수 O 일정 횟수 x 거리 O
+                                                    if (document.exists()) {
+                                                        //DB 필드명 표시 지워서 데이터 값만 표시
+                                                        String str1 = document.getData().toString();
+                                                        str1 = str1.substring(str1.indexOf("=")+1);
+                                                        String distance = str1.substring(0, str1.indexOf("}")); //추가한 출석 횟수
+
+
+                                                        for(int i = 0; i<list.size(); i++) {
+                                                            showChallengeList("0", distance, day,i);
+                                                        }
 
 
 
-                                    } else {
+
+                                                    }
+                                                    //출석일수 O 일정 횟수 X 거리 X
+                                                    else {
+                                                        for(int i = 0; i<list.size(); i++) {
+                                                            showChallengeList("0", "0", day,i);
+                                                        }
+                                                    }
+                                                }
+                                                else {
+
+                                                }
+                                            }
+                                        });
 
                                     }
                                 }
@@ -199,6 +235,7 @@ public class FragmentChallenge extends Fragment {
 
 
                     } else {
+
 
                     }
                 }
@@ -293,11 +330,10 @@ public class FragmentChallenge extends Fragment {
         if(finalCnt3 >= 100) {
             saveComplete(list.get(9), format_1);
         }
-        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Favorite").document(list.get(i))
+        db.collection("DB").document(user.getEmail()).collection("Challenge").document("List").collection("Favorite").document(list.get(i))
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
 
                 if (task.isSuccessful()) {
 
@@ -367,31 +403,7 @@ public class FragmentChallenge extends Fragment {
                         else if(list.get(i).equals("출석 횟수 15일")){
                                 challenge_adapter.setArrayData(list.get(i), finalCnt3, false);
                         }
-                        /*for (int i = 0; i < list.size(); i++) {
 
-                            if (list.get(i).equals("운동 일정 10개 추가")) {
-                                challenge_adapter.setArrayData(list.get(i), value1, false);
-                            } else if (list.get(i).equals("운동 일정 30개 추가")) {
-                                challenge_adapter.setArrayData(list.get(i), value2, false);
-                            } else if (list.get(i).equals("운동 일정 50개 추가")) {
-                                challenge_adapter.setArrayData(list.get(i), value3, false);
-                            } else if (list.get(i).equals("걷거나 뛴 거리 1km")) {
-                                challenge_adapter.setArrayData(list.get(i), dis1, false);
-                            } else if (list.get(i).equals("걷거나 뛴 거리 3km")) {
-                                challenge_adapter.setArrayData(list.get(i), dis2, false);
-                            } else if (list.get(i).equals("걷거나 뛴 거리 5km")) {
-                                challenge_adapter.setArrayData(list.get(i), dis3, false);
-                            } else if (list.get(i).equals("누적 42.195km 달성")) {
-                                challenge_adapter.setArrayData(list.get(i), dis4, false);
-                            } else if (list.get(i).equals("출석 횟수 3일")) {
-                                challenge_adapter.setArrayData(list.get(i), 0, false);
-                            } else if (list.get(i).equals("출석 횟수 7일")) {
-                                challenge_adapter.setArrayData(list.get(i), 0, false);
-                            } else {
-                                challenge_adapter.setArrayData(list.get(i), 0, false);
-                            }
-
-                        }*/
                         recyclerView.setAdapter(challenge_adapter);
                     }
                 }
@@ -414,11 +426,11 @@ public class FragmentChallenge extends Fragment {
 
 
     }
-    //출석 점수 저장하기
+
     public void saveComplete(String txt,String time){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Complete").document(txt)
+        db.collection("DB").document(user.getEmail()).collection("Challenge").document("List").collection("Complete").document(txt)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -427,7 +439,7 @@ public class FragmentChallenge extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (!document.exists()) {
                         UserRank userRank = new UserRank(txt, time);
-                        db.collection("DB").document("User").collection(user.getUid()).document("Challenge").collection("Complete").document(txt).set(userRank)
+                        db.collection("DB").document(user.getEmail()).collection("Challenge").document("List").collection("Complete").document(txt).set(userRank)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void avoid) {
@@ -456,73 +468,6 @@ public class FragmentChallenge extends Fragment {
 
 
 
-
-    /*//출석일수 DB 불러오기
-    public void totalAttendance(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalAttendance")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString();
-                        str1 = str1.substring(str1.indexOf("=")+1);
-                        x = str1.substring(0, str1.indexOf("}"));
-
-                        int value = Integer.parseInt(x)*10;
-                        check = true;
-                        adapter.addItem("3일 연속 출석", Integer.toString(value)+"%", value);
-                        adapter.notifyDataSetChanged();
-
-                        db.collection("DB").document("User").collection(user.getUid()).document("Score")
-                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        //DB 필드명 표시 지워서 데이터 값만 표시
-                                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
-                                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                                        String score1 = str1.substring(0, str1.indexOf(",")); //점수
-                                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                                        String id2 = id1.substring(0, id1.indexOf("}")); //이메일
-
-                                        int nowScore = Integer.parseInt(score1); //점수
-
-                                        String sum = Integer.toString(nowScore+value); //기존점수와 더하기
-
-                                        saveScore(sum);
-
-
-                                    } else {
-                                    }
-                                }
-                                else {
-                                }
-                            }
-                        });
-
-
-                    } else {
-                        adapter.addItem("3일 연속 출석", Integer.toString(0)+"%", 0);
-                        adapter.addItem("7일 연속 출석", Integer.toString(0)+"%", 0);
-                        adapter.addItem("10일 연속 출석", Integer.toString(0)+"%", 0);
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-                else {
-
-                }
-            }
-        });
-
-    }*/
 
 
 

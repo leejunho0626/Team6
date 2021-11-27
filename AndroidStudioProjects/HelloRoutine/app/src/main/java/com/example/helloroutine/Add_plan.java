@@ -152,7 +152,7 @@ public class Add_plan extends AppCompatActivity {
         if(edit.length()>0){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             UserWrite userWrite = new UserWrite(edit);
-            db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date).document(type).set(userWrite)
+            db.collection("DB").document(user.getEmail()).collection("Plan").document("plan").collection(date).document(type).set(userWrite)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void avoid) {
@@ -175,7 +175,7 @@ public class Add_plan extends AppCompatActivity {
     public void addTotalPlan(String total){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserWrite userWrite = new UserWrite(total);
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan").set(userWrite)
+        db.collection("DB").document(user.getEmail()).collection("Total").document("PlanCnt").set(userWrite)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
@@ -192,7 +192,7 @@ public class Add_plan extends AppCompatActivity {
     //최종 일정 횟수 불러오기
     public void loadingTotalPlan(String setting){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
+        db.collection("DB").document(user.getEmail()).collection("Total").document("PlanCnt")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -207,13 +207,15 @@ public class Add_plan extends AppCompatActivity {
                         String data = str1.substring(0, str1.indexOf("}")); //일정 쵯수
 
                         //데이터 값
-                        int value = Integer.parseInt(data)*10; //도전과제
-                        int value2 = (int) Math.round(Double.parseDouble(data)/30*100); //도전과제
-                        String sum = Integer.toString(value+value2);
                         int temp = Integer.parseInt(data)+1; //일정 횟수
+                        int value = temp*10; //도전과제
+                        int value2 = (int) Math.round(Double.parseDouble(String.valueOf(temp))/30*100); //도전과제
+                        String sum = Integer.toString(value+value2);
+
                         data = Integer.toString(temp);
                         //String distance = listC.toString();
-                        addTotalPlan(data); //일정 횟수 추가
+                        addTotalPlan(Integer.toString(temp)); //일정 횟수 추가
+                        loadScore(sum);
                         if(temp==10){
                             showNoti("도전과제 완료", "운동 일정 10개 추가", setting);
                         }
@@ -223,14 +225,13 @@ public class Add_plan extends AppCompatActivity {
                         if(temp==50){
                             showNoti("도전과제 완료", "운동 일정 50개 추가",setting);
                         }
-                        loadScore(sum);
 
                     }
                     else {
                         try {
                             addTotalPlan("0"); //문서 생성
-                            sleep(2000);
-                            db.collection("DB").document("User").collection(user.getUid()).document("TotalPlan")
+                            sleep(1000);
+                            db.collection("DB").document(user.getEmail()).collection("Total").document("PlanCnt")
                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -240,17 +241,17 @@ public class Add_plan extends AppCompatActivity {
                                             //DB 필드명 표시 지워서 데이터 값만 표시
                                             String str1 = document.getData().toString();
                                             str1 = str1.substring(str1.indexOf("=")+1);
-                                            String data = str1.substring(0, str1.indexOf("}"));
+                                            String data = str1.substring(0, str1.indexOf("}")); //0점
                                             //데이터 값
-                                            int value = Integer.parseInt(data)*10; //도전과제
-                                            int value2 = (int) Math.round(Double.parseDouble(data)/30*100); //도전과제
-                                            String sum = Integer.toString(value+value2);
                                             int temp = Integer.parseInt(data)+1;
-                                            data = Integer.toString(temp);
+                                            int value = temp*10; //도전과제
+                                            int value2 = (int) Math.round(Double.parseDouble(String.valueOf(temp))/30*100); //도전과제
+                                            String sum = Integer.toString(value+value2);
+
 
                                             try {
-                                                addTotalPlan(data);
-                                                sleep(2000);
+                                                addTotalPlan(Integer.toString(temp));
+                                                sleep(1000);
                                                 loadScore(sum);
 
                                             }   catch (InterruptedException e) {
@@ -279,11 +280,11 @@ public class Add_plan extends AppCompatActivity {
         });
     }
 
-    //진행도 점수 저장하기
+    //일정 진행도 점수 저장하기
     public void saveScore(String total){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserRank userRank = new UserRank(user.getEmail(),total);
-        db.collection("DB").document("User").collection(user.getUid()).document("Score").set(userRank)
+        db.collection("DB").document(user.getEmail()).collection("Total").document("PlanScore").set(userRank)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
@@ -301,7 +302,7 @@ public class Add_plan extends AppCompatActivity {
 
     public void loadScore(String data){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Score")
+        db.collection("DB").document(user.getEmail()).collection("Total").document("PlanScore")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -309,26 +310,14 @@ public class Add_plan extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     //문서가 존재하는 경우
                     if (document.exists()) {
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString(); //{score=점수,id=이메일}
-                        str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                        String score = str1.substring(0, str1.indexOf(",")); //점수
-                        String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                        String id = id1.substring(0, id1.indexOf("}")); //이메일
-
-                        int nowScore = Integer.parseInt(score);
-                        int addScore = Integer.parseInt(data);
-                        int total = nowScore+addScore;
-
-
-                        saveScore(Integer.toString(total)); //추가할 점수 + 기존 점수
+                        saveScore(data); //업데이트
 
                     }
                     else {
                         try {
                             saveScore("0");
-                            sleep(2000);
-                            db.collection("DB").document("User").collection(user.getUid()).document("Score")
+                            sleep(1000);
+                            db.collection("DB").document(user.getEmail()).collection("Total").document("PlanScore")
                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -336,20 +325,11 @@ public class Add_plan extends AppCompatActivity {
                                         DocumentSnapshot document = task.getResult();
                                         //문서가 존재하는 경우
                                         if (document.exists()) {
-                                            //DB 필드명 표시 지워서 데이터 값만 표시
-                                            String str1 = document.getData().toString(); //{score=점수,id=이메일}
-                                            str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                                            String score = str1.substring(0, str1.indexOf(",")); //점수
-                                            String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                                            String id = id1.substring(0, id1.indexOf("}")); //이메일
 
-                                            int nowScore = Integer.parseInt(score);
-                                            int addScore = Integer.parseInt(data);
-                                            int total = nowScore+addScore;
-                                            saveScore(Integer.toString(total)); //추가할 점수 + 기존 점수
+                                            saveScore(data); //추가할 점수 + 기존 점수
 
                                         } else {
-
+                                            Toast.makeText(getApplicationContext(), "일정 횟수 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
                                         }
                                     } else {
                                         Toast.makeText(getApplicationContext(), "일정 횟수 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();

@@ -57,44 +57,26 @@ public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void cancelRq(String id){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("ID").collection(id).document("uid")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    //DB 필드명 표시 지워서 데이터 값만 표시
-                    String str2 = document.getData().toString();
-                    str2 = str2.substring(str2.indexOf("=")+1);
-                    String y = str2.substring(0, str2.indexOf("}"));
+        db.collection("DB").document(user.getEmail()).collection("Request").document(id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        deleteOpponent(id, user.getEmail());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-                    db.collection("DB").document("User").collection(user.getUid()).document("RQ_Friend").collection("Uid").document(y)
-                            .delete()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    deleteOpponent(y, user.getUid());
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-
-                                }
-                            });
-
-
-                } else {
-
-                }
-            }
-        });
+                    }
+                });
 
     }
 
-    public void deleteOpponent(String user, String uid){
+    public void deleteOpponent(String user, String id){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user).document("AS_Friend").collection("Uid").document(uid)
+        db.collection("DB").document(user).collection("Receive").document(id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

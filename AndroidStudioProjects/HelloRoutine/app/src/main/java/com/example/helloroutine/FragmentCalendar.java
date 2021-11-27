@@ -98,7 +98,7 @@ public class FragmentCalendar extends Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(format_2_1).document(temp)
+                                    db.collection("DB").document(user.getEmail()).collection("Plan").document("plan").collection(format_2_1).document(temp)
                                             .delete()
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -195,7 +195,7 @@ public class FragmentCalendar extends Fragment {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                            db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(clickDate).document(temp)
+                                            db.collection("DB").document(user.getEmail()).collection("Plan").document("plan").collection(clickDate).document(temp)
                                                     .delete()
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
@@ -295,7 +295,7 @@ public class FragmentCalendar extends Fragment {
     //일정 표시
     public void showPlanList(String date){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(date)
+        db.collection("DB").document(user.getEmail()).collection("Plan").document("plan").collection(date)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -321,7 +321,7 @@ public class FragmentCalendar extends Fragment {
 
     public void findData(String data){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(user.getUid()).document("Plan").collection(data)
+        db.collection("DB").document(user.getEmail()).collection("Plan").document("plan").collection(data)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/white_edittext"
-                android:hint="이메일을 입력하세요"
+                android:hint=" 이메일을 입력하세요"
                 android:paddingLeft="5dp"
                 android:singleLine="true"
                 tools:ignore="MissingConstraints" />
@@ -115,7 +115,7 @@
                 android:password="true"
                 android:background="@drawable/white_edittext"
                 android:paddingLeft="5dp"
-                android:hint="6자리 이상 입력하세요"
+                android:hint=" 6자리 이상 입력하세요"
                 tools:ignore="MissingConstraints"/>
 
             <LinearLayout

@@ -184,22 +184,6 @@ public class Register extends AppCompatActivity {
                                 //2. 비밀번호 변경
                                 user.updatePassword(pw);
                                 //3. 아이디 DB에 저장
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                UserWrite userWrite = new UserWrite(user.getEmail());
-                                db.collection("DB").document("User").collection(user.getUid()).document("ID").set(userWrite) //경로
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void avoid) {
-                                                Log.d(TAG, "success(general)");
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.d(TAG, "fail(general");
-                                            }
-                                        });
-                                saveScore();
                                 saveFriend();
                                 saveID();
                                 firebaseAuth.signOut(); //로그아웃
@@ -219,8 +203,8 @@ public class Register extends AppCompatActivity {
     public void saveID(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserWrite userWrite = new UserWrite(user.getUid());
-        db.collection("DB").document("ID").collection(user.getEmail()).document("uid").set(userWrite) //경로
+        UserWrite userWrite = new UserWrite(user.getEmail());
+        db.collection("DB").document("UID").collection(user.getUid()).document("id").set(userWrite) //경로
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
@@ -235,30 +219,12 @@ public class Register extends AppCompatActivity {
                 });
     }
 
-    public void saveScore(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserRank userRank = new UserRank(user.getEmail(),"0");
-        db.collection("DB").document("User").collection(user.getUid()).document("Score").set(userRank) //경로
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void avoid) {
-                        Log.d(TAG, "save success(score)");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "save fail(score)");
-                    }
-                });
-    }
 
     public void saveFriend(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserWrite userWrite = new UserWrite(user.getUid());
-        db.collection("DB").document("User").collection(user.getUid()).document("Friend").collection("Uid").document(user.getUid()).set(userWrite) //경로
+        UserWrite userWrite = new UserWrite(user.getEmail());
+        db.collection("DB").document(user.getEmail()).collection("Friend").document(user.getEmail()).set(userWrite) //경로
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
