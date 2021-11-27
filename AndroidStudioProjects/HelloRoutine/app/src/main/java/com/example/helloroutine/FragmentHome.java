@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,14 +58,14 @@ import static java.lang.Thread.sleep;
 
 public class FragmentHome extends Fragment {
 
-    static TextView tmp, pty, pcp, sno, sky, pop, time3;
+    TextView tmp, pty, pcp, sno, sky, pop, time3;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private static LocationSource mLocationSource;
-    static GridView grid;
-    static GridAdapter adt;
+    GridView grid;
+    GridAdapter adt;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    static ProgressDialog customProgressDialog;
+    ProgressDialog customProgressDialog;
     private static Animation fab_open, fab_close;
     private static Boolean isFabOpen = false;
     private static FloatingActionButton fab, fab1, fab2;
@@ -75,11 +76,13 @@ public class FragmentHome extends Fragment {
 
 
     static boolean check = true;
-    static RecyclerView recyclerView,recyclerView2;
-    static RecyclerAdapter recyclerAdapter;
-    static ChallengeAdapter challenge_adapter;
+    RecyclerView recyclerView,recyclerView2;
+    RecyclerAdapter recyclerAdapter;
+    ChallengeAdapter challenge_adapter;
     String base_time = time();
     ArrayList<String> list = new ArrayList<>();
+
+    ImageView im1, im2, im3;
 
     String nx=null;
     String ny=null;
@@ -104,6 +107,9 @@ public class FragmentHome extends Fragment {
         recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false)) ;
         recyclerAdapter = new RecyclerAdapter();
         challenge_adapter = new ChallengeAdapter();
+        im1 = view.findViewById(R.id.im1);
+        im2 = view.findViewById(R.id.im2);
+        im3 = view.findViewById(R.id.im3);
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -149,7 +155,8 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View v) {
                 //
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/results?search_query=%EB%AC%B8%ED%99%94%EC%B2%B4%EC%9C%A1%EA%B4%80%EA%B4%91%EB%B6%80+%EC%9A%B4%EB%8F%99"));
+
+                Intent intent = new Intent(getActivity(), Guide.class);
                 startActivity(intent);
             }
         });
@@ -169,6 +176,8 @@ public class FragmentHome extends Fragment {
         totalDistance();
 
         showWeather();
+
+        recommend();
 
         //totalAttendance(format_1);
 
@@ -636,7 +645,7 @@ public class FragmentHome extends Fragment {
             }
 
             try {
-                Log.d("onpostEx", "출력 값 : "+nx+ny);
+                //Log.d("onpostEx", "출력 값 : "+nx+ny);
                 if(we.equals(add_[i-2])) break;
             }
 
@@ -670,6 +679,34 @@ public class FragmentHome extends Fragment {
                 "&ny=" +ny;
         NetworkTask networkTask = new NetworkTask(url, null);
         networkTask.execute(); //날씨 실행
+    }
+
+    public void recommend(){
+//상체
+        int[] images = new int[]{
+                R.drawable.crunch2, R.drawable.bicyt1, R.drawable.rt11,R.drawable.ratpulldown1,R.drawable.packdeckfly1,R.drawable.packdecklateral1};
+
+        //하체
+        int[] images2 = new int[]{
+                R.drawable.backlunge, R.drawable.highknees, R.drawable.squart,R.drawable.anglelegpress1,R.drawable.hacksquart1,R.drawable.leg1};
+
+
+        //전신
+        int[] images3 = new int[]{
+                R.drawable.flan, R.drawable.flankjack,R.drawable.mt1,R.drawable.sideflankwalk,R.drawable.bantoverowing1,R.drawable.deadlift1,R.drawable.hangingleg,R.drawable.sitlow};
+
+
+
+        int randomNum = (int) (Math.random() * 6);
+        im1.setImageResource(images[randomNum]);
+
+        int randomNum2 = (int) (Math.random() * 6);
+        im2.setImageResource(images2[randomNum2]);
+
+        int randomNum3 = (int) (Math.random() * 8);
+        im3.setImageResource(images3[randomNum3]);
+
+
     }
 
 
@@ -748,12 +785,12 @@ public class FragmentHome extends Fragment {
                 }
                 pop.setText("강수확률 : "+POP+"%");
                 time3.setText("기준 : " + base_time.substring(0,2) + "시");
-                Log.d("onpostEx", "출력 값 : "+s);
+                //Log.d("onpostEx", "출력 값 : "+s);
 
 
             } catch (NullPointerException e) {
 
-                pty.setText("기상정보를 불러올 수 없습니다.");
+                time3.setText("기상정보를 불러올 수 없습니다.");
                 tmp.setText("");
 
             }

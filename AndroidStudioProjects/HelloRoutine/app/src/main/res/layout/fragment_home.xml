@@ -218,7 +218,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text=" "
+                            android:text="적설량 : 0"
                             android:textSize="18dp"/>
 
                     </LinearLayout>
@@ -259,25 +259,29 @@
                     android:layout_margin="10dp">
 
                     <ImageView
+                        android:id="@+id/im1"
                         android:layout_width="110dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/image_no"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginRight="10dp"/>
+                        android:layout_gravity="left"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
                     <ImageView
+                        android:id="@+id/im2"
                         android:layout_width="110dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/image_no"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_gravity="center"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
 
                     <ImageView
+                        android:id="@+id/im3"
                         android:layout_width="110dp"
                         android:layout_height="80dp"
-                        android:background="@drawable/image_no"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="10dp"/>
+                        android:layout_gravity="right"/>
 
 
                 </LinearLayout>

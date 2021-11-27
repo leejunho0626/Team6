@@ -38,7 +38,7 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.btnRefuse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                refuseRv(arrayList.get(position));
+                refuseRv(arrayList.get(position), position);
 
             }
         });
@@ -65,7 +65,7 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     //거절
-    public void refuseRv(String id){
+    public void refuseRv(String id, int postion){
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document("ID").collection(id).document("uid")
@@ -89,6 +89,7 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
+                                                    notifyItemRemoved(postion);
 
                                                 }
                                             })
