@@ -19,6 +19,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -117,7 +118,11 @@ public class MainActivity extends AppCompatActivity {
                     setting.setVisibility(View.VISIBLE);
                     timer.setVisibility(View.VISIBLE);
                     firstState = true;
-                    stopTimer();
+                    try {
+                        stopTimer();
+                    } catch(Exception e){
+                        Toast.makeText(MainActivity.this,"시간을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             updateTimer();
