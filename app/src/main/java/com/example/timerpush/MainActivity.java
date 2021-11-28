@@ -37,11 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean timerRunning;
     private boolean firstState;
+    private boolean flag = true;
 
     private long time = 0;
     private long tempTime = 0;
-
-    int cnt = 0;
 
     NotificationManager manager;
     NotificationCompat.Builder builder;
@@ -102,13 +101,15 @@ public class MainActivity extends AppCompatActivity {
             stopBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(cnt % 2 == 1)
+                    if (flag) {
                         stopBtn.setText("STOP");
-                    else
+                        flag = false;
+                    }
+                    else if (!flag) {
                         stopBtn.setText("RESUME");
+                        flag = true;
+                    }
                     startStop();
-
-                    cnt++;
                 }
             });
 
@@ -143,35 +144,35 @@ public class MainActivity extends AppCompatActivity {
             String sSec = "0";
 
             if (firstState) {
-                sHour = hourText.getText().toString();
-                sMin = minText.getText().toString();
-                sSec = secText.getText().toString();
-                if (hourText.getText().toString().equals(""))
-                    sHour = "0";
-                if (minText.getText().toString().equals(""))
-                    sMin = "0";
-                if (secText.getText().toString().equals(""))
-                    sSec = "0";
-                time = (Long.parseLong(sHour) * 3600000) + (Long.parseLong(sMin) * 60000) + (Long.parseLong(sSec) * 1000) + 1000;
-            } else {
-                time = tempTime;
-            }
-
-            cntDownTimer = new CountDownTimer(time, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    tempTime = millisUntilFinished;
-                    updateTimer();
+                    sHour = hourText.getText().toString();
+                    sMin = minText.getText().toString();
+                    sSec = secText.getText().toString();
+                    if (hourText.getText().toString().equals(""))
+                        sHour = "0";
+                    if (minText.getText().toString().equals(""))
+                        sMin = "0";
+                    if (secText.getText().toString().equals(""))
+                        sSec = "0";
+                    time = (Long.parseLong(sHour) * 3600000) + (Long.parseLong(sMin) * 60000) + (Long.parseLong(sSec) * 1000) + 1000;
+                } else{
+                    time = tempTime;
                 }
 
-                @Override
-                public void onFinish() {
-                    showNoti();
-                }
-            }.start();
+                cntDownTimer = new CountDownTimer(time, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        tempTime = millisUntilFinished;
+                        updateTimer();
+                    }
 
-            timerRunning = true;
-            firstState = false;
+                    @Override
+                    public void onFinish() {
+                        showNoti();
+                    }
+                }.start();
+
+                timerRunning = true;
+                firstState = false;
         }
 
         private void stopTimer () {
