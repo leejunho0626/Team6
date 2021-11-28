@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "393964681243",
+    "project_id": "pushalram-71a9f",
+    "storage_bucket": "pushalram-71a9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393964681243:android:a2d4d17c9f4e70199020be",
+        "android_client_info": {
+          "package_name": "com.example.timerpush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393964681243-b9ullgt98anld18t6r4tftc29dpkhgt0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBGFVAtIEuLvcYvdmclfa6-mkDuaGmRaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393964681243-b9ullgt98anld18t6r4tftc29dpkhgt0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

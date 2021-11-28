@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean timerRunning;
     private boolean firstState;
     private boolean flag = true;
+    private boolean Timercheck = true;
+
+    String sHour = "0";
+    String sMin = "0";
+    String sSec = "0";
 
     private long time = 0;
     private long tempTime = 0;
@@ -101,13 +107,15 @@ public class MainActivity extends AppCompatActivity {
             stopBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (flag) {
-                        stopBtn.setText("STOP");
-                        flag = false;
-                    }
-                    else if (!flag) {
-                        stopBtn.setText("RESUME");
-                        flag = true;
+                    if (Long.parseLong(sHour) == 0 && Long.parseLong(sMin) == 0 && Long.parseLong(sSec) == 0) {}
+                    else {
+                        if (flag) {
+                            stopBtn.setText("STOP");
+                            flag = false;
+                        } else if (!flag) {
+                            stopBtn.setText("RESUME");
+                            flag = true;
+                        }
                     }
                     startStop();
                 }
@@ -139,11 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void startTimer () {
-            String sHour = "0";
-            String sMin = "0";
-            String sSec = "0";
-
-            if (firstState) {
+                if (firstState) {
                     sHour = hourText.getText().toString();
                     sMin = minText.getText().toString();
                     sSec = secText.getText().toString();
@@ -154,11 +158,14 @@ public class MainActivity extends AppCompatActivity {
                     if (secText.getText().toString().equals(""))
                         sSec = "0";
                     time = (Long.parseLong(sHour) * 3600000) + (Long.parseLong(sMin) * 60000) + (Long.parseLong(sSec) * 1000) + 1000;
-                } else{
+                    if (Long.parseLong(sHour) == 0 && Long.parseLong(sMin) == 0 && Long.parseLong(sSec) == 0) {
+                        Toast.makeText(MainActivity.this, "시간을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        Timercheck = false;
+                    }
+                } else {
                     time = tempTime;
                 }
-
-                cntDownTimer = new CountDownTimer(time, 1000) {
+            cntDownTimer = new CountDownTimer(time, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         tempTime = millisUntilFinished;
@@ -167,7 +174,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFinish() {
-                        showNoti();
+                        if(Timercheck){
+                            showNoti();
+                        } else{}
                     }
                 }.start();
 
@@ -180,6 +189,10 @@ public class MainActivity extends AppCompatActivity {
             timerRunning = false;
             cancelBtn.setText("CANCEL");
             cntText.setText("0:00:00");
+            stopBtn.setText("STOP");
+            hourText.setText("");
+            minText.setText("");
+            secText.setText("");
         }
 
         private void updateTimer () {
