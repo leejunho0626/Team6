@@ -11,15 +11,15 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
-public class LockScreenActivity extends Activity implements SensorEventListener {
+public class WalkCnt extends Activity implements SensorEventListener {
 
     SensorManager sensorManager;
     Sensor stepCountSensor;
@@ -30,16 +30,13 @@ public class LockScreenActivity extends Activity implements SensorEventListener 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lock_screen);
+        setContentView(R.layout.walkcnt);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); //다크모드 해제
 
         stepCountView = findViewById(R.id.stepCountView);
         resetButton = findViewById(R.id.resetButton);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
         // 활동 퍼미션 체크
         if(ContextCompat.checkSelfPermission(this,
@@ -67,8 +64,6 @@ public class LockScreenActivity extends Activity implements SensorEventListener 
         });
 
     }
-
-
     public void onStart() {
         super.onStart();
         if(stepCountSensor !=null) {

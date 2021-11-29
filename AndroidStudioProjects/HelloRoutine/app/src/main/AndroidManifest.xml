@@ -45,12 +45,12 @@
         <receiver android:name=".ScreenReceiver"></receiver>
         <service android:name=".ScreenService"></service>
         <activity android:name=".LockScreenActivity"></activity>
-        <activity android:name=".LockScreen"></activity>
         <activity android:name=".Guide"></activity>
         <activity android:name=".TOP"/>
         <activity android:name=".Bottom"/>
         <activity android:name=".Allbody"/>
         <activity android:name=".ShowExe"/>
+        <activity android:name=".WalkCnt"/>
 
     </application>
     <!-- API 버전 28 이하 -->

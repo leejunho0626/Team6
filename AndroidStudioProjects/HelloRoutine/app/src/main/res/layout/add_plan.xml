@@ -57,9 +57,9 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
-                android:paddingTop="10dp"
-                android:background="#B4B4B6"
-                android:text="선택하기"
+                android:gravity="center"
+                android:background="@drawable/test1"
+                android:hint="선택하기"
                 android:textSize="19dp"
                 android:textColor="@color/black"
                 android:paddingLeft="10dp"
@@ -69,65 +69,76 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/txt2"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            android:paddingTop="10dp"
-            android:text="횟수"
-            android:layout_gravity="left"
-            android:textSize="19dp"
-            android:textColor="@color/black"
-            android:paddingLeft="10dp"
-            tools:ignore="MissingConstraints" />
+            <TextView
+                android:id="@+id/txt2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:paddingTop="10dp"
+                android:text="횟수"
+                android:layout_gravity="center"
+                android:textSize="19dp"
+                android:textColor="@color/black"
+                android:paddingLeft="10dp"
+                tools:ignore="MissingConstraints" />
 
 
-        <EditText
-            android:id="@+id/exeNUm"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/layout_background"
-            android:ems="17"
-            android:hint="회"
-            android:maxLength="30"
-            android:paddingLeft="10dp"
-            android:singleLine="true"
-            tools:ignore="MissingConstraints" />
+            <EditText
+                android:id="@+id/exeNUm"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/layout_background"
+                android:ems="3"
+                android:hint="회"
+                android:maxLength="30"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                tools:ignore="MissingConstraints" />
 
-        <TextView
-            android:id="@+id/txt3"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            android:paddingTop="10dp"
-            android:text="세트"
-            android:layout_gravity="left"
-            android:textSize="19dp"
-            android:textColor="@color/black"
-            android:paddingLeft="10dp"
-            tools:ignore="MissingConstraints" />
+            <TextView
+                android:id="@+id/txt3"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:paddingTop="10dp"
+                android:text="세트"
+                android:layout_gravity="center"
+                android:textSize="19dp"
+                android:textColor="@color/black"
+                android:paddingLeft="10dp"
+                tools:ignore="MissingConstraints" />
 
-        <EditText
-            android:id="@+id/exeSet"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/layout_background"
-            android:ems="17"
-            android:hint="세트"
-            android:maxLength="30"
-            android:paddingLeft="10dp"
-            android:singleLine="true"
-            tools:ignore="MissingConstraints" />
+
+
+            <EditText
+                android:id="@+id/exeSet"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/layout_background"
+                android:ems="3"
+                android:hint="세트"
+                android:maxLength="30"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                tools:ignore="MissingConstraints" />
+
+
+        </LinearLayout>
+
+
 
 
 
@@ -160,8 +171,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:paddingTop="10dp"
-                android:background="#B4B4B6"
-                android:text="설정하기"
+                android:background="@drawable/test1"
+                android:hint="설정하기"
                 android:textSize="19dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"

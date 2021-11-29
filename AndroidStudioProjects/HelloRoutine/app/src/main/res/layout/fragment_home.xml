@@ -351,6 +351,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="225dp"
+        android:layout_marginRight="15sp"
+        android:src="@drawable/ic_baseline_looks_6_24"
+        android:visibility="invisible"
+        app:backgroundTint="@color/logo3"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:contentDescription="TODO" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

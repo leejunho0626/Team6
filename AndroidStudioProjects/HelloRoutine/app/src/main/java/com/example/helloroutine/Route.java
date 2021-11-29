@@ -115,7 +115,7 @@ public class Route extends AppCompatActivity implements OnMapReadyCallback {
                                             }
                                         });
                                         try {
-                                            Thread.sleep(500);  // 0.5초마다 반복
+                                            Thread.sleep(1000);  // 0.5초마다 반복
                                         } catch (Exception e) {
                                         }
                                     }

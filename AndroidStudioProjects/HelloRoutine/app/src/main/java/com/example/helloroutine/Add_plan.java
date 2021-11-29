@@ -74,7 +74,6 @@ public class Add_plan extends AppCompatActivity {
         clickDate.setText(date);
 
         if(txtType==null){
-            exeType.setText("선택하기");
             exeType.setOnClickListener(new TextView.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -98,7 +97,7 @@ public class Add_plan extends AppCompatActivity {
             });
         }
         else {
-            //DB 필드명 표시 지워서 데이터 값만 표시
+
             exeType.setText(txtType);
 
         }
@@ -126,14 +125,36 @@ public class Add_plan extends AppCompatActivity {
         btnSave.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String edit = exeType.getText().toString()+": "+exeSet.getText().toString()+"세트 "+exeNum.getText().toString()+"회/ "
-                        +"예정 시간 : "+exeTime.getText().toString(); //입력한 값
-                Intent intent = getIntent();
-                Bundle bundle = intent.getExtras();
-                String date = bundle.getString("date");
-                writeUpload(date, edit, exeType.getText().toString(), temp1);
-                Toast.makeText(getApplicationContext(), "저장했습니다.", Toast.LENGTH_LONG).show();
-                finish();
+                if(exeType.getText().toString().length()>0){
+                    if(exeSet.getText().toString().length()>0){
+                        if(exeNum.getText().toString().length()>0){
+                            if(exeTime.getText().toString().length()>0){
+                                String edit = exeType.getText().toString()+": "+exeSet.getText().toString()+"세트 "+exeNum.getText().toString()+"회/ "
+                                        +"예정 시간 : "+exeTime.getText().toString(); //입력한 값
+                                Intent intent = getIntent();
+                                Bundle bundle = intent.getExtras();
+                                String date = bundle.getString("date");
+                                writeUpload(date, edit, exeType.getText().toString(), temp1);
+                                Toast.makeText(getApplicationContext(), "저장했습니다.", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "예정 시간을 설정하세요.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "운동 횟수를 입력하세요.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "운동 세트를 입력하세요.", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "운동 종류를 선택하세요.", Toast.LENGTH_LONG).show();
+                }
+
 
             }
         });
@@ -147,7 +168,7 @@ public class Add_plan extends AppCompatActivity {
         finish();
     }
 
-    //목표 설정1
+    //목표 설정
     public void writeUpload(String date, String edit, String type, String setting){
         if(edit.length()>0){
             FirebaseFirestore db = FirebaseFirestore.getInstance();

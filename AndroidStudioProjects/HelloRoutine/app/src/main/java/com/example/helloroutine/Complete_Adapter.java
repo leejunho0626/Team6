@@ -32,7 +32,7 @@ public class Complete_Adapter extends RecyclerView.Adapter<ViewHolder> {
         String text2 = arrayList2.get(position);
 
         holder.txtCom.setText(text);
-        holder.txtTime.setText("완료 시간 : "+text2);
+        holder.txtTime.setText(text2);
 
 
     }

@@ -62,7 +62,8 @@ public class Challenge_complete extends AppCompatActivity {
                             recyclerView.setAdapter(complete_adapter);
 
                         } else {
-
+                            complete_adapter.setArrayData("완료된 목록이 없습니다.", "");
+                            recyclerView.setAdapter(complete_adapter);
                         }
 
                     }

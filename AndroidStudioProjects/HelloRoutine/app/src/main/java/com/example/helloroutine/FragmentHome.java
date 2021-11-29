@@ -88,7 +88,7 @@ public class FragmentHome extends Fragment {
     ProgressDialog customProgressDialog;
     private static Animation fab_open, fab_close;
     private static Boolean isFabOpen = false;
-    private static FloatingActionButton fab, fab1, fab2;
+    private static FloatingActionButton fab, fab1, fab2, fab3;
     static  LinearLayout linearLayout;
     String cnt;
     String x;
@@ -154,6 +154,8 @@ public class FragmentHome extends Fragment {
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab1 = (FloatingActionButton) view.findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) view.findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) view.findViewById(R.id.fab3);
+
         fab.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,6 +178,15 @@ public class FragmentHome extends Fragment {
                 //
                 anim();
                 Intent intent = new Intent(getActivity(), Timer_function.class);
+                startActivity(intent);
+            }
+        });
+        fab3.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+                anim();
+                Intent intent = new Intent(getActivity(), WalkCnt.class);
                 startActivity(intent);
             }
         });
@@ -391,14 +402,18 @@ public class FragmentHome extends Fragment {
         if (isFabOpen) {
             fab1.startAnimation(fab_close);
             fab2.startAnimation(fab_close);
+            fab3.startAnimation(fab_close);
             fab1.setClickable(false);
             fab2.setClickable(false);
+            fab3.setClickable(false);
             isFabOpen = false;
         } else {
             fab1.startAnimation(fab_open);
             fab2.startAnimation(fab_open);
+            fab3.startAnimation(fab_open);
             fab1.setClickable(true);
             fab2.setClickable(true);
+            fab3.setClickable(true);
             isFabOpen = true;
         }
     }

@@ -11,9 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="40dp"
         android:gravity="center"
-        android:text="오늘 날짜"
-        android:textSize="35dp"
-        android:textColor="@color/white"/>
+        android:text="만보기"
+        android:textSize="35dp"/>
 
 
     <LinearLayout
@@ -28,7 +27,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:gravity="center"
-            android:text="걸음수 : 1234"
+            android:text="걸음수 : 123"
             android:textColor="@color/black"
             android:textSize="25dp"/>
         <View
@@ -45,14 +44,6 @@
             android:text="Reset"/>
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:text="오늘의 일정\n\n1. 팔운동\n2. 다리운동\n3. 복근운동"
-        android:textColor="@color/black"
-        android:textSize="25dp"/>
 
 
 

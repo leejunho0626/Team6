@@ -90,7 +90,7 @@ public class FragmentCalendar extends Fragment {
 
                                     Intent intent = new Intent(getActivity(), Add_plan.class);
                                     intent.putExtra("date",format_2_1);
-                                    intent.putExtra("exeType",temp);
+                                    intent.putExtra("exeType","변경할 운동 : "+temp);
                                     startActivity(intent);
                                 }
                             })
