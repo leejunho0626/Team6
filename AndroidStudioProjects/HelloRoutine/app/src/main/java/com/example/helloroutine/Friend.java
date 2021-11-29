@@ -193,50 +193,50 @@ public class Friend extends AppCompatActivity {
     public void addFriend(String uid){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            db.collection("DB").document("UID").collection(uid).document("id")
-                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+        db.collection("DB").document("UID").collection(uid).document("id")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-
-
-                        if (document.exists()) {
-                            //DB 필드명 표시 지워서 데이터 값만 표시
-                            String str1 = document.getData().toString();
-                            str1 = str1.substring(str1.indexOf("=")+1);
-                            String id = str1.substring(0, str1.indexOf("}")); //입력한uid의 아이디
-
-                            UserFriend userFriend = new UserFriend(uid);
-                            db.collection("DB").document(user.getEmail()).collection("Request").document(id).set(userFriend)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void avoid) {
-                                            receiveMsg(id);
-                                            Toast.makeText(getApplicationContext(), "요청을 보냈습니다.", Toast.LENGTH_LONG).show();
-
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
-                                        }
-                                    });
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
 
 
+                    if (document.exists()) {
+                        //DB 필드명 표시 지워서 데이터 값만 표시
+                        String str1 = document.getData().toString();
+                        str1 = str1.substring(str1.indexOf("=")+1);
+                        String id = str1.substring(0, str1.indexOf("}")); //입력한uid의 아이디
 
-                        } else {
-                            Toast.makeText(getApplicationContext(), "요청에 실패했습니다. 올바른 UID가 맞는지 확인하세요.", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    else {
+                        UserFriend userFriend = new UserFriend(uid);
+                        db.collection("DB").document(user.getEmail()).collection("Request").document(id).set(userFriend)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void avoid) {
+                                        receiveMsg(id);
+                                        Toast.makeText(getApplicationContext(), "요청을 보냈습니다.", Toast.LENGTH_LONG).show();
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                                    }
+                                });
 
 
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "요청에 실패했습니다. 올바른 UID가 맞는지 확인하세요.", Toast.LENGTH_LONG).show();
                     }
                 }
-            });
+                else {
+
+
+                }
+            }
+        });
 
     }
 
@@ -279,21 +279,21 @@ public class Friend extends AppCompatActivity {
     public void receiveMsg(String id){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            UserFriend userFriend = new UserFriend(user.getUid());
-            db.collection("DB").document(id).collection("Receive").document(user.getEmail()).set(userFriend)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void avoid) {
-                            Log.d(TAG, " 요청 성공 ");
+        UserFriend userFriend = new UserFriend(user.getUid());
+        db.collection("DB").document(id).collection("Receive").document(user.getEmail()).set(userFriend)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        Log.d(TAG, " 요청 성공 ");
 
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
+                    }
+                });
 
     }
 
@@ -320,59 +320,122 @@ public class Friend extends AppCompatActivity {
                             }
                             adapter2.notifyDataSetChanged();
 
-                            //친구 점수 검색
-                            db.collection("DB").document(str1).collection("Total").document("Score")
-                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+                            db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceCnt")
+                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
-                                        if (document.exists()){
+                                        //출석일수 O 일정 횟수 O 거리 O
+                                        if (document.exists()) {
                                             //DB 필드명 표시 지워서 데이터 값만 표시
-                                            String str1 = document.getData().toString(); //{score=점수,id=이메일}
-                                            str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
-                                            score1 = str1.substring(0, str1.indexOf(",")); //점수
-                                            String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
-                                            id2 = id1.substring(0, id1.indexOf("}")); //이메일
+                                            String str3 = document.getData().toString();
+                                            str3 = str3.substring(str3.indexOf("=")+1);
+                                            String today = str3.substring(0, str3.indexOf("}"));
 
-                                            Log.d(TAG, "id/score" + " => " +id2+" "+score1);
+                                            db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
+                                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        DocumentSnapshot document = task.getResult();
+                                                        if (document.exists()) {
+                                                            //DB 필드명 표시 지워서 데이터 값만 표시
+                                                            String str2 = document.getData().toString();
+                                                            str2 = str2.substring(str2.indexOf("=")+1);
+                                                            String distance = str2.substring(0, str2.indexOf("}")); //0
 
-                                            scoreList.add(score1);
-                                            adapter3.notifyDataSetChanged();
-                                            idList.add(id2);
-                                            adapter4.notifyDataSetChanged();
+                                                            int dis1 = (int) Math.round(Double.parseDouble(distance)/1*100);
+                                                            int dis2 = (int) Math.round(Double.parseDouble(distance)/3*100);
+                                                            int dis3 = (int) Math.round(Double.parseDouble(distance)/5*100);
+                                                            int dis4 = (int) Math.round(Double.parseDouble(distance)/42.195*100);
+                                                            int cnt = (int) Math.round(Double.parseDouble(today)/3*100);
+                                                            int cnt2 = (int) Math.round(Double.parseDouble(today)/7*100);
+                                                            int cnt3 = (int) Math.round(Double.parseDouble(today)/15*100);
+                                                            int disSum = dis1+dis2+dis3+dis4+cnt+cnt2+cnt3;
+                                                            //친구 점수 검색
+                                                            db.collection("DB").document(str1).collection("Total").document("PlanScore")
+                                                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                    if(task.isSuccessful()){
+                                                                        DocumentSnapshot document = task.getResult();
+                                                                        if (document.exists()){
+                                                                            //DB 필드명 표시 지워서 데이터 값만 표시
+                                                                            String str1 = document.getData().toString(); //{score=점수,id=이메일}
+                                                                            str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
+                                                                            score1 = str1.substring(0, str1.indexOf(",")); //점수
+                                                                            String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                                                                            id2 = id1.substring(0, id1.indexOf("}")); //이메일
 
-                                            for (int i =0; i < idList.size() ; i++ ){
-                                                for (int j = i+1; j < idList.size() ; j++ ){
-                                                    if (Integer.parseInt(scoreList.get(j)) > Integer.parseInt(scoreList.get(i))){
-                                                        String temp = scoreList.get(i);
-                                                        scoreList.set(i, scoreList.get(j));
-                                                        scoreList.set(j, temp);
-                                                        String str = idList.get(i);
-                                                        idList.set(i, idList.get(j));
-                                                        idList.set(j, str);
+
+                                                                            int total = disSum+Integer.parseInt(score1);
+                                                                            String totalScore = Integer.toString(total);
+                                                                            Log.d(TAG, "id/score" + " => " +id2+" "+total);
+
+                                                                            scoreList.add(totalScore);
+                                                                            adapter3.notifyDataSetChanged();
+                                                                            idList.add(id2);
+                                                                            adapter4.notifyDataSetChanged();
+
+                                                                            for (int i =0; i < idList.size() ; i++ ){
+                                                                                for (int j = i+1; j < idList.size() ; j++ ){
+                                                                                    if (Integer.parseInt(scoreList.get(j)) > Integer.parseInt(scoreList.get(i))){
+                                                                                        String temp = scoreList.get(i);
+                                                                                        scoreList.set(i, scoreList.get(j));
+                                                                                        scoreList.set(j, temp);
+                                                                                        String str = idList.get(i);
+                                                                                        idList.set(i, idList.get(j));
+                                                                                        idList.set(j, str);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            idScoreList.clear();
+                                                                            for (int i =0; i < idList.size() ; i++ ){
+                                                                                idScoreList.add(i+1+". "+idList.get(i)+ " / " + scoreList.get(i));
+
+                                                                            }
+                                                                            adapter.notifyDataSetChanged();
+                                                                            Log.d(TAG, "total"+ " => " +idScoreList);
+
+
+                                                                        }
+                                                                        else{
+                                                                            idScoreList.add("- "+str1+ " / " + 0+disSum);
+                                                                            adapter.notifyDataSetChanged();
+
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                            });
+
+
+
+                                                        } else {
+
+
+                                                        }
+                                                    } else {
+                                                        Toast.makeText(getApplicationContext(), "거리 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
                                                     }
                                                 }
-                                            }
-                                            idScoreList.clear();
-                                            for (int i =0; i < idList.size() ; i++ ){
-                                                idScoreList.add(i+1+". "+idList.get(i)+ " / " + scoreList.get(i));
 
-                                            }
-                                            adapter.notifyDataSetChanged();
-                                            Log.d(TAG, "total"+ " => " +idScoreList);
-
+                                            });
 
                                         }
-                                        else{
-                                            idScoreList.add("- "+str1+ " / " + 0);
-                                            adapter.notifyDataSetChanged();
 
-                                        }
+                                    }
+                                    else {
+
                                     }
                                 }
-
                             });
+
+
+
+
+
                         } else {
 
                         }

@@ -69,7 +69,7 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
         Intent receive_intent_ = getIntent();
         speed = receive_intent_.getDoubleExtra("Key02", 0);  // 이동거리 관련 Key값 m 값을 가져옴
         double total = Math.round((speed/1000)*100)/100.0;
-        speed_.setText("이동 거리 " + Double.toString(total) + "km"); // Km값으로 소수점 2번째 자리까지 보여줌.
+        speed_.setText("하이헬루와 함께 걸은 거리 > < \n -> " + Double.toString(total) + "km"); // Km값으로 소수점 2번째 자리까지 보여줌.
         //DB
 
         double time_ = 0;
@@ -82,19 +82,19 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
         if(hour==0) {
             if(min==0)
             {
-                textView.setText("이동시간 : " + sec + "초");
+                textView.setText("하이헬루와 함께 걸은 시간 > <  \n -> " + sec + "초");
             }
             else {
-                textView.setText("이동시간 : " + min+"분"+sec + "초");
+                textView.setText("하이헬루와 함께 걸은 시간 > < \n -> " + min+"분"+sec + "초");
             }
         }
         else {
-            textView.setText("이동시간 : " +hour+"시"+min+"분"+sec + "초");
+            textView.setText("하이헬루와 함께 걸은 시간 > < \n -> " +hour+"시"+min+"분"+sec + "초");
         }
 
         double avgspeed = (speed/1000)/(time_/1000/60/60); // 평균 속력을 Km/h로 보여줌
 
-        km.setText("평균 속력" + Double.toString(Math.round(avgspeed*100)/100.0) + "km/h"); // km/h값을 소수점 2번째 자리까지 보여줌
+        km.setText("하이헬루가 느낀 너의 평균 속력 > < \n -> " + Double.toString(Math.round(avgspeed*100)/100.0) + "km/h"); // km/h값을 소수점 2번째 자리까지 보여줌
 
         loadDistance(total);
 

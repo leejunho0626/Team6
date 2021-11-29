@@ -1,18 +1,26 @@
 package com.example.helloroutine;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +37,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,6 +71,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.content.Context.VIBRATOR_SERVICE;
 import static java.lang.Thread.sleep;
 
 public class FragmentHome extends Fragment {
@@ -83,13 +95,18 @@ public class FragmentHome extends Fragment {
     SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
     LocationManager mLocMan; // 위치 관리자
 
-
+    private static String CHANNEL_ID = "TimerPushAlarm";
+    private static String CHANEL_NAME = "PushAlarm";
+    NotificationManager manager;
+    NotificationCompat.Builder builder;
+    SharedPreferences spref;
     static boolean check = true;
     RecyclerView recyclerView,recyclerView2;
     RecyclerAdapter recyclerAdapter;
     ChallengeAdapter challenge_adapter;
     String base_time = time();
     ArrayList<String> list = new ArrayList<>();
+    ArrayList<String> list2 = new ArrayList<>();
 
     ImageView im1, im2, im3;
 
@@ -120,6 +137,9 @@ public class FragmentHome extends Fragment {
         im2 = view.findViewById(R.id.im2);
         im3 = view.findViewById(R.id.im3);
         mLocMan = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        spref = getActivity().getSharedPreferences("gref", MODE_PRIVATE);
+
+        String temp1 = spref.getString("push", "사용");
 
         //로딩화면 객체 생성
         customProgressDialog = new ProgressDialog(getActivity());
@@ -171,6 +191,7 @@ public class FragmentHome extends Fragment {
             }
         });
 
+        friendRQ(temp1);
         loadDate();
         addList();
 
@@ -319,7 +340,7 @@ public class FragmentHome extends Fragment {
                                         String str1 = document.getData().toString();
                                         str1 = str1.substring(str1.indexOf("=")+1);
                                         cnt = str1.substring(0, str1.indexOf("}")); //cnt 값
-                                        
+
                                         cnt=caldate(format_1,x,cnt);
                                         saveCnt(cnt);
 
@@ -768,6 +789,71 @@ public class FragmentHome extends Fragment {
         int randomNum3 = (int) (Math.random() * 8);
         im3.setImageResource(images3[randomNum3]);
 
+
+    }
+
+    public void friendRQ(String setting){
+        list2.clear();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("DB").document(user.getEmail()).collection("Receive")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            //DB 필드명 표시 지워서 데이터 값만 표시
+                            list2.add(document.getId());
+                            if(list2.size()>1){
+                                showNoti("친구 요청 ", Integer.toString(list2.size())+"명의 친구 요청이 있습니다.", setting);
+                            }
+                            else{
+                                showNoti("친구 요청 ", document.getId()+"님의 친구 요청이 있습니다.", setting);
+                            }
+
+
+                        } else {
+
+                        }
+
+                    }
+
+                } else {
+
+                }
+            }
+        });
+    }
+
+    public void showNoti(String title, String text ,String setting){
+        Vibrator vib = (Vibrator)getActivity().getSystemService(VIBRATOR_SERVICE);
+        Uri ringing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        Ringtone ringtone = RingtoneManager.getRingtone(getActivity().getApplicationContext(), ringing);
+
+        builder = null;
+        manager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE); //버전 오레오 이상일 경우
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(
+                    new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            );
+            builder = new NotificationCompat.Builder(getActivity(),CHANNEL_ID); //하위 버전일 경우
+        } else {
+            builder = new NotificationCompat.Builder(getActivity());
+        }
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        //알림창 제목
+        builder.setContentTitle(title);
+        //알림창 메시지
+        builder.setContentText(text);
+        //알림창 아이콘
+        builder.setSmallIcon(R.drawable.ic_stat_name);
+        Notification notification = builder.build();
+
+        if(setting.equals("사용")){
+            ringtone.play();
+            manager.notify(1,notification);
+        }
 
     }
 
