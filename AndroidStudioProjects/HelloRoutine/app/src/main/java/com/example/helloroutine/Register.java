@@ -20,7 +20,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.kakao.usermgmt.response.model.User;
+
 import static android.content.ContentValues.TAG;
 
 public class Register extends AppCompatActivity {
@@ -29,6 +33,8 @@ public class Register extends AppCompatActivity {
     EditText edtID, edtPw, edtPW2; //아이디, 비밀번호, 이메일 입력텍스트
     Button btnRegister, btnCheckId; //중복확인, 최종 회원가입 버튼
     private FirebaseAuth firebaseAuth; //FirebaseAuth 선언
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = database.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +45,8 @@ public class Register extends AppCompatActivity {
         txtError1 = findViewById(R.id.txtError1);
         txtError2 = findViewById(R.id.txtError2);
         txtError3 = findViewById(R.id.txtError3);
-        edtID = findViewById(R.id.edtID);
-        edtPw = findViewById(R.id.edtPW);
+        edtID = findViewById(R.id.edtID); //아이디
+        edtPw = findViewById(R.id.edtPW); //비번
         edtPW2 = findViewById(R.id.edtPW2);
         btnRegister = findViewById(R.id.btnSignUp);
         btnCheckId = findViewById(R.id.btnCheckID);
@@ -71,6 +77,10 @@ public class Register extends AppCompatActivity {
                                 txtError1.setText("사용 가능한 아이디입니다."); //경고 메시지
                                 txtError1.setTextColor(Color.parseColor("#4CAF50"));
                                 edtID.setBackgroundResource(R.drawable.white_edittext);  //테투리 흰색으로 변경
+
+                                UserRank userRank = new UserRank("테스트", "test");
+                                databaseReference.child("Test").child("hi").setValue(userRank);
+
                             }
                             //계정 생성 실패
                             else {

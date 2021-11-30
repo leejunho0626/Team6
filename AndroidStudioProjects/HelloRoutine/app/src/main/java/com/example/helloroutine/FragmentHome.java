@@ -203,7 +203,7 @@ public class FragmentHome extends Fragment {
         });
 
         friendRQ(temp1);
-        loadDate();
+        loadDate(temp1);
         addList();
 
         //현재 날짜
@@ -320,7 +320,7 @@ public class FragmentHome extends Fragment {
     }
 
     //불러오기
-    public void loadDate(){
+    public void loadDate(String setting){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceLast")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -339,7 +339,7 @@ public class FragmentHome extends Fragment {
                         saveDate(format_1);
 
                         //cnt 값 들어오기
-                        db.collection("DB").document("User").collection(user.getUid()).document("AttendanceCnt")
+                        db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceCnt")
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -352,8 +352,11 @@ public class FragmentHome extends Fragment {
                                         str1 = str1.substring(str1.indexOf("=")+1);
                                         cnt = str1.substring(0, str1.indexOf("}")); //cnt 값
 
-                                        cnt=caldate(format_1,x,cnt);
-                                        saveCnt(cnt);
+                                        String num=caldate(format_1,x,cnt);
+                                        saveCnt(num);
+                                        if(num.equals("3")){
+                                            showNoti("도전과제 완료","출석 횟수 3일", setting);
+                                        }
 
                                     } else {
 
