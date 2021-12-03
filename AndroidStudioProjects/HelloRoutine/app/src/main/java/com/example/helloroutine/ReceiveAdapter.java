@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,11 +35,12 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String text = position+1+". "+arrayList.get(position);
+        String text = "· "+arrayList.get(position);
         holder.txtRvId.setText(text);
         holder.btnRefuse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(view.getContext(), "요청을 거절했습니다.", Toast.LENGTH_SHORT).show();
                 refuseRv(arrayList.get(position), position);
 
             }
@@ -46,6 +49,7 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(view.getContext(), "요청을 수락했습니다.", Toast.LENGTH_SHORT).show();
                 acceptRv(arrayList.get(position));
 
             }

@@ -23,7 +23,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp">
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:id="@+id/txt2"
@@ -47,11 +50,17 @@
 
             </LinearLayout>
             <TextView
-                android:id="@+id/txtLock"
+                android:id="@+id/txtPush"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="20dp"
                 android:text="사용 안함"/>
+
+            <View
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:background="@color/gray"/>
 
 
             <LinearLayout
@@ -84,11 +93,17 @@
 
 
             <TextView
-                android:id="@+id/txtPush"
+                android:id="@+id/txtLock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="20dp"
                 android:text="사용 안함"/>
+
+            <View
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:background="@color/gray"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,6 +140,14 @@
                     android:textSize="17dp"/>
 
             </LinearLayout>
+
+            <View
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:background="@color/gray"/>
 
             <Button
                 android:id="@+id/btnRemove"

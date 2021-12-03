@@ -16,17 +16,22 @@
             android:id="@+id/clickDate"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:paddingTop="10dp"
             android:text="선택 날짜"
-            android:textSize="19dp"
+            android:textSize="25dp"
             android:gravity="center"
             android:textColor="@color/black"
             android:paddingLeft="10dp"
             tools:ignore="MissingConstraints" />
+
+        <View
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:background="@color/gray"/>
 
 
         <LinearLayout
@@ -99,10 +104,11 @@
                 android:background="@drawable/layout_background"
                 android:ems="3"
                 android:hint="회"
-                android:maxLength="30"
+                android:maxLength="3"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints"
+                android:inputType="number"/>
 
             <TextView
                 android:id="@+id/txt3"
@@ -110,7 +116,6 @@
                 android:layout_height="45dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:paddingTop="10dp"
                 android:text="세트"
@@ -130,10 +135,11 @@
                 android:background="@drawable/layout_background"
                 android:ems="3"
                 android:hint="세트"
-                android:maxLength="30"
+                android:maxLength="3"
                 android:paddingLeft="10dp"
                 android:singleLine="true"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints"
+                android:inputType="number"/>
 
 
         </LinearLayout>
@@ -181,6 +187,12 @@
 
 
         </LinearLayout>
+
+        <View
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:background="@color/gray"/>
 
         <Button
             android:id="@+id/btnSave_plan"

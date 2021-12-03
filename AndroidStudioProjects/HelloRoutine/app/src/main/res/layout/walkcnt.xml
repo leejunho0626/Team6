@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:gravity="center"
-            android:text="걸음수 : 123"
+            android:text="걸음수 : 0"
             android:textColor="@color/black"
             android:textSize="25dp"/>
         <View

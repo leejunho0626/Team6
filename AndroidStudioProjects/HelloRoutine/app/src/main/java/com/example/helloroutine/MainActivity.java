@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.calendar:
                     transaction.replace(R.id.frameLayout, fragmentCalendar).commitAllowingStateLoss();
+
                     break;
                 case R.id.home:
                     //로딩창 객체 생성

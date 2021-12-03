@@ -7,11 +7,12 @@
 
 
     <TextView
+        android:id="@+id/todayDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="40dp"
         android:gravity="center"
-        android:text="오늘 날짜"
+        android:text=" "
         android:textSize="35dp"
         android:textColor="@color/white"/>
 
@@ -28,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:gravity="center"
-            android:text="걸음수 : 1234"
+            android:text="걸음수 : 0"
             android:textColor="@color/black"
             android:textSize="25dp"/>
         <View
@@ -48,11 +49,17 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="오늘의 일정\n\n1. 팔운동\n2. 다리운동\n3. 복근운동"
+        android:text="오늘의 일정"
         android:textColor="@color/black"
         android:textSize="25dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyceler_lockPlan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"/>
 
 
 

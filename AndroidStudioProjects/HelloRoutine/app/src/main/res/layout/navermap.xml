@@ -23,6 +23,12 @@
         android:textSize="25dp"
         android:textColor="@color/white"/>
 
+    <View
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="4px"
+        android:background="@color/gray"/>
+
 
     <TextView
         android:id="@+id/km"
@@ -32,6 +38,12 @@
         android:text="이동 거리"
         android:textSize="25dp"
         android:textColor="@color/white"/>
+
+    <View
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="4px"
+        android:background="@color/gray"/>
 
 
 

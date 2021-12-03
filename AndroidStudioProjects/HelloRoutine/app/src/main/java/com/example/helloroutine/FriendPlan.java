@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Calendar;
@@ -25,6 +26,7 @@ public class FriendPlan extends AppCompatActivity {
     TextView clickID ,txtDate;
     RecyclerView recyclerView;
     RecyclerAdapter recyclerAdapter;
+
 
 
 
@@ -57,12 +59,26 @@ public class FriendPlan extends AppCompatActivity {
                 DatePickerDialog.OnDateSetListener mDateSetListener =
                         new DatePickerDialog.OnDateSetListener() {
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                String strDate = String.valueOf(year) + ".";
-                                strDate += String.valueOf(monthOfYear+1) + ".";
-                                strDate += String.valueOf(dayOfMonth);
+                                String Year = String.valueOf(year);
+                                //한 자리수 날짜 오류 수정
+                                String month = null;
+                                if(String.valueOf(monthOfYear+1).length()<2){
+                                    month = "0"+String.valueOf(monthOfYear+1);
+                                }
+                                else{
+                                    month = String.valueOf(monthOfYear+1);
+                                }
+                                String day = null;
+                                if(String.valueOf(dayOfMonth).length()<2){
+                                    day = "0"+String.valueOf(dayOfMonth);
+                                }
+                                else{
+                                    day = String.valueOf(dayOfMonth);
+                                }
+                                String date = Year+"."+month+"."+day;
 
-                                txtDate.setText(strDate);
-                                showPlanList(id, strDate);
+                                txtDate.setText(date);
+                                showPlanList(id, date);
                             }
 
                         };
@@ -74,63 +90,49 @@ public class FriendPlan extends AppCompatActivity {
 
     }
 
-    //일정 표시
+
     public void showPlanList(String id, String date){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("ID").collection(id).document("uid")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()){
-                        //DB 필드명 표시 지워서 데이터 값만 표시
-                        String str1 = document.getData().toString();
-                        str1 = str1.substring(str1.indexOf("=")+1);
-                        String y = str1.substring(0, str1.indexOf("}")); //uid
-
-                        friendPlan(y, date);
-
-                    }
-                    else{
-
-                    }
-                }
-            }
-
-        });
-
-    }
-
-    //일정 표시
-    public void friendPlan(String uid, String date){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("DB").document("User").collection(uid).document("Plan").collection(date)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("DB").document(id).collection("Plan").document("plan").collection(date)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.exists()) {
-                            //DB 필드명 표시 지워서 데이터 값만 표시
-                            String str2 = document.getData().toString();
-                            str2 = str2.substring(str2.indexOf("=")+1);
-                            String y = str2.substring(0, str2.indexOf("}"));
+                QuerySnapshot document = task.getResult();
+                recyclerAdapter.arrayList.clear();
+                if(!document.isEmpty()){
+                    db.collection("DB").document(id).collection("Plan").document("plan").collection(date)
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                            recyclerAdapter.setArrayData(y);
-                            recyclerView.setAdapter(recyclerAdapter);
+                                    //DB 필드명 표시 지워서 데이터 값만 표시
+                                    String str2 = document.getData().toString();
+                                    str2 = str2.substring(str2.indexOf("=")+1);
+                                    String y = str2.substring(0, str2.indexOf("}"));
 
-                        } else {
+                                    recyclerAdapter.setArrayData(y);
+                                    recyclerView.setAdapter(recyclerAdapter);
+                                }
 
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "일정 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                            }
                         }
-
-                    }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "일정 불러오기를 실패했습니다.", Toast.LENGTH_LONG).show();
+                    });
                 }
+                else {
+                    recyclerAdapter.setArrayData("일정이 없습니다.");
+                    recyclerView.setAdapter(recyclerAdapter);
+                }
+
             }
+
         });
+
     }
+
 }
 

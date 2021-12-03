@@ -20,13 +20,19 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:paddingTop="10dp"
             android:text="선택 아이디"
-            android:textSize="19dp"
+            android:background="@drawable/test1"
+            android:backgroundTint="@color/logo3"
+            android:textSize="20dp"
             android:gravity="center"
             android:textColor="@color/black"
             android:paddingLeft="10dp"
             tools:ignore="MissingConstraints" />
+        <View
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:background="@color/gray"/>
 
 
         <LinearLayout
@@ -58,8 +64,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:paddingTop="10dp"
-                android:background="#B4B4B6"
-                android:text="선택하기"
+                android:background="@drawable/test1"
+                android:hint="선택하기"
                 android:textSize="19dp"
                 android:textColor="@color/black"
                 android:paddingLeft="10dp"
@@ -68,8 +74,14 @@
 
 
         </LinearLayout>
+        <View
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:background="@color/gray"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_margin="5dp"
             android:id="@+id/recyceler_frPlan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/logo3">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,31 +13,40 @@
         <Button
             android:id="@+id/btnTop"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_margin="20dp"
+            android:backgroundTint="@color/white"
+            android:textSize="30dp"
+            android:textColor="@color/black"
             android:text="상체"/>
 
 
         <Button
             android:id="@+id/btnBottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_margin="20dp"
+            android:backgroundTint="@color/white"
+            android:textSize="30dp"
+            android:textColor="@color/black"
             android:text="하체"/>
 
         <Button
             android:id="@+id/btnAllbody"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_margin="20dp"
+            android:backgroundTint="@color/white"
+            android:textSize="30dp"
+            android:textColor="@color/black"
             android:text="전신"/>
 
         <Button
             android:id="@+id/btnYoutube"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_margin="20dp"
-            android:text="유투브 영상 보러가기"/>
+            android:text="유튜브 영상 보러가기"/>
 
 
     </LinearLayout>

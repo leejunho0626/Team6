@@ -26,7 +26,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> im
     }
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String text = "▶ "+arrayList.get(position);
+        String text = "· "+arrayList.get(position);
         holder.textView.setText(text);
 
 

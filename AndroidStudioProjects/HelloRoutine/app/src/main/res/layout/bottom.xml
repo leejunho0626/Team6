@@ -8,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="40dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,32 +20,46 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="맨몸"
-                android:textSize="30dp"/>
+                android:paddingLeft="20dp"
+                android:textSize="30dp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/btn7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="뒤 런지"/>
+                android:text="뒤 런지"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="하이 니즈"/>
+                android:text="하이 니즈"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="스쿼트"/>
+                android:text="스쿼트"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
 
 
         </LinearLayout>
+
+        <View
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:background="@color/gray"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,28 +70,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="기구"
-                android:textSize="30dp"/>
+                android:paddingLeft="20dp"
+                android:textSize="30dp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/btn10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="앵글 레그프레스"/>
+                android:text="앵글 레그프레스"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="핵 스쿼트"/>
+                android:text="핵 스쿼트"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="다리 확장"/>
+                android:text="다리 확장"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
 
 

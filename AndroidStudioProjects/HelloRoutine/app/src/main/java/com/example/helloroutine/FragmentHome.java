@@ -79,6 +79,7 @@ import static java.lang.Thread.sleep;
 public class FragmentHome extends Fragment {
 
     TextView tmp, pty, pcp, sno, sky, pop, time3;
+    ImageView imgWeather;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSION_REQUEST_CODE = 100;
     private static LocationSource mLocationSource;
@@ -124,6 +125,7 @@ public class FragmentHome extends Fragment {
         sky = (TextView) view.findViewById(R.id.sky);
         pop = (TextView) view.findViewById(R.id.pop);
         time3 = (TextView) view.findViewById(R.id.time3);
+        imgWeather = view.findViewById(R.id.imgWeather);
         adt = new GridAdapter(getActivity()); //어댑터 객체 생성
         grid = view.findViewById(R.id.grid); //그리드뷰 객체 참조
         linearLayout = view.findViewById(R.id.layout_Guid);
@@ -190,6 +192,8 @@ public class FragmentHome extends Fragment {
                 startActivity(intent);
             }
         });
+
+
 
         //운동 가이드 클릭
         linearLayout.setOnClickListener(new Button.OnClickListener() {
@@ -356,6 +360,12 @@ public class FragmentHome extends Fragment {
                                         saveCnt(num);
                                         if(num.equals("3")){
                                             showNoti("도전과제 완료","출석 횟수 3일", setting);
+                                        }
+                                        if(num.equals("7")){
+                                            showNoti("도전과제 완료","출석 횟수 7일", setting);
+                                        }
+                                        if(num.equals("15")){
+                                            showNoti("도전과제 완료","출석 횟수 15일", setting);
                                         }
 
                                     } else {
@@ -783,7 +793,8 @@ public class FragmentHome extends Fragment {
     }
 
     public void recommend(){
-//상체
+
+        //상체
         int[] images = new int[]{
                 R.drawable.crunch2, R.drawable.bicyt1, R.drawable.rt11,R.drawable.ratpulldown1,R.drawable.packdeckfly1,R.drawable.packdecklateral1};
 
@@ -806,6 +817,130 @@ public class FragmentHome extends Fragment {
 
         int randomNum3 = (int) (Math.random() * 8);
         im3.setImageResource(images3[randomNum3]);
+
+        im1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity().getApplicationContext(), images[randomNum], Toast.LENGTH_LONG).show();
+                if(images[randomNum]==images[0]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","1");
+                    startActivity(intent);
+                }
+                else if(images[randomNum]==images[1]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","2");
+                    startActivity(intent);
+                }
+                else if(images[randomNum]==images[2]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","3");
+                    startActivity(intent);
+                }
+                else if(images[randomNum]==images[3]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","4");
+                    startActivity(intent);
+                }
+                else if(images[randomNum]==images[4]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","5");
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","6");
+                    startActivity(intent);
+                }
+
+            }
+        });
+
+        im2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity().getApplicationContext(), images[randomNum], Toast.LENGTH_LONG).show();
+                if(images2[randomNum2]==images2[0]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","7");
+                    startActivity(intent);
+                }
+                else if(images2[randomNum2]==images2[1]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","8");
+                    startActivity(intent);
+                }
+                else if(images2[randomNum2]==images2[2]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","9");
+                    startActivity(intent);
+                }
+                else if(images2[randomNum2]==images2[3]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","10");
+                    startActivity(intent);
+                }
+                else if(images2[randomNum2]==images2[4]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","11");
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","12");
+                    startActivity(intent);
+                }
+
+            }
+        });
+        im3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity().getApplicationContext(), images[randomNum], Toast.LENGTH_LONG).show();
+                if(images3[randomNum3]==images3[0]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","13");
+                    startActivity(intent);
+                }
+                else if(images3[randomNum3]==images3[1]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","14");
+                    startActivity(intent);
+                }
+                else if(images3[randomNum3]==images3[2]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","15");
+                    startActivity(intent);
+                }
+                else if(images3[randomNum3]==images3[3]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","16");
+                    startActivity(intent);
+                }
+                else if(images3[randomNum3]==images3[4]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","17");
+                    startActivity(intent);
+                }
+                else if(images3[randomNum3]==images3[5]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","18");
+                    startActivity(intent);
+                }
+                else if(images3[randomNum3]==images3[6]){
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","19");
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(getActivity(), ShowExe.class); //화면 전환
+                    intent.putExtra("date","20");
+                    startActivity(intent);
+                }
+
+
+            }
+        });
 
 
     }
@@ -865,7 +1000,7 @@ public class FragmentHome extends Fragment {
         //알림창 메시지
         builder.setContentText(text);
         //알림창 아이콘
-        builder.setSmallIcon(R.drawable.ic_stat_name);
+        builder.setSmallIcon(R.drawable.logo);
         Notification notification = builder.build();
 
         if(setting.equals("사용")){
@@ -921,36 +1056,49 @@ public class FragmentHome extends Fragment {
                     else st.nextToken();
                     cnt++;
                 }
-                tmp.setText(TMP+"도");
+                tmp.setText(TMP+"℃");
                 if(PTY.equals("0")) {
                     pty.setText("");
-                    if(SKY.equals("1"))
+                    if(SKY.equals("1")){
                         sky.setText("맑음");
-                    if(SKY.equals("3"))
+                        imgWeather.setImageResource(R.drawable.sunny);
+                    }
+
+                    if(SKY.equals("3")){
                         sky.setText("구름 많음");
-                    if(SKY.equals("4"))
+                        imgWeather.setImageResource(R.drawable.few_clouds);
+                    }
+
+                    if(SKY.equals("4")){
                         sky.setText("흐림");
+                        imgWeather.setImageResource(R.drawable.broken_clouds);
+                    }
+
                 }
 
                 if(PTY.equals("1")) {
                     pty.setText("비");
                     pcp.setText("강수량 : " +PCP);
+                    imgWeather.setImageResource(R.drawable.rain);
                 }
                 if(PTY.equals("2")) {
                     pty.setText("눈비");
                     pcp.setText("강수량 : " +PCP);
                     sno.setText("적설량 : " +SNO);
+                    imgWeather.setImageResource(R.drawable.snow_rain);
                 }
                 if(PTY.equals("3")) {
                     pty.setText("눈");
                     sno.setText("적설량 : " +SNO);
+                    imgWeather.setImageResource(R.drawable.snow);
                 }
                 if(PTY.equals("4")) {
                     pty.setText("소나기");
                     pcp.setText("강수량 : " +PCP);
+                    imgWeather.setImageResource(R.drawable.shower_rain);
                 }
                 pop.setText("강수확률 : "+POP+"%");
-                time3.setText("발표 기준 : " + base_time.substring(0,2) + "시");
+                time3.setText("발표 시간 : " + base_time.substring(0,2) + "시");
                 //Log.d("onpostEx", "출력 값 : "+s);
 
 

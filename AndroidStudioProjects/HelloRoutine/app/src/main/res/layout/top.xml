@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="40dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,33 +20,47 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
                 android:text="맨몸"
-                android:textSize="30dp"/>
+                android:textSize="30dp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/btn1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="복부 크런치"/>
+                android:text="복부 크런치"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="바이시클 크런치"/>
+                android:text="바이시클 크런치"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="러시안 트위스트"/>
+                android:text="러시안 트위스트"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
 
 
         </LinearLayout>
+
+        <View
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:background="@color/gray"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,29 +70,37 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
                 android:text="기구"
-                android:textSize="30dp"/>
+                android:textSize="30dp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/btn4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="랫풀다운"/>
+                android:text="랫풀다운"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="펙덱 플라이"/>
+                android:text="펙덱 플라이"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="펙덱 레어델트 래터럴"/>
+                android:text="펙덱 레어델트 래터럴"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
 
 

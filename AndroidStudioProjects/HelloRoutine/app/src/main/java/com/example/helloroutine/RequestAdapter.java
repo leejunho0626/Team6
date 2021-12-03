@@ -1,9 +1,13 @@
 package com.example.helloroutine;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     static ArrayList<String> arrayList;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    Context context;
     public RequestAdapter() {
         arrayList = new ArrayList<>();
     }
@@ -33,12 +38,15 @@ public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String text = position+1+". "+arrayList.get(position);
+
+        String text = "· "+arrayList.get(position);
         holder.txtRqId.setText(text);
         holder.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(view.getContext(), "요청을 취소했습니다.", Toast.LENGTH_SHORT).show();
                 cancelRq(arrayList.get(position));
+
 
             }
         });
@@ -56,12 +64,14 @@ public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public void cancelRq(String id){
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document(user.getEmail()).collection("Request").document(id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+
                         deleteOpponent(id, user.getEmail());
                     }
                 })
@@ -71,6 +81,8 @@ public class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                     }
                 });
+
+
 
     }
 

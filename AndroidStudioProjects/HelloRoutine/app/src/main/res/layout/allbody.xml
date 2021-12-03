@@ -8,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,39 +20,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="맨몸"
-                android:textSize="30dp"/>
+                android:paddingLeft="20dp"
+                android:textSize="30dp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/btn13"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="플랭크"/>
+                android:text="플랭크"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn14"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="플랭크잭"/>
+                android:text="플랭크잭"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn15"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="마운틴 클라이머"/>
+                android:text="마운틴 클라이머"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="사이드플랭크워크"/>
+                android:text="사이드플랭크워크"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
 
 
         </LinearLayout>
+
+        <View
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:background="@color/gray"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,35 +79,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="기구"
-                android:textSize="30dp"/>
+                android:paddingLeft="20dp"
+                android:textSize="30dp"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/btn17"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="벤트 오버로윙"/>
+                android:text="벤트 오버로윙"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn18"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="데드리프트"/>
+                android:text="데드리프트"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn19"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="행잉 레그 레이즈"/>
+                android:text="행잉 레그 레이즈"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
             <Button
                 android:id="@+id/btn20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="시티드 로윙"/>
+                android:text="시티드 로윙"
+                android:textSize="25dp"
+                android:backgroundTint="@color/logo2"/>
 
 
         </LinearLayout>

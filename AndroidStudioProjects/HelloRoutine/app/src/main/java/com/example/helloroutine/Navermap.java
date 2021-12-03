@@ -5,11 +5,22 @@ import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentManager;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +33,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.MapFragment;
@@ -39,8 +52,11 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
     double speed = 0;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String x; //최종 거리값
-
-
+    NotificationManager manager;
+    NotificationCompat.Builder builder;
+    private static String CHANNEL_ID = "TimerPushAlarm";
+    private static String CHANEL_NAME = "PushAlarm";
+    SharedPreferences spref;
 
     ArrayList listC = new ArrayList();
 
@@ -52,6 +68,9 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
         speed_ = findViewById(R.id.speed); // 이동거리
         textView = findViewById(R.id.textView); // 이동시간
         km = findViewById(R.id.km); // 평균 속력
+        spref = getSharedPreferences("gref", MODE_PRIVATE);
+
+        String temp1 = spref.getString("push", "사용");
 
 
 
@@ -69,9 +88,9 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
         Intent receive_intent_ = getIntent();
         speed = receive_intent_.getDoubleExtra("Key02", 0);  // 이동거리 관련 Key값 m 값을 가져옴
         double total = Math.round((speed/1000)*100)/100.0;
-        speed_.setText("하이헬루와 함께 걸은 거리 > < \n -> " + Double.toString(total) + "km"); // Km값으로 소수점 2번째 자리까지 보여줌.
+        speed_.setText("하이헬루와 함께 걸은 거리 \n -> " + Double.toString(total) + "km"); // Km값으로 소수점 2번째 자리까지 보여줌.
         //DB
-
+        loadDistance(total, temp1);
         double time_ = 0;
         time_ = receive_intent_.getDoubleExtra("Key03", 0); // 총 이동시간을 가져옴 단위 1000당 1초
 
@@ -82,21 +101,21 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
         if(hour==0) {
             if(min==0)
             {
-                textView.setText("하이헬루와 함께 걸은 시간 > <  \n -> " + sec + "초");
+                textView.setText("하이헬루와 함께 걸은 시간 \n -> " + sec + "초");
             }
             else {
-                textView.setText("하이헬루와 함께 걸은 시간 > < \n -> " + min+"분"+sec + "초");
+                textView.setText("하이헬루와 함께 걸은 시간 \n -> " + min+"분"+sec + "초");
             }
         }
         else {
-            textView.setText("하이헬루와 함께 걸은 시간 > < \n -> " +hour+"시"+min+"분"+sec + "초");
+            textView.setText("하이헬루와 함께 걸은 시간\n -> " +hour+"시"+min+"분"+sec + "초");
         }
 
         double avgspeed = (speed/1000)/(time_/1000/60/60); // 평균 속력을 Km/h로 보여줌
 
-        km.setText("하이헬루가 느낀 너의 평균 속력 > < \n -> " + Double.toString(Math.round(avgspeed*100)/100.0) + "km/h"); // km/h값을 소수점 2번째 자리까지 보여줌
+        km.setText("하이헬루가 느낀 너의 평균 속력 \n -> " + Double.toString(Math.round(avgspeed*100)/100.0) + "km/h"); // km/h값을 소수점 2번째 자리까지 보여줌
 
-        loadDistance(total);
+
 
 
     }
@@ -144,7 +163,7 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
 
     }
 
-    public void loadDistance(double total){
+    public void loadDistance(double total, String setting){
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
@@ -164,6 +183,19 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
                         double temp = Double.parseDouble(x)+total;
                         saveDistance(Double.toString(temp));
 
+                        if(temp>=1&&temp<3){
+                            showNoti("도전과제 완료", "걷거나 뛴 거리 1km", setting);
+                        }
+                        if(temp>=3&&temp<5){
+                            showNoti("도전과제 완료", "걷거나 뛴 거리 3km", setting);
+                        }
+                        if(temp>=5&&temp<42.195){
+                            showNoti("도전과제 완료", "걷거나 뛴 거리 5km",setting);
+                        }
+                       if(temp>=42.195){
+                            showNoti("도전과제 완료", "누적 42.195km 달성",setting);
+                        }
+
 
                     } else {
                         saveDistance("0"); //문서 생성
@@ -181,6 +213,19 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
 
                                         double temp = Double.parseDouble(x)+total;
                                         saveDistance(Double.toString(temp));
+
+                                        if(temp==1){
+                                            showNoti("도전과제 완료", "걷거나 뛴 거리 1km", setting);
+                                        }
+                                        if(temp==3){
+                                            showNoti("도전과제 완료", "걷거나 뛴 거리 3km", setting);
+                                        }
+                                        if(temp==5){
+                                            showNoti("도전과제 완료", "걷거나 뛴 거리 5km",setting);
+                                        }
+                                        if(temp==42.195){
+                                            showNoti("도전과제 완료", "누적 42.195km 달성",setting);
+                                        }
 
                                     } else {
 
@@ -218,6 +263,40 @@ public class Navermap extends AppCompatActivity implements OnMapReadyCallback {
                         Toast.makeText(getApplicationContext(), "Error.(getEmail)", Toast.LENGTH_LONG).show();
                     }
                 });
+
+    }
+
+
+
+    public void showNoti(String title, String text ,String setting){
+        Vibrator vib = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+        Uri ringing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringing);
+
+        builder = null;
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE); //버전 오레오 이상일 경우
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(
+                    new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            );
+            builder = new NotificationCompat.Builder(this,CHANNEL_ID); //하위 버전일 경우
+        } else {
+            builder = new NotificationCompat.Builder(this);
+        }
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        //알림창 제목
+        builder.setContentTitle(title);
+        //알림창 메시지
+        builder.setContentText(text);
+        //알림창 아이콘
+        builder.setSmallIcon(R.drawable.logo);
+        Notification notification = builder.build();
+
+        if(setting.equals("사용")){
+            ringtone.play();
+            manager.notify(1,notification);
+        }
 
     }
 }

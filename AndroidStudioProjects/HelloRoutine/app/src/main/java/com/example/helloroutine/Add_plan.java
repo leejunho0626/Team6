@@ -111,6 +111,7 @@ public class Add_plan extends AppCompatActivity {
                 TimePickerDialog.OnTimeSetListener mTimeSetListener =
                         new TimePickerDialog.OnTimeSetListener() {
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
                                 exeTime.setText(hourOfDay + ":" + minute+"분");
                             }
                         };
@@ -231,10 +232,9 @@ public class Add_plan extends AppCompatActivity {
                         int temp = Integer.parseInt(data)+1; //일정 횟수
                         int value = temp*10; //도전과제
                         int value2 = (int) Math.round(Double.parseDouble(String.valueOf(temp))/30*100); //도전과제
-                        String sum = Integer.toString(value+value2);
+                        int value3 = (int) Math.round(Double.parseDouble(String.valueOf(temp))/50*100); //도전과제
+                        String sum = Integer.toString(value+value2+value3);
 
-                        data = Integer.toString(temp);
-                        //String distance = listC.toString();
                         addTotalPlan(Integer.toString(temp)); //일정 횟수 추가
                         loadScore(sum);
                         if(temp==10){
@@ -267,7 +267,8 @@ public class Add_plan extends AppCompatActivity {
                                             int temp = Integer.parseInt(data)+1;
                                             int value = temp*10; //도전과제
                                             int value2 = (int) Math.round(Double.parseDouble(String.valueOf(temp))/30*100); //도전과제
-                                            String sum = Integer.toString(value+value2);
+                                            int value3 = (int) Math.round(Double.parseDouble(String.valueOf(temp))/50*100); //도전과제
+                                            String sum = Integer.toString(value+value2+value3);
 
 
                                             try {
@@ -394,7 +395,7 @@ public class Add_plan extends AppCompatActivity {
         //알림창 메시지
         builder.setContentText(text);
         //알림창 아이콘
-        builder.setSmallIcon(R.drawable.ic_stat_name);
+        builder.setSmallIcon(R.drawable.logo);
         Notification notification = builder.build();
 
         if(setting.equals("사용")){

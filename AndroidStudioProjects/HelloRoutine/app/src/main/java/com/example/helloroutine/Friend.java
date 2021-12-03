@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -47,6 +49,7 @@ public class Friend extends AppCompatActivity {
     ArrayAdapter<String> adapter3;
     ArrayAdapter<String> adapter4;
     ListView listView, listView2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,7 @@ public class Friend extends AppCompatActivity {
         });
         thread.start();
 
+
         listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -114,6 +118,10 @@ public class Friend extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         deleteFriend(friendList.get(position));
+                        overridePendingTransition(0, 0);//인텐트 효과 없애기
+                        Intent intent2 = getIntent(); //인텐트
+                        startActivity(intent2); //액티비티 열기
+                        overridePendingTransition(0, 0);//인텐트 효과 없애기
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -139,7 +147,8 @@ public class Friend extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Friend.this);
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(Friend.this);
                 builder.setTitle("친구 추가하기");
-                builder.setMessage("복사한 친구의 UID를 입력하세요.");
+                builder.setMessage("· 복사한 친구의 UID를 입력하세요.");
+                builder.setIcon(R.drawable.ic_baseline_supervised_user_circle_24);
                 builder.setView(editText);
 
                 builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
@@ -183,6 +192,7 @@ public class Friend extends AppCompatActivity {
         btnRq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 Intent intent = new Intent(Friend.this, RequestList.class); //화면 전환
                 startActivity(intent);
 
@@ -320,7 +330,7 @@ public class Friend extends AppCompatActivity {
                             }
                             adapter2.notifyDataSetChanged();
 
-                            db.collection("DB").document(user.getEmail()).collection("Total").document("AttendanceCnt")
+                            db.collection("DB").document(str1).collection("Total").document("AttendanceCnt")
                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -333,7 +343,7 @@ public class Friend extends AppCompatActivity {
                                             str3 = str3.substring(str3.indexOf("=")+1);
                                             String today = str3.substring(0, str3.indexOf("}"));
 
-                                            db.collection("DB").document(user.getEmail()).collection("Total").document("DistanceCnt")
+                                            db.collection("DB").document(str1).collection("Total").document("DistanceCnt")
                                                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -391,6 +401,7 @@ public class Friend extends AppCompatActivity {
                                                                                 }
                                                                             }
                                                                             idScoreList.clear();
+
                                                                             for (int i =0; i < idList.size() ; i++ ){
                                                                                 idScoreList.add(i+1+". "+idList.get(i)+ " / " + scoreList.get(i));
 
@@ -401,7 +412,7 @@ public class Friend extends AppCompatActivity {
 
                                                                         }
                                                                         else{
-                                                                            idScoreList.add("- "+str1+ " / " + 0+disSum);
+                                                                            idScoreList.add("- "+str1+ " / " + 0);
                                                                             adapter.notifyDataSetChanged();
 
                                                                         }
@@ -414,6 +425,65 @@ public class Friend extends AppCompatActivity {
 
                                                         } else {
 
+                                                            int cnt = (int) Math.round(Double.parseDouble(today)/3*100);
+                                                            int cnt2 = (int) Math.round(Double.parseDouble(today)/7*100);
+                                                            int cnt3 = (int) Math.round(Double.parseDouble(today)/15*100);
+                                                            int disSum = cnt+cnt2+cnt3;
+                                                            //친구 점수 검색
+                                                            db.collection("DB").document(str1).collection("Total").document("PlanScore")
+                                                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                    if(task.isSuccessful()){
+                                                                        DocumentSnapshot document = task.getResult();
+                                                                        if (document.exists()){
+                                                                            //DB 필드명 표시 지워서 데이터 값만 표시
+                                                                            String str1 = document.getData().toString(); //{score=점수,id=이메일}
+                                                                            str1 = str1.substring(str1.indexOf("=")+1); //점수,id=이메일}
+                                                                            score1 = str1.substring(0, str1.indexOf(",")); //점수
+                                                                            String id1 = str1.substring(str1.indexOf("=")+1); //이메일}
+                                                                            id2 = id1.substring(0, id1.indexOf("}")); //이메일
+
+
+                                                                            int total = disSum+Integer.parseInt(score1);
+                                                                            String totalScore = Integer.toString(total);
+                                                                            Log.d(TAG, "id/score" + " => " +id2+" "+total);
+
+                                                                            scoreList.add(totalScore);
+                                                                            adapter3.notifyDataSetChanged();
+                                                                            idList.add(id2);
+                                                                            adapter4.notifyDataSetChanged();
+
+                                                                            for (int i =0; i < idList.size() ; i++ ){
+                                                                                for (int j = i+1; j < idList.size() ; j++ ){
+                                                                                    if (Integer.parseInt(scoreList.get(j)) > Integer.parseInt(scoreList.get(i))){
+                                                                                        String temp = scoreList.get(i);
+                                                                                        scoreList.set(i, scoreList.get(j));
+                                                                                        scoreList.set(j, temp);
+                                                                                        String str = idList.get(i);
+                                                                                        idList.set(i, idList.get(j));
+                                                                                        idList.set(j, str);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            idScoreList.clear();
+                                                                            for (int i =0; i < idList.size() ; i++ ){
+                                                                                idScoreList.add(i+1+". "+idList.get(i)+ " / " + scoreList.get(i));
+                                                                            }
+                                                                            adapter.notifyDataSetChanged();
+                                                                            Log.d(TAG, "total"+ " => " +idScoreList);
+
+
+                                                                        }
+                                                                        else{
+                                                                            idScoreList.add("- "+str1+ " / " + 0);
+                                                                            adapter.notifyDataSetChanged();
+
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                            });
 
                                                         }
                                                     } else {
@@ -423,6 +493,10 @@ public class Friend extends AppCompatActivity {
 
                                             });
 
+                                        }
+                                        else{
+                                            idScoreList.add("- "+str1+ " / " + 0);
+                                            adapter.notifyDataSetChanged();
                                         }
 
                                     }

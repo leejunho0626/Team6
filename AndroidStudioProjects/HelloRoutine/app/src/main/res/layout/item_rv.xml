@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:backgroundTint="@color/logo2"
             android:text="거절"
             android:textSize="15dp"/>
 
@@ -36,6 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/logo2"
             android:text="수락"
             android:textSize="15dp"/>
 

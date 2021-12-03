@@ -156,18 +156,22 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:paddingLeft="10dp"
                             android:text=" "
                             android:textSize="18dp"/>
+
+                        <ImageView
+                            android:id="@+id/imgWeather"
+                            android:layout_width="35dp"
+                            android:layout_height="match_parent"/>
                         //현재온도
                         <TextView
                             android:id="@+id/tmp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:paddingLeft="10dp"
                             android:text=" "
                             android:textSize="18dp"/>
+
                         //강수형태
                         <TextView
                             android:id="@+id/pty"
@@ -176,6 +180,7 @@
                             android:layout_margin="5dp"
                             android:text=" "
                             android:textSize="18dp"/>
+
 
 
                     </LinearLayout>
@@ -200,17 +205,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:paddingLeft="40dp"
                             android:text=" "
                             android:textSize="18dp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_margin="10dp">
 
                         //적설량
                         <TextView
@@ -222,7 +218,6 @@
                             android:textSize="18dp"/>
 
                     </LinearLayout>
-
 
                 </LinearLayout>
 
@@ -248,6 +243,46 @@
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="20dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="상체"
+                        android:textColor="@color/black"
+                        android:textSize="15dp"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="하체"
+                        android:textColor="@color/black"
+                        android:textSize="15dp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="전신"
+                        android:textColor="@color/black"
+                        android:textSize="15dp"/>
                 </LinearLayout>
 
 

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 class ViewHolder extends RecyclerView.ViewHolder {
-    TextView textView, textView2, textView3, txtRqId, txtRvId, txtFav, txtSub ,txtCom, txtTime;
+    TextView textView, textView2, textView3, txtRqId, txtRvId, txtFav, txtSub ,txtCom, txtTime, textLock;
     ProgressBar progressBar, prgFav;
     Button btnCancel, btnRefuse, btnAccept;
     CheckBox fav;
@@ -25,6 +25,7 @@ class ViewHolder extends RecyclerView.ViewHolder {
         txtSub = itemView.findViewById(R.id.sub);
         txtCom = itemView.findViewById(R.id.complete_title);
         txtTime = itemView.findViewById(R.id.complete_time);
+        textLock = itemView.findViewById(R.id.textLock);
         progressBar = itemView.findViewById(R.id.challenge_prg);
         prgFav = itemView.findViewById(R.id.prg);
         btnCancel = itemView.findViewById(R.id.btnCancel);

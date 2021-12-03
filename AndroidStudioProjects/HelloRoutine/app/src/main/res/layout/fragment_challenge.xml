@@ -28,7 +28,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_gravity="right"
-                    android:text="완료 목록"/>
+                    android:text="완료 목록"
+                    android:backgroundTint="@color/logo2"/>
 
 
 

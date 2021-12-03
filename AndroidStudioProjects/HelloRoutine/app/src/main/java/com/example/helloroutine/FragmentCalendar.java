@@ -3,6 +3,7 @@ package com.example.helloroutine;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,10 +47,12 @@ public class FragmentCalendar extends Fragment {
     String format_1 = format.format(System.currentTimeMillis());
     RecyclerView recyclerView;
     PlanAdapter planAdapter;
+    SwipeRefreshLayout refresh_layout;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_calendar, container, false);
+
 
         adt = new GridAdapter(getActivity()); //어댑터 객체 생성
         grid = view.findViewById(R.id.grid); //그리드뷰 객체 참조
@@ -58,6 +64,7 @@ public class FragmentCalendar extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.recyceler_clickPlan);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false)) ;
         planAdapter = new PlanAdapter();
+        refresh_layout = view.findViewById(R.id.refresh_layout);
 
         //달력표시
         cal = Calendar.getInstance();
@@ -73,6 +80,24 @@ public class FragmentCalendar extends Fragment {
 
         txt1.setText(format_1_1);
         findData(format_2_1);
+
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                planAdapter.arrayList.clear();
+
+                // 새로고침 코드를 작성
+                findData(format_2_1);
+                planAdapter.notifyDataSetChanged();
+
+                // 새로고침 완료시,
+                // 새로고침 아이콘이 사라질 수 있게 isRefreshing = false
+                refresh_layout.setRefreshing(false);
+            }
+        });
+
+
+
         planAdapter.setOnItemClicklistener(new OnPlanItemClickListener() {
             @Override
             public void OnItemClick(PlanAdapter.ViewHolder holder, View view, int position) {
@@ -83,14 +108,15 @@ public class FragmentCalendar extends Fragment {
                     String temp = item.substring(0,item.indexOf(":"));
                     new AlertDialog.Builder(getActivity())
                             .setTitle(format_2_1)
-                            .setMessage(item)
+                            .setMessage("· "+item)
+                            .setIcon(R.drawable.ic_baseline_today_24)
                             .setPositiveButton("변경", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     Intent intent = new Intent(getActivity(), Add_plan.class);
                                     intent.putExtra("date",format_2_1);
-                                    intent.putExtra("exeType","변경할 운동 : "+temp);
+                                    intent.putExtra("exeType",temp);
                                     startActivity(intent);
                                 }
                             })
@@ -104,6 +130,10 @@ public class FragmentCalendar extends Fragment {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(getContext().getApplicationContext(), "삭제했습니다.", Toast.LENGTH_LONG).show();
+
+
+
+
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -136,6 +166,7 @@ public class FragmentCalendar extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+
                 //한 자리수 날짜 오류 수정
                 String month = null;
                 if(adt.mItem.get(i).month().length()<2){
@@ -154,6 +185,21 @@ public class FragmentCalendar extends Fragment {
                 //클릭한 날짜 데이터
                 String clickDate = adt.mItem.get(i).year()+"."+month+"."+day;
                 String clickDate2 = month+"월 "+day+"일";
+
+                refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        planAdapter.arrayList.clear();
+
+                        // 새로고침 코드를 작성
+                        findData(clickDate);
+                        planAdapter.notifyDataSetChanged();
+
+                        // 새로고침 완료시,
+                        // 새로고침 아이콘이 사라질 수 있게 isRefreshing = false
+                        refresh_layout.setRefreshing(false);
+                    }
+                });
 
                 txt1.setText(clickDate2);
 
@@ -234,6 +280,8 @@ public class FragmentCalendar extends Fragment {
 
         return view;
     }
+
+
 
 
     //달력 표시
