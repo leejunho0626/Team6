@@ -82,7 +82,6 @@ public class ReceiveAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        notifyItemRemoved(postion);
 
                                     }
                                 })

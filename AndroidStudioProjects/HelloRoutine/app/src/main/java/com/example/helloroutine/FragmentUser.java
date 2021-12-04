@@ -36,7 +36,6 @@ public class FragmentUser extends Fragment {
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_user, container, false);
 
-
         firebaseAuth = FirebaseAuth.getInstance();
         //구글 로그인한 정보 가져오기
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
@@ -104,9 +103,6 @@ public class FragmentUser extends Fragment {
 
             }
         });
-
-
-
 
         return view;
     }

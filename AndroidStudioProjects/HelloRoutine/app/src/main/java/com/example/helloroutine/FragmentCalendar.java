@@ -3,7 +3,6 @@ package com.example.helloroutine;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,7 +49,6 @@ public class FragmentCalendar extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_calendar, container, false);
-
 
         adt = new GridAdapter(getActivity()); //어댑터 객체 생성
         grid = view.findViewById(R.id.grid); //그리드뷰 객체 참조
@@ -95,8 +91,6 @@ public class FragmentCalendar extends Fragment {
                 refresh_layout.setRefreshing(false);
             }
         });
-
-
 
         planAdapter.setOnItemClicklistener(new OnPlanItemClickListener() {
             @Override
@@ -281,9 +275,6 @@ public class FragmentCalendar extends Fragment {
         return view;
     }
 
-
-
-
     //달력 표시
     private void show()
     {
@@ -337,9 +328,6 @@ public class FragmentCalendar extends Fragment {
         return Integer.parseInt(f.format(d));
     }
 
-
-
-
     //일정 표시
     public void showPlanList(String date){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -385,12 +373,6 @@ public class FragmentCalendar extends Fragment {
 
         });
 
-
     }
-
-
-
-
-
 
 }

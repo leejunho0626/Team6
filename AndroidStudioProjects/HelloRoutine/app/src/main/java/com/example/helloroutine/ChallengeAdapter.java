@@ -46,6 +46,5 @@ public class ChallengeAdapter extends RecyclerView.Adapter<ViewHolder> {
         arrayList.add(strData);
         arrayList2.add(value);
 
-
     }
 }

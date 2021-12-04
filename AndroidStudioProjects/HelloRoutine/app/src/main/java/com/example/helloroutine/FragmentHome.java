@@ -21,7 +21,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,12 +68,9 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
-import static java.lang.Thread.sleep;
 
 public class FragmentHome extends Fragment {
 
@@ -92,10 +88,8 @@ public class FragmentHome extends Fragment {
     private static FloatingActionButton fab, fab1, fab2, fab3;
     static  LinearLayout linearLayout;
     String cnt;
-    String x;
     SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd");
     LocationManager mLocMan; // 위치 관리자
-
     private static String CHANNEL_ID = "TimerPushAlarm";
     private static String CHANEL_NAME = "PushAlarm";
     NotificationManager manager;
@@ -108,9 +102,7 @@ public class FragmentHome extends Fragment {
     String base_time = time();
     ArrayList<String> list = new ArrayList<>();
     ArrayList<String> list2 = new ArrayList<>();
-
     ImageView im1, im2, im3;
-
     String nx=null;
     String ny=null;
 
@@ -316,8 +308,6 @@ public class FragmentHome extends Fragment {
             if(format.format(cal1.getTime()).equals(format.format(cal2.getTime())));
             else if(check) cnt = "1";
         }
-
-
 
         return cnt;
 
@@ -1175,6 +1165,12 @@ public class FragmentHome extends Fragment {
             //위치 권한 요청
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
+
+        int permissionCheck2 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        if(permissionCheck2 == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 0);
+        }
+
     }
 
 }

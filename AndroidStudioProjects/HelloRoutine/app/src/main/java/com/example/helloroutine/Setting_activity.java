@@ -45,8 +45,6 @@ public class Setting_activity extends AppCompatActivity {
     SharedPreferences.Editor editor, editor2;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

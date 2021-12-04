@@ -46,6 +46,5 @@ public class Complete_Adapter extends RecyclerView.Adapter<ViewHolder> {
         arrayList.add(strData);
         arrayList2.add(time);
 
-
     }
 }

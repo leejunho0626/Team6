@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Calendar;
@@ -26,9 +24,6 @@ public class FriendPlan extends AppCompatActivity {
     TextView clickID ,txtDate;
     RecyclerView recyclerView;
     RecyclerAdapter recyclerAdapter;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

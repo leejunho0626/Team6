@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -49,7 +48,6 @@ public class Friend extends AppCompatActivity {
     ArrayAdapter<String> adapter3;
     ArrayAdapter<String> adapter4;
     ListView listView, listView2;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -505,10 +503,6 @@ public class Friend extends AppCompatActivity {
                                     }
                                 }
                             });
-
-
-
-
 
                         } else {
 
