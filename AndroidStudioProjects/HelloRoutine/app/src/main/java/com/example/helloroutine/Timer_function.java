@@ -86,7 +86,6 @@ public class Timer_function extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 firstState = true;
-
                 setting.setVisibility(View.VISIBLE);
                 timer.setVisibility(View.VISIBLE);
                 startStop(temp1);

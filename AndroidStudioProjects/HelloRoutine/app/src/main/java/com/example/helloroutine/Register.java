@@ -77,9 +77,11 @@ public class Register extends AppCompatActivity {
                                 txtError1.setText("사용 가능한 아이디입니다."); //경고 메시지
                                 txtError1.setTextColor(Color.parseColor("#4CAF50"));
                                 edtID.setBackgroundResource(R.drawable.white_edittext);  //테투리 흰색으로 변경
-
+                               /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 UserRank userRank = new UserRank("테스트", "test");
-                                databaseReference.child("Test").child("hi").setValue(userRank);
+                                databaseReference.child("User").child(user.getUid()).setValue(userRank);*/
+                                Toast.makeText(Register.this, "회원가입을 축하합니다.", Toast.LENGTH_SHORT).show();
+
 
                             }
                             //계정 생성 실패
@@ -171,6 +173,28 @@ public class Register extends AppCompatActivity {
             }
         });
     }
+
+    public void authLogin(String id, String pw){
+        //1. firebaseAuth에 로그인
+        firebaseAuth.signInWithEmailAndPassword(id, pw)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            UserRank userRank = new UserRank("테스트", "test");
+                            databaseReference.child("User").child(user.getUid()).setValue(userRank);
+                            Toast.makeText(Register.this, "회원가입을 축하합니다.", Toast.LENGTH_SHORT).show();
+
+
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),"아이디 또는 비밀번호를 입력하세요.(회원가입)",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 
     //최종 회원가입
      /*

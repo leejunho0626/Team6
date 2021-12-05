@@ -319,7 +319,7 @@ public class Login extends AppCompatActivity {
             user = FirebaseAuth.getInstance().getCurrentUser();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             UserWrite userWrite = new UserWrite(user.getEmail());
-            db.collection("DB").document("User").collection(user.getUid()).document("ID").set(userWrite)
+            db.collection("DB").document("UID").collection(user.getUid()).document("id").set(userWrite)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void avoid) {
@@ -333,7 +333,6 @@ public class Login extends AppCompatActivity {
                         }
                     });
             saveFriend();
-            saveID();
             finish();
         }
     }
@@ -363,17 +362,17 @@ public class Login extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         UserWrite userWrite = new UserWrite(user.getUid());
-        db.collection("DB").document(user.getEmail()).set(userWrite) //경로
+        db.collection("DB").document("UID").collection(user.getUid()).document("id").set(userWrite)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void avoid) {
-                        Log.d(TAG, "save success(id)");
+                        Log.d(TAG, "Add success(google)");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "save fail(id)");
+                        Log.d(TAG, "Add fail(google)");
                     }
                 });
     }
